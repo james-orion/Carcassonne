@@ -34,13 +34,47 @@ class Player:
             print(f"{self.name} has no meeples left to use!")
 
     ''' Function to increase number of meeples in player's hand '''
-    def return_meeple(self):
+    def add_meeple(self):
         # Increase meeples count by 1
         self.meeples += 1
 
-    ''' Function to return player status: name, score, and remaining meeples in player's hand '''
+    ''' String function to return player status: name, score, and remaining meeples in player's hand '''
     def __str__(self):
         return f"Player: {self.name}, Score: {self.score}, Meeples: {self.meeples}"
 
-if __name__=="__main__":
+''' 
+Test for correctness: 
+Create a single player with name 'Grace', print initial status, 
+add 10 points, remove meeple, add 5 points, remove meeple, 
+add 5 points, add meeple, print player final status.
+Expect: 
+Initial status = Player: Grace, Score: 0, Meeples: 5.
+Final Status = Player: Grace, Score: 20, Meeples: 4.
+'''
+def test_one():
+    # Initialize player
+    player1 = Player(name= "Grace")
+    print("Player initial status...")
+    # Print initial player status
+    print(player1)
+    # Add 10 points
+    player1.add_score(10)
+    # Remove meeple from hand
+    player1.use_meeple()
+    # Add 5 points
+    player1.add_score(5)
+    # Remove meeple from hand
+    player1.use_meeple()
+    # Add 5 points
+    player1.add_score(5)
+    # Add meeple to hand
+    player1.add_meeple()
+    print("Player final status...")
+    # Print final player status
+    print(player1)
     
+#def test_two:
+    
+    
+test_one()
+#test_two()
