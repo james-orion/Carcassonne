@@ -20,7 +20,7 @@ class Tile:
     # Optionally tile contains monastery or village
     # Each of the fields is a Side
 
-    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building = 'NONE', meeple: Meeple = None, shield = False):
+    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building = 'NONE', meeple: Meeple = None, shield = False, is_connected = True):
         """Constructor
                 Takes in four Sides of a tile: top, bottom, left, right, and a building
                 These are Enums,
@@ -34,6 +34,7 @@ class Tile:
         self.building = building
         self.meeple = meeple
         self.shield = shield
+        self.is_connected = is_connected
 
     # Getters
     def get_top(self):
@@ -59,6 +60,10 @@ class Tile:
     def has_shield(self):
         """Method to check if the tile has a shield"""
         return self.shield
+
+    def is_connected(self):
+        """Method to check if the tile has a connected city"""
+        return self.is_connected
 
     # Setters
     def set_top(self, new_top: Side):
@@ -89,6 +94,14 @@ class Tile:
         """Method to remove a shield from the tile"""
         self.shield = False
 
+    def set_connected(self):
+        """Method to set a city as connected in a tile"""
+        self.is_connected = True
+
+    def not_connected(self):
+        """Method to set a city as not connected in a tile"""
+        self.is_connected = False
+
     # Function to rotate tiles
     def rotate_tile(self):
         """Method to rotate a tile one side in a counter-clockwise direction"""
@@ -100,11 +113,14 @@ class Tile:
 
 # Create tiles for base game
 # There are 72 tiles including one start tile
-start = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD']) # one of these
-monastery_1 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY']) # two of these
-monastery_2 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY']) # four of these
+start = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD']) # x1
+monastery_1 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY']) # x2
+monastery_2 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY']) # x4
 city_surrounded = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['CITY'], shield = True) # one of these
-
-
+top_city_w_road = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD']) # x3
+top_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD']) # x5
+left_right_city_shield = Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True) # x2
+left_right_city = Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD']) # x1
+top_bottom_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], is_connected = False) # x3
 
 
