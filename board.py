@@ -1,11 +1,5 @@
 """
-Starting Template
-
-Once you have learned how to use classes, you can begin your program with this
-template.
-
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.starting_template
+This file is the board class for the game Carcassonne
 """
 import arcade
 import arcade.gui
