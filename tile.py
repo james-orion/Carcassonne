@@ -1,18 +1,26 @@
 # Class representing a Carcassonne tile
 from enum import Enum
 import arcade
+
+class Side(Enum):
+    ROAD = 1
+    CITY = 2
+    FIELD = 3
+
+class Building(Enum):
+    VILLAGE = 1
+    MONASTERY = 2
+    NONE = 3
+
 '''Tile Class'''
 class Tile:
-
-    Side = Enum('Side', ['ROAD', 'CITY', 'FIELD'])
-    Building = Enum('Building', ['VILLAGE', 'MONASTERY', 'NONE'])
 
     # Fields representing the area connected on each side of the tile
     # From the options of city, road, field
     # Optionally tile contains monastery or village
     # Each of the fields is a Side
 
-    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building, meeple: Meeple = None, shield = False):
+    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building = 'NONE', meeple: Meeple = None, shield = False):
         """Constructor
                 Takes in four Sides of a tile: top, bottom, left, right, and a building
                 These are Enums,
@@ -89,6 +97,14 @@ class Tile:
         self.set_right(self.get_bottom())
         self.set_bottom(self.get_left())
         self.set_left(temp_top)
+
+# Create tiles for base game
+# There are 72 tiles including one start tile
+start = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD']) # one of these
+monastery_1 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY']) # two of these
+monastery_2 = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY']) # four of these
+city_surrounded = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['CITY'], shield = True) # one of these
+
 
 
 
