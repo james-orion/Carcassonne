@@ -1,6 +1,6 @@
 class Meeple:
     def __init__(self, player, color):
-        self.plyer = player
+        self.player = player
         self.color = color
         self.is_placed = False
         self.feature_type = None
