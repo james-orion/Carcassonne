@@ -5,6 +5,10 @@
 '''
 import arcade
 
+'''
+NOTE: might do a list of meeples instead of a count, 
+talk with Hack about combining meeple class with player clas
+'''
 
 ''' Player Class '''
 class Player:
