@@ -21,7 +21,7 @@ class Tile:
             Building has options, 'VILLAGE', 'MONASTERY', 'NONE'
         Also has a meeple that can be played on the tile
     '''
-    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building, meeple: Meeple):
+    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building, meeple: Meeple = None):
         self.top = top
         self.bottom = bottom
         self.left = left
@@ -80,11 +80,5 @@ class Tile:
         self.set_bottom(self.get_left())
         self.set_left(temp_top)
 
-    # Function to place a Meeple on a tile
-    def place_meeple(self, meeple: Meeple):
-        # TODO: need to differentiate between different roads, fields, etc.
-        if(self.building == 'VILLAGE'):
-            #there are x number of potential roads to place on, where x is the number of sides with road
-        elif(self.building == 'MONASTERY'):
 
 
