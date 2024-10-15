@@ -4,6 +4,8 @@ This file is the board class for the game Carcassonne
 import arcade
 import arcade.gui
 
+import player
+
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -31,7 +33,7 @@ class GameView(arcade.View):
     def __init__(self):
         super().__init__()
         # Initialize Background Imgae
-        self.background = arcade.load_texture("wood.jpg")
+        self.background = arcade.load_texture("images/wood.jpg")
         # Initalize sprite lists
         self.player_list = None
         self.scoreboard_list = None
@@ -47,21 +49,21 @@ class GameView(arcade.View):
         self.tile_list = arcade.SpriteList()
         self.help_list = arcade.SpriteList()
         # Meeple sprite
-        img = "Meeple.jpg"
+        img = "images/Meeple.jpg"
         self.player_sprite = arcade.Sprite(img,
                                            SPRITE_SCALING_PLAYER)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 90
         self.player_list.append(self.player_sprite)
         # Scoreboard Sprite
-        scoreboard = "scoreboard.jpg"
+        scoreboard = "images/scoreboard.jpg"
         self.scoreboard_sprite = arcade.Sprite(scoreboard,
                                                SPRITE_SCALING_SCORE)
         self.scoreboard_sprite.center_x = 250
         self.scoreboard_sprite.center_y = 80
         self.scoreboard_list.append(self.scoreboard_sprite)
         # Tile Sprite
-        tile = "tile.jpg"
+        tile = "images/tile.jpg"
         self.tile_sprite = arcade.Sprite(tile,
                                          SPRITE_SCALING_TILE)
         self.tile_sprite.center_x = 400
@@ -77,9 +79,7 @@ class GameView(arcade.View):
 
 
     def on_draw(self):
-        """
-        Render the screen.
-        """
+        """ Render the screen. """
         # Start With a Fresh Screen
         self.clear()
         # Start the Rendering Process
@@ -134,16 +134,10 @@ class GameView(arcade.View):
                          font_name="Kenney Future")
 
     def on_update(self, delta_time):
-        """
-        All the logic to move, and the game logic goes here.
+        """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
-        need it.
-            """
-        for sprite in self.tile_list:
-            if sprite.x > self.screen_width:
-                sprite.vx = -30
-            elif sprite.x < 0:
-                sprite.vx = 30
+        need it. """
+        pass
 
 
     def on_resize(self, width, height):
@@ -158,21 +152,15 @@ class GameView(arcade.View):
         print(f"Window resized to: {width}, {height}")
 
     def on_key_press(self, key, key_modifiers):
-        """
-        Called whenever a key on the keyboard is pressed.
-        """
+        """ Called whenever a key on the keyboard is pressed. """
         pass
 
     def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-        """
+        """ Called whenever the user lets off a previously pressed key."""
         pass
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
+        """ Called whenever the mouse moves."""
         # Allow Sprite to Move With Mouse
         if self.dragging_sprite:
             self.dragging_sprite.center_x += delta_x
@@ -182,18 +170,13 @@ class GameView(arcade.View):
             self.dragging_meeple.center_x += delta_x
             self.dragging_meeple.center_y += delta_y
 
-        clicked_meeple = arcade.get_sprites_at_point((0, 0),
-                                                     self.tile_list)
-        if clicked_meeple:
-            print("hi")
+
+
 
 
 
     def on_mouse_press(self, x, y, button, key_modifiers):
-        """
-        Called when the user presses a mouse button.
-
-        """
+        """ Called when the user presses a mouse button. """
         # If Left Button on Mouse Clicked on Tile
         if button == arcade.MOUSE_BUTTON_LEFT:
             clicked_tile = arcade.get_sprites_at_point((x,y),
@@ -209,14 +192,12 @@ class GameView(arcade.View):
             if clicked_meeple:
                 self.dragging_meeple = new_meeple[0]
 
-            # Allow dragging to be possible
+            # Allow dragging to be possible for tile
             if clicked_tile:
                 self.dragging_sprite = clicked_tile[0]
 
     def on_mouse_release(self, x, y, button, key_modifiers):
-        """
-        Called when a user releases a mouse button.
-        """
+        """ Called when a user releases a mouse button. """
         # If Lest Mouse Is Relased stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
@@ -243,6 +224,7 @@ class OpenView(arcade.View):
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
+
         arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
         arcade.set_viewport(0,
                             self.window.width,
@@ -251,6 +233,7 @@ class OpenView(arcade.View):
 
     def on_draw(self):
         """ Draw this view """
+
         self.clear()
         arcade.draw_text("Welcome Screen",
                          self.window.width / 2,
@@ -286,7 +269,7 @@ class ScoreboardView(arcade.View):
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
-        self.background = arcade.load_texture("notepad.jpg.png")
+        self.background = arcade.load_texture("images/notepad.jpg.png")
         arcade.set_viewport(0,
                             self.window.width,
                             0,
@@ -309,6 +292,8 @@ class ScoreboardView(arcade.View):
                          anchor_x="center",
                          font_name="Kenney Future")
         # Player and Numbers maybe in for loop
+        # This workS
+        # player1_name = player.Player.get_name(self)
         arcade.draw_text("Player 1", 150,
                          self.window.height - 150,
                          arcade.color.BLACK,
@@ -352,7 +337,7 @@ class HelpView(arcade.View):
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
-        self.background = arcade.load_texture("notepad.jpg.png")
+        self.background = arcade.load_texture("images/notepad.jpg.png")
         arcade.set_viewport(0,
                             self.window.width,
                             0,
@@ -383,10 +368,12 @@ class HelpView(arcade.View):
 
 def main():
     """ Main function """
+
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     start_view = OpenView()
     window.show_view(start_view)
     arcade.run()
+
 
 
 if __name__ == "__main__":

@@ -63,6 +63,11 @@ class Player:
     def get_score(self):
         return self.score
 
+    ''' Function to get player score '''
+
+    def set_name(self,name):
+        self.name = name
+
 #-----------------------------------------------------------------------------------
 '''
 Test for setter methods.
