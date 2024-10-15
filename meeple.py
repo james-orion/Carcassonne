@@ -1,3 +1,12 @@
+# Meeple Class
+# Stores information about meeples, such as what player
+# they belong to, what color they are, whether or not they
+# have been placed, etc. It will also count the points a
+# meeple earns once a feature is completed, and how many
+# points are won at the end of the game.
+
+import player
+
 class Meeple:
     def __init__(self, player, color):
         self.player = player
@@ -61,7 +70,7 @@ class Meeple:
             # points = 1 per each tile in partial city, extra 1 if tile with coat of arms
             pass
         elif self.feature_type == "monestary":
-            # points = number of tiles surrounding monestary + 1
+            # points = number of tiles surrounding monestary + 1 for monestary itself
             pass
         else:
             # points = 3 points per completed city the field is touching
@@ -80,7 +89,7 @@ if __name__ == "__main__":
 
 # functionality:
 # store list of meeples in player class
-# end of game storing
+# end of game scoring
 
 # potential issues:
 # tiles where meeples can't be placed
