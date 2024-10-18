@@ -4,9 +4,6 @@ import arcade
 '''Tile Class'''
 class Tile:
 
-    # TODO: Tiles have meeples attatched
-    # TODO: check if tiles are connected to each other --- maybe board functionality
-
     Side = Enum('Side', ['ROAD', 'CITY', 'FIELD'])
     Building = Enum('Building', ['VILLAGE', 'MONASTERY', 'NONE'])
 
@@ -14,66 +11,79 @@ class Tile:
     # From the options of city, road, field
     # Optionally tile contains monastery or village
     # Each of the fields is a Side
-    '''Constructor
-        Takes in four Sides of a tile: top, bottom, left, right, and a building
-        These are Enums, 
-            Side has options, 'ROAD', 'CITY', 'FIELD',
-            Building has options, 'VILLAGE', 'MONASTERY', 'NONE'
-        Also has a meeple that can be played on the tile
-    '''
-    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building, meeple: Meeple = None):
+
+    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building, meeple: Meeple = None, shield = False):
+        """Constructor
+                Takes in four Sides of a tile: top, bottom, left, right, and a building
+                These are Enums,
+                    Side has options, 'ROAD', 'CITY', 'FIELD',
+                    Building has options, 'VILLAGE', 'MONASTERY', 'NONE'
+                Also has a meeple that can be played on the tile """
         self.top = top
         self.bottom = bottom
         self.left = left
         self.right = right
         self.building = building
         self.meeple = meeple
+        self.shield = shield
 
     # Getters
-    '''Method to return the top side of a tile'''
     def get_top(self):
+        """Method to return the top side of a tile"""
         return self.top
 
-    '''Method to return the left side of a tile'''
     def get_left(self):
+        """Method to return the left side of a tile"""
         return self.left
 
-    '''Method to return the right side of a tile'''
     def get_right(self):
+        """Method to return the right side of a tile"""
         return self.right
 
-    '''Method to return the bottom side of a tile'''
     def get_bottom(self):
+        """Method to return the bottom side of a tile"""
         return self.bottom
 
-    '''Method to return the building attached to a tile'''
     def get_building(self):
+        """Method to return the building attached to a tile"""
         return self.building
 
+    def has_shield(self):
+        """Method to check if the tile has a shield"""
+        return self.shield
+
     # Setters
-    '''Method to set the value of the top side of a tile'''
     def set_top(self, new_top: Side):
+        """Method to set the value of the top side of a tile"""
         self.top = new_top
 
-    '''Method to set the value of the left side of a tile'''
     def set_left(self, new_left: Side):
+        """Method to set the value of the left side of a tile"""
         self.left = new_left
 
-    '''Method to set the value of the right side of a tile'''
     def set_right(self, new_right: Side):
+        """Method to set the value of the right side of a tile"""
         self.right = new_right
 
-    '''Method to set the value of the bottom side of a tile'''
     def set_bottom(self, new_bottom: Side):
+        """Method to set the value of the bottom side of a tile"""
         self.bottom = new_bottom
 
-    '''Method to set the value of the building attached to a tile'''
     def set_building(self, new_building: Building):
+        """Method to set the value of the building attached to a tile"""
         self.building = new_building
 
+    def add_shield(self):
+        """Method to add a shield to the tile"""
+        self.shield = True
+
+    def remove_shield(self):
+        """Method to remove a shield from the tile"""
+        self.shield = False
+
     # Function to rotate tiles
-    '''Method to rotate a tile one side in a counter-clockwise direction'''
     def rotate_tile(self):
+        """Method to rotate a tile one side in a counter-clockwise direction"""
         temp_top = self.get_top()
         self.set_top(self.get_right())
         self.set_right(self.get_bottom())
