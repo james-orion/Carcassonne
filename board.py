@@ -227,7 +227,7 @@ class GameView(arcade.View):
         global moved_meeple
         global meeple_x
         global meeple_y
-        # If Lest Mouse Is Relased stop dragging
+        # If Left Mouse Is Relased stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
             self.dragging_meeple = None
@@ -370,6 +370,7 @@ class ScoreboardView(arcade.View):
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
+        
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
         global moved, moved_meeple
