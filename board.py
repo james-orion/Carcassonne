@@ -28,13 +28,14 @@ SPRITE_SCALING_TILE = 0.3
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
+# Tile Movement/Placement
 tile_x  = 200
 tile_y = 100
-
-
-class QuitButton(arcade.gui.UIFlatButton):
-    def on_click(self, event: arcade.gui.UIOnClickEvent):
-        arcade.exit()
+moved= False
+# Meeple Movement/ Placement
+meeple_x  = 100
+meeple_y = 100
+moved_meeple= False
 
 class GameView(arcade.View):
 
@@ -48,12 +49,14 @@ class GameView(arcade.View):
         self.scoreboard_list = None
         self.tile_list = None
         self.help_list = None
-        # Keeping Track of Location
-        self.old_view = None
+
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
-
+        global tile_x
+        global tile_y
+        global meeple_x
+        global meeple_y
         # Create sprite lists
         self.player_list = arcade.SpriteList()
         self.scoreboard_list = arcade.SpriteList()
@@ -63,8 +66,8 @@ class GameView(arcade.View):
         img = "images/Meeple.jpg"
         self.player_sprite = arcade.Sprite(img,
                                            SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 100
+        self.player_sprite.center_x = meeple_x
+        self.player_sprite.center_y = meeple_y
         self.player_list.append(self.player_sprite)
         # Scoreboard Sprite
         scoreboard = ":resources:onscreen_controls/shaded_dark/hamburger.png"
@@ -142,20 +145,28 @@ class GameView(arcade.View):
         """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it. """
+        global moved
+        global tile_x
+        global tile_y
+        global moved_meeple
+        global meeple_x
+        global meeple_y
+        # if tile moved update with new location
+        if moved:
+            self.tile_sprite.center_x = tile_x
+            self.tile_sprite.center_y = tile_y
+        # if meeple moved update with new location
+        if moved_meeple:
+            self.tile_sprite.center_x = meeple_x
+            self.tile_sprite.center_y = meeple_y
 
-        self.tile_sprite.update()
-    def on_show_view(self):
-        self.help_state = (self.player_list)
-    def on_hide_view(self):
-        player_list = self.help_state
-        self.player_list = player_list
+
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
 
         # Call the parent. Failing to do this will mess up the coordinates,
         # and default to 0,0 at the center and the edges being -1 to 1.
-        tile_collison = arcade.get_sprites_at_point((100, 100),
-                                                     self.tile_list)
+
         super().on_resize(width, height)
 
         print(f"Window resized to: {width}, {height}")
@@ -174,8 +185,7 @@ class GameView(arcade.View):
         if self.dragging_sprite:
             self.dragging_sprite.center_x += delta_x
             self.dragging_sprite.center_y += delta_y
-            tile_x = self.dragging_sprite.center_x
-            tile_y = self.dragging_sprite.center_y
+
             # Allow Sprite to Move With Mouse
         if self.dragging_meeple:
             self.dragging_meeple.center_x += delta_x
@@ -211,6 +221,12 @@ class GameView(arcade.View):
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
+        global moved
+        global tile_x
+        global tile_y
+        global moved_meeple
+        global meeple_x
+        global meeple_y
         # If Lest Mouse Is Relased stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
@@ -222,12 +238,23 @@ class GameView(arcade.View):
                                                           self.help_list)
 
             if clicked_help:
-                self.sprite_positions = {"tile": (self.tile_sprite.center_x, self.tile_sprite.center_y),}
+                moved = True
+                tile_x= self.tile_sprite.center_x
+                tile_y = self.tile_sprite.center_y
+                moved_meeple = True
+                meeple_x = self.player_sprite.center_x
+                meeple_y = self.player_sprite.center_y
                 help_view = HelpView()
                 help_view.setup()
                 self.window.show_view(help_view)
 
             if clicked_scoreboard:
+                moved = True
+                tile_x = self.tile_sprite.center_x
+                tile_y = self.tile_sprite.center_y
+                moved_meeple = True
+                meeple_x = self.player_sprite.center_x
+                meeple_y = self.player_sprite.center_y
                 scoreboard_view = ScoreboardView()
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
@@ -345,6 +372,9 @@ class ScoreboardView(arcade.View):
                          font_name="Kenney Future")
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
+        global moved, moved_meeple
+        moved = False
+        moved_meeple = False
         game_view = GameView()
         game_view.setup()
         self.window.show_view(game_view)
@@ -386,9 +416,13 @@ class HelpView(arcade.View):
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
+        global moved, moved_meeple
+        moved = False
+        moved_meeple = False
         game_view = GameView()
         game_view.setup()
         self.window.show_view(game_view)
+
 
 def main():
     """ Main function """
