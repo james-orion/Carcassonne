@@ -4,6 +4,8 @@
     10/7/2024
 '''
 import arcade
+# Import Meeple Class
+from meeple import Meeple
 
 '''
 NOTE: might do a list of meeples instead of a count, 
@@ -13,14 +15,20 @@ talk with Hack about combining meeple class with player clas
 ''' Player Class '''
 class Player:
     ''' Constructor '''
-    def __init__(self, name: str, meeples: int = 5):
+    def __init__(self, name: str = None, meeple_count: int = 5):
 
         # Set player name to what is entered 
-        self.name = name
+        if name is None:
+            # If no name is provided, prompt the user for input
+            self.name = input("Enter the player's name: ")
+        else:
+            self.name = name
+            
         # Initial score set to 0
         self.score = 0
-        # Default number of meeples set to 5
-        self.meeples = meeples
+        
+        # Initialize a list of Meeple objects for the player
+        self.meeples = [Meeple(self, "red") for i in range(meeple_count)]
 
 #-----------------------------------------------------------------------------------
     ''' Setter Methods '''
@@ -29,35 +37,53 @@ class Player:
         # Add points to player score
         self.score += points
 
-    ''' Function to reduce remaining meeples in player's hand, set value to -1 '''
-    def use_meeple(self):
-        # Check if there are meeples remaining in hand
-        if self.meeples > 0:
-            # If meeples, reduce number by 1
-            self.meeples -= 1
-        # If there are no meeples in hand, print warning message
-        else:
-            print(f"{self.name}: you have no meeples in hand to use, all are in play.")
+    """ Function to place a meeple on a tile if available. """
+    def use_meeple(self, tile):
+        for meeple in self.meeples:
+            # Check if meeple is in player's hand (not placed)
+            if not meeple.is_placed:
+                # Place meeple on the tile
+                meeple.place_meeple(tile)
+                return True
+        # If no meeples are available, print warning message
+        print(f"{self.name}: you have no meeples left to place.")
+        return False
 
-    ''' Function to increase number of meeples in player's hand, set value to +1 '''
-    def add_meeple(self):
-        # Check if the total count of meeples in hand is less than or equal to 4
-        if self.meeples <= 4:
-            # If there is room for another meeple, ncrease meeples count by 1
-            self.meeples += 1
-        # If all meeples are in hand, print warning message
-        else: 
-            print(f"{self.name}: all meeples are in your hand, cannot add more.")
+    """ Function to return a meeple to the player's hand and add points to the player's score. """
+    def add_meeple(self, points):
+        for meeple in self.meeples:
+            # Check if meeple is on the board (placed)
+            if meeple.is_placed:
+                # Get points from the meeple based on position
+                earned_points = meeple.meeple_score()
+                # Add the earned points to player's total score 
+                self.set_score(earned_points + points)
+                return True
+        print(f"{self.name}: No meeples to return.")
+        return False
+    
+    """ Calculate end-of-game points based on meeples still placed. """
+    def end_of_game_scoring(self):
+        points = 0
+        for meeple in self.meeples:
+            # Check if meeple is still on the board
+            if meeple.is_placed:
+                # Add end-of-game points from meeple position 
+                # to playe'sr total score
+                points += meeple.end_of_game_scoring()
+        # Add points to player's total score
+        self.set_score(points)
 
 #-----------------------------------------------------------------------------------
     ''' Getter Methods '''
     ''' String function to return player status: name, score, and remaining meeples in player's hand '''
     def __str__(self):
-        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.meeples}"
+        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.get_meeple_count()}"
     
     ''' Function to get count of meeples in hand'''
     def get_meeple_count(self):
-        return self.meeples
+        # Return the number of meeples that are not placed
+        return len([meeple for meeple in self.meeples if not meeple.is_placed])
     
     ''' Function to get player name '''
     def get_name(self):
