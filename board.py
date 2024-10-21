@@ -6,8 +6,7 @@ This file is part of Carcassonne board view
 """
 import arcade
 import arcade.gui
-from arcade import get_sprites_at_point
-from pyglet import sprite
+
 
 import meeple
 import player
@@ -42,13 +41,13 @@ class GameView(arcade.View):
     def __init__(self):
         super().__init__()
         # Initialize Background Imgae
-        self.sprite_positions = {}
         self.background = arcade.load_texture("images/wood.jpg")
         # Initalize sprite lists
         self.player_list = None
         self.scoreboard_list = None
         self.tile_list = None
         self.help_list = None
+
 
 
     def setup(self):
