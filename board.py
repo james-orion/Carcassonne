@@ -7,9 +7,8 @@ This file is part of Carcassonne board view
 import arcade
 import arcade.gui
 
-
-import meeple
-import player
+import current_tile
+import current_meeple
 
 
 # Global Var: Screen Size
@@ -27,18 +26,12 @@ SPRITE_SCALING_TILE = 0.3
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
-# Tile Movement/Placement
-tile_x  = 200
-tile_y = 100
-moved= False
-# Meeple Movement/ Placement
-meeple_x  = 100
-meeple_y = 100
-moved_meeple= False
+
+
 
 class GameView(arcade.View):
 
-    def __init__(self):
+    def __init__(self, curr_tile, curr_meeple):
         super().__init__()
         # Initialize Background Imgae
         self.background = arcade.load_texture("images/wood.jpg")
@@ -47,7 +40,9 @@ class GameView(arcade.View):
         self.scoreboard_list = None
         self.tile_list = None
         self.help_list = None
-
+        # Initalize current meeple and current tile position
+        self.curr_tile = curr_tile
+        self.curr_meeple = curr_meeple
 
 
     def setup(self):
@@ -65,8 +60,8 @@ class GameView(arcade.View):
         img = "images/Meeple.jpg"
         self.player_sprite = arcade.Sprite(img,
                                            SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = meeple_x
-        self.player_sprite.center_y = meeple_y
+        self.player_sprite.center_x = self.curr_meeple.get_x()
+        self.player_sprite.center_y = self.curr_meeple.get_y()
         self.player_list.append(self.player_sprite)
         # Scoreboard Sprite
         scoreboard = ":resources:onscreen_controls/shaded_dark/hamburger.png"
@@ -79,9 +74,10 @@ class GameView(arcade.View):
         tile = "images/tile.jpg"
         self.tile_sprite = arcade.Sprite(tile,
                                          SPRITE_SCALING_TILE)
-        self.tile_sprite.center_x = tile_x
-        self.tile_sprite.center_y = tile_y
+        self.tile_sprite.center_x = self.curr_tile.get_x()
+        self.tile_sprite.center_y = self.curr_tile.get_y()
         self.tile_list.append(self.tile_sprite)
+
         # Help Sprite
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
         self.help_sprite = arcade.Sprite(help,
@@ -144,20 +140,21 @@ class GameView(arcade.View):
         """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it. """
-        global moved
-        global tile_x
-        global tile_y
+
         global moved_meeple
         global meeple_x
         global meeple_y
+
         # if tile moved update with new location
-        if moved:
-            self.tile_sprite.center_x = tile_x
-            self.tile_sprite.center_y = tile_y
+        if self.curr_tile.get_moved():
+            print("moved")
+            print(self.curr_tile.get_x())
+            self.tile_sprite.center_x = self.curr_tile.get_x()
+            self.tile_sprite.center_y = self.curr_tile.get_y()
         # if meeple moved update with new location
-        if moved_meeple:
-            self.tile_sprite.center_x = meeple_x
-            self.tile_sprite.center_y = meeple_y
+        if self.curr_meeple.get_moved():
+            self.tile_sprite.center_x = self.curr_meeple.get_x()
+            self.tile_sprite.center_y = self.curr_meeple.get_y()
 
 
     def on_resize(self, width, height):
@@ -220,9 +217,7 @@ class GameView(arcade.View):
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
-        global moved
-        global tile_x
-        global tile_y
+
         global moved_meeple
         global meeple_x
         global meeple_y
@@ -237,24 +232,24 @@ class GameView(arcade.View):
                                                           self.help_list)
 
             if clicked_help:
-                moved = True
-                tile_x= self.tile_sprite.center_x
-                tile_y = self.tile_sprite.center_y
-                moved_meeple = True
-                meeple_x = self.player_sprite.center_x
-                meeple_y = self.player_sprite.center_y
-                help_view = HelpView()
+                self.curr_tile.set_moved(True)
+                self.curr_tile.set_x(self.tile_sprite.center_x)
+                self.curr_tile.set_y(self.tile_sprite.center_y)
+                self.curr_meeple.set_moved(True)
+                self.curr_meeple.set_x(self.player_sprite.center_x)
+                self.curr_meeple.set_y(self.player_sprite.center_y)
+                help_view = HelpView(self.curr_tile, self.curr_meeple)
                 help_view.setup()
                 self.window.show_view(help_view)
 
             if clicked_scoreboard:
-                moved = True
-                tile_x = self.tile_sprite.center_x
-                tile_y = self.tile_sprite.center_y
-                moved_meeple = True
-                meeple_x = self.player_sprite.center_x
-                meeple_y = self.player_sprite.center_y
-                scoreboard_view = ScoreboardView()
+                self.curr_tile.set_moved(True)
+                self.curr_tile.set_x(self.tile_sprite.center_x)
+                self.curr_tile.set_y(self.tile_sprite.center_y)
+                self.curr_meeple.set_moved(True)
+                self.curr_meeple.set_x(self.player_sprite.center_x)
+                self.curr_meeple.set_y(self.player_sprite.center_y)
+                scoreboard_view = ScoreboardView(self.curr_tile, self.curr_meeple)
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
 
@@ -289,17 +284,21 @@ class OpenView(arcade.View):
                          font_name="Kenney Future")
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, start the game. """
-        game_view = GameView()
+        self.curr_tile = current_tile.current_tile()
+        self.curr_meeple = current_meeple.current_meeple()
+        game_view = GameView(self.curr_tile, self.curr_meeple)
         game_view.setup()
         self.window.show_view(game_view)
 
 class ScoreboardView(arcade.View):
     """ View to show Scoreboard """
 
-    def __init__(self):
+    def __init__(self, curr_tile, curr_meeple):
         super().__init__()
         # Initialize Player From Player Class?
         self.player_list = None
+        self.curr_tile = curr_tile
+        self.curr_meeple = curr_meeple
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -372,18 +371,19 @@ class ScoreboardView(arcade.View):
         
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
-        global moved, moved_meeple
-        moved = False
-        moved_meeple = False
-        game_view = GameView()
+        self.curr_tile.set_moved(False)
+        self.curr_meeple.set_moved(False)
+        game_view = GameView(self.curr_tile, self.curr_meeple)
         game_view.setup()
         self.window.show_view(game_view)
 
 class HelpView(arcade.View):
     """ View to show Help View"""
 
-    def __init__(self):
+    def __init__(self, curr_tile, curr_meeple):
         super().__init__()
+        self.curr_tile = curr_tile
+        self.curr_meeple = curr_meeple
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -416,10 +416,9 @@ class HelpView(arcade.View):
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
-        global moved, moved_meeple
-        moved = False
-        moved_meeple = False
-        game_view = GameView()
+        self.curr_tile.set_moved(False)
+        self.curr_meeple.set_moved(False)
+        game_view = GameView(self.curr_tile, self.curr_meeple)
         game_view.setup()
         self.window.show_view(game_view)
 
