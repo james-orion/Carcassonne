@@ -5,7 +5,7 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-import player
+import arcade, player
 
 class Meeple:
     def __init__(self, player, name, color):
@@ -15,13 +15,14 @@ class Meeple:
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
+        # self.meeple_sprite = ?? - how should sprite be stored?
 
     
     # place Meeple on game board and store information about where it was placed
     def place_meeple(self, tile):
-        # validate location of meeple
-        if self.validate_placement():
-            # TODO remove from player's supply
+        # TODO validate location of meeple on tile - placed in center or one of the edges?
+        self.feature_type = None # TODO feature type is same as location of Meeple on tile
+        if self.validate_placement(tile):
             self.is_placed = True
             # TODO determine what feature on tile Meeple is placed on
             # self.feature_type = 
@@ -30,22 +31,37 @@ class Meeple:
             else:
                 self.orientation = "vertical"
             # TODO store location on game board and update tile it's placed on
+            return True
 
     
     # validates that user's placement of Meeple is allowed
-    def validate_placement(self):
-        # TODO implement
+    def validate_placement(self, tile):
+        # TODO finish implementing - iterate through list of tiles in feature,
+        # if there is a Meeple alreay placed, don't allow user to place another;
+        # if there isn't a Meeple placed anywhere on the feature, allow user to
+        # place one
+
         # if placing as highwayman, make sure only meeple on stretch of road
+        if self.feature_type == "road":
+            pass
         # if placing as knight, make sure only meeple in city
+        if self.feature_type == "city":
+            pass
         # if placing as monk/nun, make sure only meeple in monestary
+        if self.feature_type == "monestary":
+            pass
         # if placing farmer, make sure on field
+        else:
+            pass
         return True
 
 
     # determines how many points a Meeple scores once a feature is completed
     def meeple_score(self):
         points = 0
-        # TODO find some way to check if feature is completed
+        # TODO find some way to check if feature is completed, then iterate
+        # through list of tiles to determine total number of points
+
         # calculate points won by meeple in feature
         if self.feature_type == "road":
             # points = number of tiles in the complete road
@@ -56,13 +72,12 @@ class Meeple:
         elif self.feature_type == "monestary":
             points = 9
         else:
-            pass
+            return 0
 
         # unplace and reset meeple
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
-        # return meeple to supply
         return points
     
 
@@ -88,12 +103,10 @@ class Meeple:
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
-        # return meeple to supply
         return points
     
 
     # getter methods
-
     
     # returns player that Meeple belongs to
     def get_player(self):
@@ -126,8 +139,6 @@ class Meeple:
     
 
     # setter methods
-
-
     # sets players Meeple blongs to
     def set_player(self, player):
         self.player = player
@@ -189,7 +200,7 @@ def test_two():
     if test_meeple_1.get_orientation() != "horizontal":
         return "FAILED doesn't update horizontal orientation"
     
-    test_meeple_2 = Meeple("Jack", "m1", "red")
+    test_meeple_2 = Meeple("Jack", "m2", "red")
     test_meeple_1.set_feature_type("road")
     test_tile = None
     test_meeple_1.place_meeple(test_tile)
