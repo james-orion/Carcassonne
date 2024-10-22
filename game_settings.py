@@ -1,5 +1,5 @@
 """
-This file, updates the current tile placement of the game
+This file, updates the current game settings
 
 """
 
