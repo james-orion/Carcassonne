@@ -7,9 +7,10 @@ This file is part of Carcassonne board view
 import arcade
 import arcade.gui
 
+
 import current_tile
 import current_meeple
-
+import game_settings
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
@@ -31,7 +32,7 @@ DEFAULT_LINE_HEIGHT = 45
 
 class GameView(arcade.View):
 
-    def __init__(self, curr_tile, curr_meeple):
+    def __init__(self, curr_tile, curr_meeple, settings):
         super().__init__()
         # Initialize Background Imgae
         self.background = arcade.load_texture("images/wood.jpg")
@@ -43,14 +44,12 @@ class GameView(arcade.View):
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
+        self.settings = settings
 
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
-        global tile_x
-        global tile_y
-        global meeple_x
-        global meeple_y
+
         # Create sprite lists
         self.player_list = arcade.SpriteList()
         self.scoreboard_list = arcade.SpriteList()
@@ -141,10 +140,6 @@ class GameView(arcade.View):
         Normally, you'll call update() on the sprite lists that
         need it. """
 
-        global moved_meeple
-        global meeple_x
-        global meeple_y
-
         # if tile moved update with new location
         if self.curr_tile.get_moved():
             print("moved")
@@ -182,7 +177,7 @@ class GameView(arcade.View):
             self.dragging_sprite.center_x += delta_x
             self.dragging_sprite.center_y += delta_y
 
-            # Allow Sprite to Move With Mouse
+        # Allow Sprite to Move With Mouse
         if self.dragging_meeple:
             self.dragging_meeple.center_x += delta_x
             self.dragging_meeple.center_y += delta_y
@@ -218,9 +213,6 @@ class GameView(arcade.View):
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
 
-        global moved_meeple
-        global meeple_x
-        global meeple_y
         # If Left Mouse Is Relased stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
@@ -253,6 +245,159 @@ class GameView(arcade.View):
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
 
+class NameView(arcade.View):
+    """ View to Open Game"""
+    def __init__(self, settings):
+        super().__init__()
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        # creating horizontal boxes to allow
+        # user to pick number of players
+        self.h_box = (arcade.gui.
+                      UIBoxLayout(vertical=False))
+        back_button = (arcade.gui.
+                       UIFlatButton(text="BACK", width=100))
+        self.h_box.add(back_button.with_space_around(left=10))
+        back_button.on_click = self.on_back
+        next_button = (arcade.gui.
+                       UIFlatButton(text="NEXT", width=100))
+        self.h_box.add(next_button.with_space_around(left=10))
+        next_button.on_click = self.on_click_next
+        # Styling container for buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center",
+                anchor_y="center",
+                child=self.h_box,
+                style=None)
+        )
+        self.settings = settings
+
+    def on_show_view(self):
+        """ This is run once when we switch to this view """
+        arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
+        arcade.set_viewport(0,
+                            self.window.width,
+                            0,
+                            self.window.height)
+
+    def on_draw(self):
+        """ Draw this view """
+        self.clear()
+        arcade.draw_text("Enter Names",
+                         self.window.width / 2,
+                         self.window.height-200,
+                         arcade.color.WHITE,
+                         font_size=40,
+                         anchor_x="center",
+                         font_name="Kenney Future")
+
+        self.manager.draw()
+
+
+    def on_back(self, event):
+        """ If the user presses the mouse button, start the game. """
+        choose_view = ChooseView()
+        self.window.show_view(choose_view)
+
+    def on_click_next(self, event):
+        """ If the user presses the mouse button, start the game. """
+        self.curr_tile = current_tile.current_tile()
+        self.curr_meeple = current_meeple.current_meeple()
+        game_view = GameView(self.curr_tile, self.curr_meeple, self.settings)
+        game_view.setup()
+        self.window.show_view(game_view)
+
+class ChooseView(arcade.View):
+    """ View to Open Game"""
+    def __init__(self):
+        super().__init__()
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        # creating horizontal boxes to allow
+        # user to pick number of players
+        self.h_box = (arcade.gui.
+                      UIBoxLayout(vertical=False))
+        self.one_button = (arcade.gui.
+                      UIFlatButton(text="1", width=100))
+        self.h_box.add(self.one_button.with_space_around(left=10))
+        self.one_button.on_click = self.on_choose_one
+        two_button = (arcade.gui.
+                      UIFlatButton(text="2", width=100))
+        self.h_box.add(two_button.with_space_around(left=10))
+        two_button.on_click = self.on_choose_two
+        three_button = (arcade.gui.
+                        UIFlatButton(text="3", width=100))
+        self.h_box.add(three_button.with_space_around(left=10))
+        three_button.on_click = self.on_choose_three
+        four_button = (arcade.gui.
+                       UIFlatButton(text="4", width=100))
+        self.h_box.add(four_button.with_space_around(left=10))
+        four_button.on_click = self.on_choose_four
+        # Styling container for buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center",
+                anchor_y="center",
+                child=self.h_box,
+                style=None)
+        )
+        # creating instance of settings
+        self.settings = game_settings.game_settings()
+
+    def on_show_view(self):
+        """ This is run once when we switch to this view """
+        arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
+        arcade.set_viewport(0,
+                            self.window.width,
+                            0,
+                            self.window.height)
+
+    def on_draw(self):
+        """ Draw this view """
+        self.clear()
+        arcade.draw_text("How Many Players?",
+                         self.window.width / 2,
+                         self.window.height-200,
+                         arcade.color.WHITE,
+                         font_size=40,
+                         anchor_x="center",
+                         font_name="Kenney Future")
+
+        self.manager.draw()
+
+    def on_choose_one(self, event):
+        """ If the user presses the mouse button, the player count
+        will be set. """
+        self.settings.set_player_count(1)
+        print(self.settings.get_player_count())
+        name_view = NameView(self.settings)
+        self.window.show_view(name_view)
+
+    def on_choose_two(self, event):
+        """ If the user presses the mouse button, the player count
+        will be set. """
+        self.settings.set_player_count(2)
+        print(self.settings.get_player_count())
+        name_view = NameView(self.settings)
+        self.window.show_view(name_view)
+
+    def on_choose_three(self, event):
+        """ If the user presses the mouse button, the player count
+        will be set. """
+        self.settings.set_player_count(3)
+        print(self.settings.get_player_count())
+        name_view = NameView(self.settings)
+        self.window.show_view(name_view)
+
+    def on_choose_four(self, event):
+        """ If the user presses the mouse button, the player count
+        will be set. """
+        self.settings.set_player_count(4)
+        print(self.settings.get_player_count())
+        name_view = NameView(self.settings)
+        self.window.show_view(name_view)
+
 
 class OpenView(arcade.View):
     """ View to Open Game"""
@@ -268,27 +413,18 @@ class OpenView(arcade.View):
     def on_draw(self):
         """ Draw this view """
         self.clear()
-        arcade.draw_text("Welcome Screen",
+        arcade.draw_text("Carcassonne",
                          self.window.width / 2,
                          self.window.height / 2,
                          arcade.color.WHITE,
                          font_size=50,
                          anchor_x="center",
                          font_name="Kenney Future")
-        arcade.draw_text("How Many Players",
-                         self.window.width / 2,
-                         self.window.height / 2-75,
-                         arcade.color.WHITE,
-                         font_size=20,
-                         anchor_x="center",
-                         font_name="Kenney Future")
+
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the mouse button, start the game. """
-        self.curr_tile = current_tile.current_tile()
-        self.curr_meeple = current_meeple.current_meeple()
-        game_view = GameView(self.curr_tile, self.curr_meeple)
-        game_view.setup()
-        self.window.show_view(game_view)
+        choose_view = ChooseView()
+        self.window.show_view(choose_view)
 
 class ScoreboardView(arcade.View):
     """ View to show Scoreboard """
