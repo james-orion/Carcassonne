@@ -6,11 +6,13 @@ This file is part of Carcassonne board view
 """
 import arcade
 import arcade.gui
-
+from arcade import set_viewport
 
 import current_tile
 import current_meeple
 import game_settings
+
+
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
@@ -246,6 +248,12 @@ class NameView(arcade.View):
                                  "Player 2",
                                  "Player 3",
                                  "Player4"]
+
+        # TODO: call player class, add to the current players
+        # self.player_one = player.Player()
+        # self.player_two = player.Player()
+        # self.player_three = player.Player()
+        # self.player_four = player.Player()
         # creating horizontal boxes to allow
         # TODO: add text input for players, call player class
         self.v_box = (arcade.gui.

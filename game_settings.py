@@ -2,6 +2,7 @@
 This file, updates the current tile placement of the game
 
 """
+import player
 
 class game_settings:
 
