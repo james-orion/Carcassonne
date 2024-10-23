@@ -15,13 +15,13 @@ class Meeple:
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
-        # self.meeple_sprite = ?? - how should sprite be stored?
+        self.meeple_sprite = None
 
     
     # place Meeple on game board and store information about where it was placed
     def place_meeple(self, tile):
         # TODO validate location of meeple on tile - placed in center or one of the edges?
-        self.feature_type = None # TODO feature type is same as location of Meeple on tile
+        #self.feature_type = None TODO feature type is same as location of Meeple on tile
         if self.validate_placement(tile):
             self.is_placed = True
             # TODO determine what feature on tile Meeple is placed on
@@ -30,6 +30,7 @@ class Meeple:
                 self.orientation = "horizontal"
             else:
                 self.orientation = "vertical"
+                self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_sprite.png\""
             # TODO store location on game board and update tile it's placed on
             return True
 
@@ -50,7 +51,7 @@ class Meeple:
         # if placing as monk/nun, make sure only meeple in monestary
         if self.feature_type == "monestary":
             pass
-        # if placing farmer, make sure on field
+        # if placing farmer, make sure only Meeple on field
         else:
             pass
         return True
@@ -138,6 +139,11 @@ class Meeple:
         return self.orientation
     
 
+    # returns Meeple's sprite
+    def get_meeple_sprite(self):
+        return self.meeple_sprite
+    
+
     # setter methods
     # sets players Meeple blongs to
     def set_player(self, player):
@@ -167,6 +173,11 @@ class Meeple:
     # sets orientation of Meeple
     def set_orientation(self, orientation):
         self.orientation = orientation
+    
+
+    # set Meeple's sprite
+    def set_meeple_sprite(self, meeple_sprite):
+        self.meeple_sprite = meeple_sprite
     
 
 # test cases
@@ -229,7 +240,21 @@ def test_three():
     return "PASSED"
 
 
+# tests Meeple sprites
+def test_four():
+    test_meeple = Meeple("Jack", "m1", "red")
+    # manually set feature type
+    test_meeple.set_feature_type("city")
+    test_tile = None
+    test_meeple.place_meeple(test_tile)
+    if test_meeple.get_meeple_sprite() != "\"meeple_sprite/red_sprite.png\"":
+        return "FAILED incorrect file path"
+    # add test case for horizontal Meeples once sprite is added
+    return "PASSED"
+
+
 if __name__ == "__main__":
     print("test one: ", test_one())
     print("test two: ", test_two())
     print("test three: ", test_three())
+    print("test four: ", test_four())
