@@ -6,20 +6,11 @@ This file is part of Carcassonne board view
 """
 import arcade
 import arcade.gui
-from arcade import set_viewport
 
-import current_tile
-import current_meeple
-import game_settings
-
-
-<<<<<<< Updated upstream
-=======
 import current_tile
 import current_meeple
 import game_settings
 import tile
->>>>>>> Stashed changes
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
@@ -32,19 +23,12 @@ STEP = 50
 # Global Var: Sprite Scaling
 SPRITE_SCALING_PLAYER = 0.2
 SPRITE_SCALING_SCORE = 1
-<<<<<<< Updated upstream
-SPRITE_SCALING_TILE = 0.3
-=======
 SPRITE_SCALING_TILE = 0.5
->>>>>>> Stashed changes
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
@@ -61,11 +45,7 @@ class GameView(arcade.View):
         self.curr_meeple = curr_meeple
         # Initalize settings
         self.settings = settings
-<<<<<<< Updated upstream
-
-=======
         self.start_tile = tile.start
->>>>>>> Stashed changes
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -153,31 +133,11 @@ class GameView(arcade.View):
                          arcade.color.WHITE,
                          12,
                          font_name="Kenney Future")
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 
     def on_update(self, delta_time):
         """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it. """
-<<<<<<< Updated upstream
-
-        # if tile moved update with new location
-        if self.curr_tile.get_moved():
-            print("moved")
-            print(self.curr_tile.get_x())
-            self.tile_sprite.center_x = self.curr_tile.get_x()
-            self.tile_sprite.center_y = self.curr_tile.get_y()
-
-        # if meeple moved update with new location
-        if self.curr_meeple.get_moved():
-            self.tile_sprite.center_x = self.curr_meeple.get_x()
-            self.tile_sprite.center_y = self.curr_meeple.get_y()
-=======
->>>>>>> Stashed changes
 
         # if tile moved update with new location
         if self.curr_tile.get_moved():
@@ -221,11 +181,7 @@ class GameView(arcade.View):
             clicked_meeple = arcade.get_sprites_at_point((x, y),
                                                          self.player_list)
             new_meeple = arcade.get_sprites_at_point((x, y),
-<<<<<<< Updated upstream
-                                                         self.player_list)
-=======
                                                      self.player_list)
->>>>>>> Stashed changes
             # meeples, allow dragging
             if clicked_meeple:
                 self.dragging_meeple = new_meeple[0]
@@ -243,17 +199,10 @@ class GameView(arcade.View):
             self.dragging_meeple = None
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
-<<<<<<< Updated upstream
-                                                       self.scoreboard_list)
-            # If help was clicked then released
-            clicked_help = arcade.get_sprites_at_point((x, y),
-                                                          self.help_list)
-=======
                                                              self.scoreboard_list)
             # If help was clicked then released
             clicked_help = arcade.get_sprites_at_point((x, y),
                                                        self.help_list)
->>>>>>> Stashed changes
             # If help clicked
             if clicked_help:
                 # save sprites location
@@ -281,67 +230,9 @@ class GameView(arcade.View):
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
 
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 class NameView(arcade.View):
     """ View to Open Game"""
-    def __init__(self, settings):
-        super().__init__()
-        self.settings = settings
-        # create manager to deal with buttons
-        self.manager = arcade.gui.UIManager()
-        self.manager.enable()
-        self.input_field= []
-        self.input_field_text = ["Player 1",
-                                 "Player 2",
-                                 "Player 3",
-                                 "Player4"]
-
-        # TODO: call player class, add to the current players
-        # self.player_one = player.Player()
-        # self.player_two = player.Player()
-        # self.player_three = player.Player()
-        # self.player_four = player.Player()
-        # creating horizontal boxes to allow
-        # TODO: add text input for players, call player class
-        self.v_box = (arcade.gui.
-                      UIBoxLayout())
-        back_button = (arcade.gui.
-                       UIFlatButton(text="BACK", width=100))
-        self.v_box.add(back_button.with_space_around(left=10))
-        back_button.on_click = self.on_back
-        next_button = (arcade.gui.
-                       UIFlatButton(text="NEXT", width=100))
-        self.v_box.add(next_button.with_space_around(left=10))
-        next_button.on_click = self.on_click_next
-        # Create an text input field per player count
-        for i in range(self.settings.get_player_count()):
-            self.input_field.append(arcade.gui.UIInputText(
-                color=arcade.color.DARK_BLUE_GRAY,
-                font_size=24,
-                width=200,
-                text=self.input_field_text[i]))
-            self.v_box.add(self.input_field[i].
-                           with_space_around(left=10))
-        # Styling container for buttons
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(
-                anchor_x="center",
-                anchor_y="center",
-                child=self.v_box,
-                style=None)
-        )
-
-    def update_text(self):
-        """" This will update the text Input """
-        self.label.text = self.input_field.text
-        self.input_field_text = self.label.text
-
-    def on_click(self, event):
-        """ This triggers an event from being clicked"""
-        self.update_text()
 
     def __init__(self, settings):
         super().__init__()
@@ -412,11 +303,7 @@ class NameView(arcade.View):
         self.clear()
         arcade.draw_text("Enter Names",
                          self.window.width / 2,
-<<<<<<< Updated upstream
-                         self.window.height-50,
-=======
                          self.window.height - 50,
->>>>>>> Stashed changes
                          arcade.color.WHITE,
                          font_size=40,
                          anchor_x="center",
@@ -425,10 +312,6 @@ class NameView(arcade.View):
         self.manager.draw()
         # Draw input text per players chosen
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     def on_back(self, event):
         """ If the user presses button change view to go back to the st
             screen. """
@@ -446,15 +329,10 @@ class NameView(arcade.View):
         game_view.setup()
         self.window.show_view(game_view)
 
-<<<<<<< Updated upstream
-class ChooseView(arcade.View):
-    """ View to Open Game"""
-=======
 
 class ChooseView(arcade.View):
     """ View to Open Game"""
 
->>>>>>> Stashed changes
     def __init__(self):
         super().__init__()
         # Initalize manager for container and butttons
@@ -465,11 +343,7 @@ class ChooseView(arcade.View):
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.one_button = (arcade.gui.
-<<<<<<< Updated upstream
-                      UIFlatButton(text="1", width=100))
-=======
                            UIFlatButton(text="1", width=100))
->>>>>>> Stashed changes
         self.h_box.add(self.one_button.with_space_around(left=10))
         self.one_button.on_click = self.on_choose_one
 
@@ -513,11 +387,7 @@ class ChooseView(arcade.View):
         self.clear()
         arcade.draw_text("How Many Players?",
                          self.window.width / 2,
-<<<<<<< Updated upstream
-                         self.window.height-200,
-=======
                          self.window.height - 200,
->>>>>>> Stashed changes
                          arcade.color.WHITE,
                          font_size=40,
                          anchor_x="center",
@@ -586,10 +456,7 @@ class OpenView(arcade.View):
             and change view"""
         choose_view = ChooseView()
         self.window.show_view(choose_view)
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
 class ScoreboardView(arcade.View):
     """ View to show Scoreboard """
@@ -632,20 +499,6 @@ class ScoreboardView(arcade.View):
                          font_name="Kenney Future")
         # TODO: Player and Numbers maybe in for loop
         # for i in player.player_count
-<<<<<<< Updated upstream
-            # arcade.draw_text(player.get_name(), 150,
-            #                  self.window.height - 150,
-            #                  arcade.color.BLACK,
-            #                  font_size=20,
-            #                  anchor_x="left",
-            #                  font_name="Kenney Future")
-            # arcade.draw_text(player.get_score(), 400,
-            #                  self.window.height - 150,
-            #                  arcade.color.BLACK,
-            #                  font_size=20,
-            #                  anchor_x="left",
-            #                  font_name="Kenney Future")
-=======
         # arcade.draw_text(player.get_name(), 150,
         #                  self.window.height - 150,
         #                  arcade.color.BLACK,
@@ -658,7 +511,6 @@ class ScoreboardView(arcade.View):
         #                  font_size=20,
         #                  anchor_x="left",
         #                  font_name="Kenney Future")
->>>>>>> Stashed changes
         arcade.draw_text("Player 1", 150,
                          self.window.height - 150,
                          arcade.color.BLACK,
@@ -684,11 +536,7 @@ class ScoreboardView(arcade.View):
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
-<<<<<<< Updated upstream
-        
-=======
 
->>>>>>> Stashed changes
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
         # reset boolean for moved sprites for game view
