@@ -11,11 +11,11 @@ class current_meeple:
         self.moved = False
 
     def set_x(self, x):
-        """ This sets the curent tile placement"""
+        """ This sets the curent meeple placement"""
         self.meeple_x = x
 
     def set_y(self, y):
-        """ This sets the current tile placement"""
+        """ This sets the current meeple placement"""
         self.meeple_y = y
 
     def set_moved(self, moved):
@@ -23,15 +23,15 @@ class current_meeple:
         self.moved = moved
 
     def get_x(self):
-        """"   This returns the current tile placement x"""
+        """"   This returns the current meeple placement x"""
         return self.meeple_x
 
     def get_y(self):
-        """ This returns the current tile placement y"""
+        """ This returns the current meeple placement y"""
         return self.meeple_y
 
     def get_moved(self):
-        """"   This returns the moved boolean """
+        """"   This returns the meeple boolean """
         return self.moved
 
 
