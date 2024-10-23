@@ -114,6 +114,7 @@ class GameView(arcade.View):
                          30,
                          font_name="Kenney Future")
 
+
         # Drawing Text, For Meeples. Need Meepl count from player?
         start_meeple_x = 10
         start_meeple_y = 50
