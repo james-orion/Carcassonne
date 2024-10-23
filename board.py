@@ -254,15 +254,17 @@ class NameView(arcade.View):
         # self.player_four = player.Player()
         # creating horizontal boxes to allow
         # TODO: add text input for players, call player class
+        self.h_box = (arcade.gui.
+                      UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
                       UIBoxLayout())
         back_button = (arcade.gui.
                        UIFlatButton(text="BACK", width=100))
-        self.v_box.add(back_button.with_space_around(left=10))
+        self.h_box.add(back_button.with_space_around(right=200))
         back_button.on_click = self.on_back
         next_button = (arcade.gui.
                        UIFlatButton(text="NEXT", width=100))
-        self.v_box.add(next_button.with_space_around(left=10))
+        self.h_box.add(next_button.with_space_around(left=200))
         next_button.on_click = self.on_click_next
         # Create an text input field per player count
         for i in range(self.settings.get_player_count()):
@@ -272,13 +274,18 @@ class NameView(arcade.View):
                 width=200,
                 text=self.input_field_text[i]))
             self.v_box.add(self.input_field[i].
-                           with_space_around(left=10))
+                           with_space_around(bottom=20))
         # Styling container for buttons
         self.manager.add(
             arcade.gui.UIAnchorWidget(
                 anchor_x="center",
                 anchor_y="center",
                 child=self.v_box,
+                style=None)
+        )
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                child=self.h_box,
                 style=None)
         )
 
