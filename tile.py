@@ -20,13 +20,13 @@ class Tile:
     # Optionally tile contains monastery or village
     # Each of the fields is a Side
 
-    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, building: Building = 'NONE', shield = False, is_connected = True, image: String):
+    def __init__(self, top: Side, bottom: Side, left: Side, right: Side, image, building: Building = Building['NONE'], shield = False, is_connected = True):
         """Constructor
                 Takes in four Sides of a tile: top, bottom, left, right, and a building
                 These are Enums,
                     Side has options, 'ROAD', 'CITY', 'FIELD',
                     Building has options, 'VILLAGE', 'MONASTERY', 'NONE'
-                Also has a meeple that can be played on the tile """
+                Also has a string representing the image of the tile """
         self.top = top
         self.bottom = bottom
         self.left = left
@@ -61,9 +61,13 @@ class Tile:
         """Method to check if the tile has a shield"""
         return self.shield
 
-    def is_connected(self):
+    def check_is_connected(self):
         """Method to check if the tile has a connected city"""
         return self.is_connected
+
+    def get_image(self):
+        """Method to return the image associated with a tile"""
+        return self.image
 
     # Setters
     def set_top(self, new_top: Side):
@@ -101,6 +105,10 @@ class Tile:
     def not_connected(self):
         """Method to set a city as not connected in a tile"""
         self.is_connected = False
+
+    def set_image(self, new_image):
+        """Method to set the image associated with a tile"""
+        self.image = new_image
 
     # Function to rotate tiles
     def rotate_tile(self):
