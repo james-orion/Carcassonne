@@ -6,7 +6,6 @@ This file is part of Carcassonne board view
 """
 import arcade
 import arcade.gui
-from arcade import set_viewport
 
 import current_tile
 import current_meeple
