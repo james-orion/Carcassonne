@@ -28,6 +28,7 @@ class Meeple:
             # self.feature_type = 
             if self.feature_type == "field":
                 self.orientation = "horizontal"
+                self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_horizontal_sprite.png\""
             else:
                 self.orientation = "vertical"
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_sprite.png\""
@@ -212,12 +213,12 @@ def test_two():
         return "FAILED doesn't update horizontal orientation"
     
     test_meeple_2 = Meeple("Jack", "m2", "red")
-    test_meeple_1.set_feature_type("road")
+    test_meeple_2.set_feature_type("road")
     test_tile = None
-    test_meeple_1.place_meeple(test_tile)
-    if test_meeple_1.get_is_placed() != True:
+    test_meeple_2.place_meeple(test_tile)
+    if test_meeple_2.get_is_placed() != True:
         return "FAILED doesn't update placement boolean"
-    if test_meeple_1.get_orientation() != "vertical":
+    if test_meeple_2.get_orientation() != "vertical":
         return "FAILED doesn't update vertical orientation"
     return "PASSED"
 
@@ -242,14 +243,20 @@ def test_three():
 
 # tests Meeple sprites
 def test_four():
-    test_meeple = Meeple("Jack", "m1", "red")
+    # TODO finish implementing horizontal sprite
+    test_meeple_1 = Meeple("Jack", "m1", "red")
     # manually set feature type
-    test_meeple.set_feature_type("city")
+    test_meeple_1.set_feature_type("city")
     test_tile = None
-    test_meeple.place_meeple(test_tile)
-    if test_meeple.get_meeple_sprite() != "\"meeple_sprite/red_sprite.png\"":
-        return "FAILED incorrect file path"
-    # add test case for horizontal Meeples once sprite is added
+    test_meeple_1.place_meeple(test_tile)
+    if test_meeple_1.get_meeple_sprite() != "\"/meeple_sprites/red_sprite.png\"":
+        return "FAILED incorrect file path for vertical sprite"
+    
+    test_meeple_2 = Meeple("Jack", "m2", "red")
+    test_meeple_2.set_feature_type("field")
+    test_meeple_2.place_meeple(test_tile)
+    if test_meeple_2.get_meeple_sprite() != "\"/meeple_sprites/red_horizontal_sprite.png\"":
+        return "FAILED incorrect file path for horizontal sprite"
     return "PASSED"
 
 
