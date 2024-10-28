@@ -2,10 +2,6 @@
 
 This file is part of Carcassonne board view
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 """
 import arcade
 import arcade.gui
@@ -297,8 +293,6 @@ class GameView(arcade.View):
                 self.window.show_view(scoreboard_view)
 
 
-<<<<<<< Updated upstream
-=======
 # view to allow user to select color
 class ColorView(arcade.View):
     def __init__(self, settings):
@@ -384,7 +378,6 @@ class ColorView(arcade.View):
             self.window.show_view(game_view)
 
 
->>>>>>> Stashed changes
 class NameView(arcade.View):
     """ View to Open Game"""
 
@@ -400,17 +393,7 @@ class NameView(arcade.View):
                                  "Player 3",
                                  "Player4"]
 
-<<<<<<< Updated upstream
-        # TODO: call player class, add to the current players
-        self.player_one = player.Player()
-        self.player_two = player.Player()
-        self.player_three = player.Player()
-        self.player_four = player.Player()
         # creating horizontal boxes to allow
-        # TODO: add text input for players, call player class
-=======
-        # creating horizontal boxes to allow
->>>>>>> Stashed changes
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
@@ -450,12 +433,7 @@ class NameView(arcade.View):
         """" This will update the text Input """
         self.label.text = self.input_field.text
         self.input_field_text = self.label.text
-<<<<<<< Updated upstream
-        print("HIIIIIIIIIIIII")
-        print(self.input_field)
-=======
 
->>>>>>> Stashed changes
 
     def on_click(self, event):
         """ This triggers text to be updated from
@@ -492,19 +470,6 @@ class NameView(arcade.View):
 
     def on_click_next(self, event):
         """ If the user presses the  button, start the game. """
-<<<<<<< Updated upstream
-        # TODO: create player object and add to settings
-        self.player_one.set_name(self.input_field_text[0])
-        self.settings.add_current_players(self.player_one)
-        for i in range(len(self.settings.current_players)):
-            print("BIIIIIIIIIIIIIIIIIIIIII")
-            print(self.settings.current_players[i])
-        # change screen
-        self.curr_tile = current_tile.current_tile()
-        self.curr_meeple = current_meeple.current_meeple()
-        game_view = GameView(self.curr_tile, self.curr_meeple, self.settings)
-        game_view.setup()
-=======
         # Add players to settings
         for i in range(self.settings.get_player_count()):
             p = player.Player()
@@ -513,7 +478,6 @@ class NameView(arcade.View):
 
         # change screen to ColorView
         game_view = ColorView(self.settings)
->>>>>>> Stashed changes
         self.window.show_view(game_view)
 
 
