@@ -43,9 +43,41 @@ class GameView(arcade.View):
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
+        # create done button
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+        # creating horizontal boxe
+        self.h_box = (arcade.gui.
+                      UIBoxLayout(vertical=False))
+        self.done_button = (arcade.gui.
+                           UIFlatButton(text="DONE", width=100))
+        # add box to manager
+        self.h_box.add(self.done_button.with_space_around( top=400))
+        # create event for done
+        self.done_button.on_click = self.on_done
+        # Styling container for button
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="right",
+                anchor_y="bottom",
+                child=self.h_box,
+                style=None)
+        )
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                child=self.h_box,
+                style=None)
+        )
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
+        self.tile_list = tile.tiles
+        # load the tiles into settings for first round
+        if settings.current_round == 1:
+            for i in self.tile_list:
+                self.settings.tiles.append(i)
+
+
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -103,6 +135,8 @@ class GameView(arcade.View):
         self.help_list.draw()
         self.tile_list.draw()
         self.player_list.draw()
+        # Drawing Button
+        self.manager.draw()
         # Drawing Text, Need From Player Class?
         start_x = 500
         start_y = 75
@@ -115,7 +149,7 @@ class GameView(arcade.View):
                          font_name="Kenney Future")
 
 
-        # Drawing Text, For Meeples. Need Meepl count from player?
+        # Drawing Text, For Meeples. Need Meeple count from player?
         start_meeple_x = 10
         start_meeple_y = 50
         arcade.draw_text("# Meeples",
@@ -151,6 +185,26 @@ class GameView(arcade.View):
         if self.curr_meeple.get_moved():
             self.tile_sprite.center_x = self.curr_meeple.get_x()
             self.tile_sprite.center_y = self.curr_meeple.get_y()
+    def on_done(self, event):
+        """ If the user presses the button, the logic will
+        be checked, the round will increment if player 4 is
+        current player, otherwise it will increment next
+        player
+        """
+        # get player count for indexing
+        count = self.settings.get_player_count() - 1
+        # if the last player to go, increment current round
+        if self.settings.get_current_player() == self.settings.current_players[count]:
+            round = self.settings.get_current_round() + 1
+            self.settings.set_current_round(round)
+        # get current player
+        current_player = self.settings.get_current_player()
+        # increment player to next player in the list
+        for player in self.settings.current_players:
+            if current_player == self.settings.current_players[player]:
+                current_player = self.settings.current_players[player+1]
+                self.settings.set_current_player(current_player)
+                print(current_player)
 
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
@@ -254,15 +308,17 @@ class NameView(arcade.View):
         # self.player_four = player.Player()
         # creating horizontal boxes to allow
         # TODO: add text input for players, call player class
+        self.h_box = (arcade.gui.
+                      UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
                       UIBoxLayout())
         back_button = (arcade.gui.
                        UIFlatButton(text="BACK", width=100))
-        self.v_box.add(back_button.with_space_around(left=10))
+        self.h_box.add(back_button.with_space_around(right=200))
         back_button.on_click = self.on_back
         next_button = (arcade.gui.
                        UIFlatButton(text="NEXT", width=100))
-        self.v_box.add(next_button.with_space_around(left=10))
+        self.h_box.add(next_button.with_space_around(left=200))
         next_button.on_click = self.on_click_next
         # Create an text input field per player count
         for i in range(self.settings.get_player_count()):
@@ -272,13 +328,18 @@ class NameView(arcade.View):
                 width=200,
                 text=self.input_field_text[i]))
             self.v_box.add(self.input_field[i].
-                           with_space_around(left=10))
+                           with_space_around(bottom=20))
         # Styling container for buttons
         self.manager.add(
             arcade.gui.UIAnchorWidget(
                 anchor_x="center",
                 anchor_y="center",
                 child=self.v_box,
+                style=None)
+        )
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                child=self.h_box,
                 style=None)
         )
 
@@ -288,7 +349,8 @@ class NameView(arcade.View):
         self.input_field_text = self.label.text
 
     def on_click(self, event):
-        """ This triggers an event from being clicked"""
+        """ This triggers text to be updated from
+                being clicked"""
         self.update_text()
 
     def on_show_view(self):
