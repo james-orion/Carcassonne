@@ -5,7 +5,7 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-import arcade, player
+# TODO add villages
 
 class Meeple:
     def __init__(self, player, name, color):
@@ -19,21 +19,30 @@ class Meeple:
 
     
     # place Meeple on game board and store information about where it was placed
-    def place_meeple(self, tile):
-        # TODO validate location of meeple on tile - placed in center or one of the edges?
-        #self.feature_type = None TODO feature type is same as location of Meeple on tile
+    def place_meeple(self, tile, user_selection):
+        if user_selection == "TOP":
+            self.feature_type == tile.get_top()
+        elif user_selection == "LEFT":
+            self.feature_type == tile.get_left()
+        elif user_selection == "RIGHT":
+            self.feature_type == tile.get_right()
+        elif user_selection == "BOTTOM":
+            self.feature_type == tile.get_bottom()
+        else:
+            self.feature_type == tile.get_building()
+
         if self.validate_placement(tile):
             self.is_placed = True
-            # TODO determine what feature on tile Meeple is placed on
-            # self.feature_type = 
             if self.feature_type == "field":
                 self.orientation = "horizontal"
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_horizontal_sprite.png\""
             else:
                 self.orientation = "vertical"
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_sprite.png\""
-            # TODO store location on game board and update tile it's placed on
             return True
+        else:
+            self.feature_type = None
+            return False
 
     
     # validates that user's placement of Meeple is allowed
@@ -44,13 +53,13 @@ class Meeple:
         # place one
 
         # if placing as highwayman, make sure only meeple on stretch of road
-        if self.feature_type == "road":
+        if self.feature_type == "ROAD":
             pass
         # if placing as knight, make sure only meeple in city
-        if self.feature_type == "city":
+        if self.feature_type == "CITY":
             pass
         # if placing as monk/nun, make sure only meeple in monestary
-        if self.feature_type == "monestary":
+        if self.feature_type == "MONASTERY":
             pass
         # if placing farmer, make sure only Meeple on field
         else:
@@ -65,13 +74,13 @@ class Meeple:
         # through list of tiles to determine total number of points
 
         # calculate points won by meeple in feature
-        if self.feature_type == "road":
+        if self.feature_type == "ROAD":
             # points = number of tiles in the complete road
             pass
-        elif self.feature_type == "city":
+        elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
             pass
-        elif self.feature_type == "monestary":
+        elif self.feature_type == "MONASTERY":
             points = 9
         else:
             return 0
@@ -88,13 +97,13 @@ class Meeple:
     def end_of_game_scoring(self):
         points = 0
         # determine of feature is partially complete
-        if self.feature_type == "road":
+        if self.feature_type == "ROAD":
             # points = number of tiles in the partial road
             pass
-        elif self.feature_type == "city":
+        elif self.feature_type == "CITY":
             # points = 1 per each tile in partial city, extra 1 if tile with coat of arms
             pass
-        elif self.feature_type == "monestary":
+        elif self.feature_type == "MONASTERY":
             # points = number of tiles surrounding monestary + 1 for monestary itself
             pass
         else:
@@ -146,6 +155,7 @@ class Meeple:
     
 
     # setter methods
+
     # sets players Meeple blongs to
     def set_player(self, player):
         self.player = player
@@ -206,7 +216,8 @@ def test_two():
     # manually sets feautre type until implemented
     test_meeple_1.set_feature_type("field")
     test_tile = None
-    test_meeple_1.place_meeple(test_tile)
+    user_selection = None
+    test_meeple_1.place_meeple(test_tile, user_selection)
     if test_meeple_1.get_is_placed() != True:
         return "FAILED doesn't update placement boolean"
     if test_meeple_1.get_orientation() != "horizontal":
@@ -214,8 +225,7 @@ def test_two():
     
     test_meeple_2 = Meeple("Jack", "m2", "red")
     test_meeple_2.set_feature_type("road")
-    test_tile = None
-    test_meeple_2.place_meeple(test_tile)
+    test_meeple_2.place_meeple(test_tile, user_selection)
     if test_meeple_2.get_is_placed() != True:
         return "FAILED doesn't update placement boolean"
     if test_meeple_2.get_orientation() != "vertical":
@@ -229,7 +239,8 @@ def test_three():
     # manually set feature again
     test_meeple.set_feature_type("monestary")
     test_tile = None
-    test_meeple.place_meeple(test_tile)
+    user_selection = None
+    test_meeple.place_meeple(test_tile, user_selection)
     if test_meeple.meeple_score() != 9:
         return "FAILED scoring failed"
     if test_meeple.get_is_placed() != False:
@@ -243,18 +254,18 @@ def test_three():
 
 # tests Meeple sprites
 def test_four():
-    # TODO finish implementing horizontal sprite
     test_meeple_1 = Meeple("Jack", "m1", "red")
     # manually set feature type
     test_meeple_1.set_feature_type("city")
     test_tile = None
-    test_meeple_1.place_meeple(test_tile)
+    user_selection = None
+    test_meeple_1.place_meeple(test_tile, user_selection)
     if test_meeple_1.get_meeple_sprite() != "\"/meeple_sprites/red_sprite.png\"":
         return "FAILED incorrect file path for vertical sprite"
     
     test_meeple_2 = Meeple("Jack", "m2", "red")
     test_meeple_2.set_feature_type("field")
-    test_meeple_2.place_meeple(test_tile)
+    test_meeple_2.place_meeple(test_tile, user_selection)
     if test_meeple_2.get_meeple_sprite() != "\"/meeple_sprites/red_horizontal_sprite.png\"":
         return "FAILED incorrect file path for horizontal sprite"
     return "PASSED"
