@@ -20,7 +20,8 @@ class Player:
         # Set player name to what is entered 
         if name is None:
             # If no name is provided, prompt the user for input
-            self.name = input("Enter the player's name: ")
+            self.name = "Player"
+            #self.name = input("Enter the player's name: ")
         else:
             self.name = name
             
@@ -46,7 +47,7 @@ class Player:
                 meeple.place_meeple(tile)
                 return True
         # If no meeples are available, print warning message
-        print(f"{self.name}: you have no meeples left to place.")
+        # print(f"{self.name}: you have no meeples left to place.")
         return False
 
     """ Function to return a meeple to the player's hand and add points to the player's score. """
@@ -59,8 +60,10 @@ class Player:
                 # Add the earned points to player's total score 
                 self.set_score(earned_points + points)
                 return True
-        print(f"{self.name}: No meeples to return.")
+        # print(f"{self.name}: No meeples to return.")
         return False
+    def set_name(self, name):
+        self.name = name
     
     """ Calculate end-of-game points based on meeples still placed. """
     def end_of_game_scoring(self):
