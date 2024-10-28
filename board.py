@@ -1,5 +1,6 @@
 """
 This file is part of Carcassonne board view
+
 """
 import arcade
 import arcade.gui
@@ -32,6 +33,7 @@ WIDTH = 60
 HEIGHT = 60
 BOARD_X = 400
 BOARD_Y = 400
+
 
 class GameView(arcade.View):
 
@@ -81,6 +83,7 @@ class GameView(arcade.View):
             for i in self.tile_list:
                 self.settings.tiles.append(i)
 
+
         # Add tile grid
         self.grid_sprite_list = arcade.SpriteList()
 
@@ -110,6 +113,7 @@ class GameView(arcade.View):
                 sprite.center_y = y
                 self.grid_sprite_list.append(sprite)
                 self.grid_sprites[row].append(sprite)
+
 
 
     def setup(self):
@@ -149,7 +153,6 @@ class GameView(arcade.View):
         self.help_sprite.center_x = 750
         self.help_sprite.center_y = 550
         self.help_list.append(self.help_sprite)
-
 
     def on_draw(self):
         """ Render the screen. """
@@ -203,8 +206,6 @@ class GameView(arcade.View):
                          arcade.color.WHITE,
                          12,
                          font_name="Kenney Future")
-
-
 
 
     def on_update(self, delta_time):
@@ -355,7 +356,7 @@ class ColorView(arcade.View):
         self.v_box.add(next_button.with_space_around(left=10))
         next_button.on_click = self.on_click_next
         self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center", anchor_y="center",align_y=-160, child=self.v_box, style=None))
-    
+
     def on_click(self):
         self.update_text()
 
@@ -382,17 +383,21 @@ class ColorView(arcade.View):
             for j in range(len(self.selected_colors)):
                 x_offset = 120 + self.color_list_string.index(self.selected_colors[j]) * 150
                 arcade.draw_text(f"Player {j + 1}", x_offset, SCREEN_HEIGHT // 2 - 80, arcade.color.WHITE, 16, font_name="Kenney Future") # TODO replace with actual name
+
         self.manager.draw() 
+
 
     def on_key_press(self, key, modifiers):
         # if key 1-4 is pressed, assign the corresponding color to that player
         if key in (arcade.key.KEY_1, arcade.key.KEY_2, arcade.key.KEY_3, arcade.key.KEY_4) and len(self.selected_colors) < self.num_players:
+
             color_index = key - arcade.key.KEY_1 
+
             if self.color_list_string[color_index] in self.available_colors:
                 player_choice = self.color_list_string[color_index]
                 self.available_colors.remove(player_choice)
                 self.selected_colors.append(player_choice)
-    
+
     # undos last color selection, or returns to name selection if no colors have been chosen
     def on_back(self, event):
         if len(self.selected_colors) == 0:
@@ -402,7 +407,7 @@ class ColorView(arcade.View):
             last_color_choice = self.selected_colors[-1]
             self.selected_colors.remove(last_color_choice)
             self.available_colors.append(last_color_choice)
-    
+
     def on_click_next(self, event):
         # TODO randomly assign remaining colors to computer players
         # TODO assign colors to players once list is implemented
@@ -431,13 +436,10 @@ class NameView(arcade.View):
                                  "Player 3",
                                  "Player4"]
 
-        # TODO: call player class, add to the current players
-        self.player_one = player.Player()
-        self.player_two = player.Player()
-        self.player_three = player.Player()
-        self.player_four = player.Player()
+
         # creating horizontal boxes to allow
-        # TODO: add text input for players, call player class
+
+
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
@@ -477,8 +479,7 @@ class NameView(arcade.View):
         """" This will update the text Input """
         self.label.text = self.input_field.text
         self.input_field_text = self.label.text
-        print("HIIIIIIIIIIIII")
-        print(self.input_field)
+
 
     def on_click(self, event):
         """ This triggers text to be updated from
@@ -515,17 +516,13 @@ class NameView(arcade.View):
 
     def on_click_next(self, event):
         """ If the user presses the  button, start the game. """
-        # TODO: create player object and add to settings
-        self.player_one.set_name(self.input_field_text[0])
-        self.settings.add_current_players(self.player_one)
-        for i in range(len(self.settings.current_players)):
-            print("BIIIIIIIIIIIIIIIIIIIIII")
-            print(self.settings.current_players[i])
-        # change screen
-        #self.curr_tile = current_tile.current_tile()
-        #self.curr_meeple = current_meeple.current_meeple()
-        #game_view = GameView(self.curr_tile, self.curr_meeple, self.settings)
-        #game_view.setup()
+
+        # Add players to settings
+        for i in range(self.settings.get_player_count()):
+            p = player.Player()
+            p.set_name(self.input_field[i].text)
+            self.settings.add_current_players(p)
+
         game_view = ColorView(self.settings)
         self.window.show_view(game_view)
 
