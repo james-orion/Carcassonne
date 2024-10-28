@@ -1,7 +1,5 @@
 """
-
 This file is part of Carcassonne board view
-
 """
 import arcade
 import arcade.gui
@@ -27,13 +25,19 @@ SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
-
+ROW_COUNT = 6
+COLUMN_COUNT = 6
+MARGIN = 5
+WIDTH = 60
+HEIGHT = 60
+BOARD_X = 400
+BOARD_Y = 400
 
 class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
         super().__init__()
-        # Initialize Background Imgae
+        # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
         # Initalize sprite lists
         self.player_list = None
@@ -77,6 +81,35 @@ class GameView(arcade.View):
             for i in self.tile_list:
                 self.settings.tiles.append(i)
 
+        # Add tile grid
+        self.grid_sprite_list = arcade.SpriteList()
+
+        # This will be a two-dimensional grid of sprites to mirror the two
+        # dimensional grid of numbers. This points to the SAME sprites that are
+        # in grid_sprite_list, just in a 2d manner.
+        self.grid_sprites = []
+
+        self.grid = []
+        for row in range(ROW_COUNT):
+            # Add an empty array that will hold each cell
+            # in this row
+            self.grid.append([])
+            for column in range(COLUMN_COUNT):
+                self.grid[row].append(0)  # Append a cell
+
+        # Create a list of solid-color sprites to represent each grid location
+        for row in range(ROW_COUNT):
+            self.grid_sprites.append([])
+            for column in range(COLUMN_COUNT):
+                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 200
+                y = row * (HEIGHT + MARGIN) + (HEIGHT / 2 + MARGIN) + 150
+                #TODO: Update this when a tile is placed.
+                sprite_color = arcade.make_transparent_color([0,0,0], 100)
+                sprite = arcade.SpriteSolidColor(WIDTH, HEIGHT, sprite_color)
+                sprite.center_x = x
+                sprite.center_y = y
+                self.grid_sprite_list.append(sprite)
+                self.grid_sprites[row].append(sprite)
 
 
     def setup(self):
@@ -117,6 +150,7 @@ class GameView(arcade.View):
         self.help_sprite.center_y = 550
         self.help_list.append(self.help_sprite)
 
+
     def on_draw(self):
         """ Render the screen. """
         # Start With a Fresh Screen
@@ -131,6 +165,7 @@ class GameView(arcade.View):
                                       SCREEN_HEIGHT,
                                       self.background)
         # Drawing Sprite Lists
+        self.grid_sprite_list.draw()
         self.scoreboard_list.draw()
         self.help_list.draw()
         self.tile_list.draw()
@@ -168,6 +203,9 @@ class GameView(arcade.View):
                          arcade.color.WHITE,
                          12,
                          font_name="Kenney Future")
+
+
+
 
     def on_update(self, delta_time):
         """ All the logic to move, and the game logic goes here.
