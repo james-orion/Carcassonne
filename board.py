@@ -1,7 +1,5 @@
 """
-
 This file is part of Carcassonne board view
-
 """
 import arcade
 import arcade.gui
@@ -32,7 +30,7 @@ class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
         super().__init__()
-        # Initialize Background Imgae
+        # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
         # Initalize sprite lists
         self.player_list = None

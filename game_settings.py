@@ -14,7 +14,7 @@ class game_settings:
         self.current_player = ""
 
     def set_current_round(self, round):
-        """ This sets the curent round """
+        """ This sets the current round """
         self.current_round = round
 
     def add_current_players(self, player):
