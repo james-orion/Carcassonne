@@ -10,6 +10,7 @@ import current_tile
 import current_meeple
 import game_settings
 import tile
+import player
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
@@ -190,6 +191,7 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
+        print(self.settings.get_player_count())
         # get player count for indexing
         count = self.settings.get_player_count() - 1
         # if the last player to go, increment current round
@@ -199,7 +201,7 @@ class GameView(arcade.View):
         # get current player
         current_player = self.settings.get_current_player()
         # increment player to next player in the list
-        for player in self.settings.current_players:
+        for player in range(len(self.settings.current_players)):
             if current_player == self.settings.current_players[player]:
                 current_player = self.settings.current_players[player+1]
                 self.settings.set_current_player(current_player)
@@ -216,14 +218,20 @@ class GameView(arcade.View):
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """ Called whenever the mouse moves. """
         # Allow Sprite to Move With Mouse
-        if self.dragging_sprite:
-            self.dragging_sprite.center_x += delta_x
-            self.dragging_sprite.center_y += delta_y
+        try:
+            if self.dragging_sprite:
+                self.dragging_sprite.center_x += delta_x
+                self.dragging_sprite.center_y += delta_y
+        except AttributeError:
+            pass
 
         # Allow Sprite to Move With Mouse
-        if self.dragging_meeple:
-            self.dragging_meeple.center_x += delta_x
-            self.dragging_meeple.center_y += delta_y
+        try:
+            if self.dragging_meeple:
+                self.dragging_meeple.center_x += delta_x
+                self.dragging_meeple.center_y += delta_y
+        except AttributeError:
+            pass
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Called when the user presses a mouse button. """
@@ -386,10 +394,10 @@ class NameView(arcade.View):
                                  "Player4"]
 
         # TODO: call player class, add to the current players
-        # self.player_one = player.Player()
-        # self.player_two = player.Player()
-        # self.player_three = player.Player()
-        # self.player_four = player.Player()
+        self.player_one = player.Player()
+        self.player_two = player.Player()
+        self.player_three = player.Player()
+        self.player_four = player.Player()
         # creating horizontal boxes to allow
         # TODO: add text input for players, call player class
         self.h_box = (arcade.gui.
@@ -431,6 +439,8 @@ class NameView(arcade.View):
         """" This will update the text Input """
         self.label.text = self.input_field.text
         self.input_field_text = self.label.text
+        print("HIIIIIIIIIIIII")
+        print(self.input_field)
 
     def on_click(self, event):
         """ This triggers text to be updated from
@@ -468,7 +478,11 @@ class NameView(arcade.View):
     def on_click_next(self, event):
         """ If the user presses the  button, start the game. """
         # TODO: create player object and add to settings
-
+        self.player_one.set_name(self.input_field_text[0])
+        self.settings.add_current_players(self.player_one)
+        for i in range(len(self.settings.current_players)):
+            print("BIIIIIIIIIIIIIIIIIIIIII")
+            print(self.settings.current_players[i])
         # change screen
         #self.curr_tile = current_tile.current_tile()
         #self.curr_meeple = current_meeple.current_meeple()
