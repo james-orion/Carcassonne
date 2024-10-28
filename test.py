@@ -24,7 +24,7 @@ def tile_test_setters():
     tile1.not_connected()
     if tile1.is_connected:
         print('Tiles Test 1 FAILED: Error with not_connected method')
-    tile1.set_image("img.png")
+    tile1.set_image("images/img.png")
     if tile1.image != 'images/img.png':
         print('Tiles Test 1 FAILED: Error with set_image method')
 
