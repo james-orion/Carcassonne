@@ -7,18 +7,24 @@ import player
 class game_settings:
 
     def __init__(self):
-        self.current_round = 0
+        self.current_round = 1
         self.current_players = []
         self.player_count = 0
+        self.tiles = []
+        self.current_player = ""
+        self.placed_tiles = []
 
     def set_current_round(self, round):
-        """ This sets the curent round """
-        self.current_round= round
-
+        """ This sets the current round """
+        self.current_round = round
 
     def add_current_players(self, player):
         """ This adds players """
         self.current_players.append(player)
+
+    def set_current_player(self, player):
+        """ This sets current player """
+        self.current_player = player
 
     def set_player_count(self, count):
         """ This sets player count"""
@@ -36,6 +42,16 @@ class game_settings:
         """"   This returns player count """
         return self.player_count
 
+    def get_current_player(self):
+        """"   This returns player count """
+        return self.current_player
+
+    def get_current_tiles(self):
+        return self.placed_tiles
+
+    def place_tile(self, tile):
+        """ Adds a tile to the list of placed tiles"""
+        self.placed_tiles.append(tile)
 
 
 

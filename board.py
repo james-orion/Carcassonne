@@ -1,5 +1,4 @@
 """
-
 This file is part of Carcassonne board view
 
 """
@@ -27,13 +26,20 @@ SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
+ROW_COUNT = 6
+COLUMN_COUNT = 6
+MARGIN = 5
+WIDTH = 60
+HEIGHT = 60
+BOARD_X = 400
+BOARD_Y = 400
 
 
 class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
         super().__init__()
-        # Initialize Background Imgae
+        # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
         # Initalize sprite lists
         self.player_list = None
@@ -76,6 +82,37 @@ class GameView(arcade.View):
         if settings.current_round == 1:
             for i in self.tile_list:
                 self.settings.tiles.append(i)
+
+
+        # Add tile grid
+        self.grid_sprite_list = arcade.SpriteList()
+
+        # This will be a two-dimensional grid of sprites to mirror the two
+        # dimensional grid of numbers. This points to the SAME sprites that are
+        # in grid_sprite_list, just in a 2d manner.
+        self.grid_sprites = []
+
+        self.grid = []
+        for row in range(ROW_COUNT):
+            # Add an empty array that will hold each cell
+            # in this row
+            self.grid.append([])
+            for column in range(COLUMN_COUNT):
+                self.grid[row].append(0)  # Append a cell
+
+        # Create a list of solid-color sprites to represent each grid location
+        for row in range(ROW_COUNT):
+            self.grid_sprites.append([])
+            for column in range(COLUMN_COUNT):
+                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 200
+                y = row * (HEIGHT + MARGIN) + (HEIGHT / 2 + MARGIN) + 150
+                #TODO: Update this when a tile is placed.
+                sprite_color = arcade.make_transparent_color([0,0,0], 100)
+                sprite = arcade.SpriteSolidColor(WIDTH, HEIGHT, sprite_color)
+                sprite.center_x = x
+                sprite.center_y = y
+                self.grid_sprite_list.append(sprite)
+                self.grid_sprites[row].append(sprite)
 
 
 
@@ -131,6 +168,7 @@ class GameView(arcade.View):
                                       SCREEN_HEIGHT,
                                       self.background)
         # Drawing Sprite Lists
+        self.grid_sprite_list.draw()
         self.scoreboard_list.draw()
         self.help_list.draw()
         self.tile_list.draw()
@@ -168,6 +206,7 @@ class GameView(arcade.View):
                          arcade.color.WHITE,
                          12,
                          font_name="Kenney Future")
+
 
     def on_update(self, delta_time):
         """ All the logic to move, and the game logic goes here.
@@ -344,12 +383,16 @@ class ColorView(arcade.View):
             for j in range(len(self.selected_colors)):
                 x_offset = 120 + self.color_list_string.index(self.selected_colors[j]) * 150
                 arcade.draw_text(f"Player {j + 1}", x_offset, SCREEN_HEIGHT // 2 - 80, arcade.color.WHITE, 16, font_name="Kenney Future") # TODO replace with actual name
-        self.manager.draw()
+
+        self.manager.draw() 
+
 
     def on_key_press(self, key, modifiers):
         # if key 1-4 is pressed, assign the corresponding color to that player
         if key in (arcade.key.KEY_1, arcade.key.KEY_2, arcade.key.KEY_3, arcade.key.KEY_4) and len(self.selected_colors) < self.num_players:
-            color_index = key - arcade.key.KEY_1
+
+            color_index = key - arcade.key.KEY_1 
+
             if self.color_list_string[color_index] in self.available_colors:
                 player_choice = self.color_list_string[color_index]
                 self.available_colors.remove(player_choice)
@@ -393,7 +436,10 @@ class NameView(arcade.View):
                                  "Player 3",
                                  "Player4"]
 
+
         # creating horizontal boxes to allow
+
+
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
@@ -470,15 +516,13 @@ class NameView(arcade.View):
 
     def on_click_next(self, event):
         """ If the user presses the  button, start the game. """
+
         # Add players to settings
         for i in range(self.settings.get_player_count()):
             p = player.Player()
             p.set_name(self.input_field[i].text)
             self.settings.add_current_players(p)
 
-
-
-        # change screen to ColorView
         game_view = ColorView(self.settings)
         self.window.show_view(game_view)
 

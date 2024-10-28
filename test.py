@@ -24,8 +24,8 @@ def tile_test_setters():
     tile1.not_connected()
     if tile1.is_connected:
         print('Tiles Test 1 FAILED: Error with not_connected method')
-    tile1.set_image("img.png")
-    if tile1.image != 'img.png':
+    tile1.set_image("images/img.png")
+    if tile1.image != 'images/img.png':
         print('Tiles Test 1 FAILED: Error with set_image method')
 
     print('Tiles Test 1 PASSED -- Setters work as expected (if this is the only statement about Test 1 printed)')
@@ -47,7 +47,7 @@ def tile_test_getters():
         print('Tiles Test 2 FAILED: Error with has_shield method')
     if not tile2.check_is_connected():
         print('Tiles Test 2 FAILED: Error with is_connected method')
-    if tile2.get_image() != 'img23.png':
+    if tile2.get_image() != 'images/img23.png':
         print('Tiles Test 2 FAILED: Error with get_image method')
     print('Tiles Test 2 PASSED: Getters work as expected (if this is the only statement about Test 2 printed)')
 
