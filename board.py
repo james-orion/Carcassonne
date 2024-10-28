@@ -179,7 +179,7 @@ class GameView(arcade.View):
         start_x = 500
         start_y = 75
         # player.Player.get_name()
-        arcade.draw_text("Player 1",
+        arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
                          arcade.color.WHITE,
@@ -230,7 +230,6 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
-        print(self.settings.get_player_count())
         # get player count for indexing
         count = self.settings.get_player_count() - 1
         # if the last player to go, increment current round
@@ -242,9 +241,16 @@ class GameView(arcade.View):
         # increment player to next player in the list
         for player in range(len(self.settings.current_players)):
             if current_player == self.settings.current_players[player]:
-                current_player = self.settings.current_players[player+1]
-                self.settings.set_current_player(current_player)
-                print(current_player)
+                # if current player is last in list, current player is first
+                if current_player == self.settings.current_players[-1]:
+                    current_player = self.settings.current_players[0]
+                    self.settings.set_current_player(current_player)
+                else:
+                    # increment to next player in list
+                    current_player = self.settings.current_players[player+1]
+                    self.settings.set_current_player(current_player)
+                    break
+
 
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
@@ -438,8 +444,6 @@ class NameView(arcade.View):
 
 
         # creating horizontal boxes to allow
-
-
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
@@ -522,6 +526,8 @@ class NameView(arcade.View):
             p = player.Player()
             p.set_name(self.input_field[i].text)
             self.settings.add_current_players(p)
+            if i == 0:
+                self.settings.set_current_player(p)
 
         game_view = ColorView(self.settings)
         self.window.show_view(game_view)
