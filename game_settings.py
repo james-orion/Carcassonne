@@ -12,6 +12,7 @@ class game_settings:
         self.player_count = 0
         self.tiles = []
         self.current_player = ""
+        self.placed_tiles = []
 
     def set_current_round(self, round):
         """ This sets the current round """
@@ -45,6 +46,12 @@ class game_settings:
         """"   This returns player count """
         return self.current_player
 
+    def get_current_tiles(self):
+        return self.placed_tiles
+
+    def place_tile(self, tile):
+        """ Adds a tile to the list of placed tiles"""
+        self.placed_tiles.append(tile)
 
 
 
