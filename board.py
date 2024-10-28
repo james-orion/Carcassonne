@@ -475,7 +475,7 @@ class NameView(arcade.View):
             p = player.Player()
             p.set_name(self.input_field[i].text)
             self.settings.add_current_players(p)
-            
+
 
 
         # change screen to ColorView
