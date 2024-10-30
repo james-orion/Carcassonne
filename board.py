@@ -263,11 +263,11 @@ class GameView(arcade.View):
         self.curr_tile.set_y(100)
         self.curr_tile.set_x(200)
         tile = self.settings.tiles[self.settings.tile_count][1].image
-        self.new_tile = arcade.Sprite(tile,
+        self.tile_sprite = arcade.Sprite(tile,
                                       SPRITE_SCALING_TILE)
-        self.new_tile.center_x = self.curr_tile.get_x()
-        self.new_tile.center_y = self.curr_tile.get_y()
-        self.tile_list.append(self.new_tile)
+        self.tile_sprite.center_x = self.curr_tile.get_x()
+        self.tile_sprite.center_y = self.curr_tile.get_y()
+        self.tile_list.append(self.tile_sprite)
         self.settings.increment_tile_count()
 
 
@@ -326,10 +326,19 @@ class GameView(arcade.View):
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
 
-        # If Left Mouse Is Relased stop dragging
+        # If Left Mouse is Released stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
             self.dragging_meeple = None
+
+            # Snaps tiles into grid
+            for i in range(len(self.grid)):
+                for j in range(len(self.grid[i])):
+                    # If the tile being dragged overlaps a certain amount with a square in the grid it is snapped into place
+                    if self.grid_sprites[i][j].collides_with_point([self.tile_sprite.center_x, self.tile_sprite.center_y]):
+                        self.tile_sprite.center_x = self.grid_sprites[i][j].center_x
+                        self.tile_sprite.center_y = self.grid_sprites[i][j].center_y
+
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
                                                              self.scoreboard_list)
