@@ -36,5 +36,3 @@ class current_tile:
         return self.moved
 
 
-
-

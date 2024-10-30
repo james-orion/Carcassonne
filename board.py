@@ -315,10 +315,13 @@ class GameView(arcade.View):
             # Allow dragging to be possible
             if clicked_tile:
                 self.dragging_sprite = clicked_tile[0]
-        # if the user right-clicks on a tile it will rotate one side CCW
         if button == arcade.MOUSE_BUTTON_RIGHT:
             clicked_tile = arcade.get_sprites_at_point((x, y),self.tile_list)
-            # TODO: call the tile.rotate_tile method
+            if clicked_tile:
+                self.rotating_tile = clicked_tile[0]
+
+
+
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
@@ -359,7 +362,13 @@ class GameView(arcade.View):
                 scoreboard_view = ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
-
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            # If the right mouse button is clicked then unclicked, rotate tile
+            # TODO: validate that only the current tile can be rotated/moved
+            if self.rotating_tile:
+                self.rotating_tile.change_angle = True
+                self.rotating_tile.angle = 90 + self.rotating_tile.angle
+                self.curr_tile.tile.rotate_tile()
 
 # view to allow user to select color
 class ColorView(arcade.View):
