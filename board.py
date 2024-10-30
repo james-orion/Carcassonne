@@ -289,6 +289,10 @@ class GameView(arcade.View):
             # Allow dragging to be possible
             if clicked_tile:
                 self.dragging_sprite = clicked_tile[0]
+        # if the user right-clicks on a tile it will rotate one side CCW
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            clicked_tile = arcade.get_sprites_at_point((x, y),self.tile_list)
+            # TODO: call the tile.rotate_tile method
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
