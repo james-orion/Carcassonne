@@ -52,7 +52,7 @@ class GameView(arcade.View):
         # create done button
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        # creating horizontal boxe
+        # creating horizontal box
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
@@ -80,8 +80,11 @@ class GameView(arcade.View):
         self.tile_list = tile.tiles
         # load the tiles into settings for first round
         if settings.current_round == 1:
+            # count keeps track of tile ID
+            count = 0
             for i in self.tile_list:
-                self.settings.tiles.append(i)
+                self.settings.tiles.append((count,i))
+                count+=1
 
 
         # Add tile grid
@@ -224,6 +227,7 @@ class GameView(arcade.View):
         if self.curr_meeple.get_moved():
             self.tile_sprite.center_x = self.curr_meeple.get_x()
             self.tile_sprite.center_y = self.curr_meeple.get_y()
+
     def on_done(self, event):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
@@ -236,6 +240,7 @@ class GameView(arcade.View):
         if self.settings.get_current_player() == self.settings.current_players[count]:
             round = self.settings.get_current_round() + 1
             self.settings.set_current_round(round)
+
         # get current player
         current_player = self.settings.get_current_player()
         # increment player to next player in the list
@@ -250,6 +255,18 @@ class GameView(arcade.View):
                     current_player = self.settings.current_players[player+1]
                     self.settings.set_current_player(current_player)
                     break
+        # change tile to next tile in list,
+        # TODO: add a random incremnt, this is just to see it if works
+        self.curr_tile.set_moved(False)
+        self.curr_tile.set_y(100)
+        self.curr_tile.set_x(200)
+        tile = self.settings.tiles[self.settings.tile_count][1].image
+        self.new_tile = arcade.Sprite(tile,
+                                      SPRITE_SCALING_TILE)
+        self.new_tile.center_x = self.curr_tile.get_x()
+        self.new_tile.center_y = self.curr_tile.get_y()
+        self.tile_list.append(self.new_tile)
+        self.settings.increment_tile_count()
 
 
     def on_resize(self, width, height):
