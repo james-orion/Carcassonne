@@ -1,9 +1,10 @@
 """
 This file is part of Carcassonne board view
+
 """
 import arcade
 import arcade.gui
-
+import random
 import current_tile
 import current_meeple
 import game_settings
@@ -33,6 +34,7 @@ HEIGHT = 60
 BOARD_X = 400
 BOARD_Y = 400
 
+
 class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
@@ -50,7 +52,7 @@ class GameView(arcade.View):
         # create done button
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        # creating horizontal boxe
+        # creating horizontal box
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
@@ -78,9 +80,15 @@ class GameView(arcade.View):
         self.tile_list = tile.tiles
         # load the tiles into settings for first round
         if settings.current_round == 1:
+            # count keeps track of tile ID
+            count = 0
             for i in self.tile_list:
-                self.settings.tiles.append(i)
-
+                self.settings.tiles.append((count,i))
+                count+=1
+            print(self.settings.tiles)
+            # shuffle list
+            random.shuffle(self.settings.tiles)
+        print(self.settings.tiles)
         # Add tile grid
         self.grid_sprite_list = arcade.SpriteList()
 
@@ -110,6 +118,7 @@ class GameView(arcade.View):
                 sprite.center_y = y
                 self.grid_sprite_list.append(sprite)
                 self.grid_sprites[row].append(sprite)
+
 
 
     def setup(self):
@@ -150,7 +159,6 @@ class GameView(arcade.View):
         self.help_sprite.center_y = 550
         self.help_list.append(self.help_sprite)
 
-
     def on_draw(self):
         """ Render the screen. """
         # Start With a Fresh Screen
@@ -176,7 +184,7 @@ class GameView(arcade.View):
         start_x = 500
         start_y = 75
         # player.Player.get_name()
-        arcade.draw_text("Player 1",
+        arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
                          arcade.color.WHITE,
@@ -205,8 +213,6 @@ class GameView(arcade.View):
                          font_name="Kenney Future")
 
 
-
-
     def on_update(self, delta_time):
         """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
@@ -223,27 +229,47 @@ class GameView(arcade.View):
         if self.curr_meeple.get_moved():
             self.tile_sprite.center_x = self.curr_meeple.get_x()
             self.tile_sprite.center_y = self.curr_meeple.get_y()
+
     def on_done(self, event):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
         current player, otherwise it will increment next
         player
         """
-        print(self.settings.get_player_count())
         # get player count for indexing
         count = self.settings.get_player_count() - 1
         # if the last player to go, increment current round
         if self.settings.get_current_player() == self.settings.current_players[count]:
             round = self.settings.get_current_round() + 1
             self.settings.set_current_round(round)
+
         # get current player
         current_player = self.settings.get_current_player()
         # increment player to next player in the list
         for player in range(len(self.settings.current_players)):
             if current_player == self.settings.current_players[player]:
-                current_player = self.settings.current_players[player+1]
-                self.settings.set_current_player(current_player)
-                print(current_player)
+                # if current player is last in list, current player is first
+                if current_player == self.settings.current_players[-1]:
+                    current_player = self.settings.current_players[0]
+                    self.settings.set_current_player(current_player)
+                else:
+                    # increment to next player in list
+                    current_player = self.settings.current_players[player+1]
+                    self.settings.set_current_player(current_player)
+                    break
+        # change tile to next tile in list,
+        # TODO: add a random incremnt, this is just to see it if works
+        self.curr_tile.set_moved(False)
+        self.curr_tile.set_y(100)
+        self.curr_tile.set_x(200)
+        tile = self.settings.tiles[self.settings.tile_count][1].image
+        self.new_tile = arcade.Sprite(tile,
+                                      SPRITE_SCALING_TILE)
+        self.new_tile.center_x = self.curr_tile.get_x()
+        self.new_tile.center_y = self.curr_tile.get_y()
+        self.tile_list.append(self.new_tile)
+        self.settings.increment_tile_count()
+
 
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
@@ -359,7 +385,7 @@ class ColorView(arcade.View):
         self.v_box.add(next_button.with_space_around(left=10))
         next_button.on_click = self.on_click_next
         self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center", anchor_y="center",align_y=-160, child=self.v_box, style=None))
-    
+
     def on_click(self):
         self.update_text()
 
@@ -386,17 +412,21 @@ class ColorView(arcade.View):
             for j in range(len(self.selected_colors)):
                 x_offset = 120 + self.color_list_string.index(self.selected_colors[j]) * 150
                 arcade.draw_text(f"Player {j + 1}", x_offset, SCREEN_HEIGHT // 2 - 80, arcade.color.WHITE, 16, font_name="Kenney Future") # TODO replace with actual name
+
         self.manager.draw() 
+
 
     def on_key_press(self, key, modifiers):
         # if key 1-4 is pressed, assign the corresponding color to that player
         if key in (arcade.key.KEY_1, arcade.key.KEY_2, arcade.key.KEY_3, arcade.key.KEY_4) and len(self.selected_colors) < self.num_players:
+
             color_index = key - arcade.key.KEY_1 
+
             if self.color_list_string[color_index] in self.available_colors:
                 player_choice = self.color_list_string[color_index]
                 self.available_colors.remove(player_choice)
                 self.selected_colors.append(player_choice)
-    
+
     # undos last color selection, or returns to name selection if no colors have been chosen
     def on_back(self, event):
         if len(self.selected_colors) == 0:
@@ -406,7 +436,7 @@ class ColorView(arcade.View):
             last_color_choice = self.selected_colors[-1]
             self.selected_colors.remove(last_color_choice)
             self.available_colors.append(last_color_choice)
-    
+
     def on_click_next(self, event):
         # TODO randomly assign remaining colors to computer players
         # TODO assign colors to players once list is implemented
@@ -435,13 +465,7 @@ class NameView(arcade.View):
                                  "Player 3",
                                  "Player4"]
 
-        # TODO: call player class, add to the current players
-        self.player_one = player.Player()
-        self.player_two = player.Player()
-        self.player_three = player.Player()
-        self.player_four = player.Player()
         # creating horizontal boxes to allow
-        # TODO: add text input for players, call player class
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
@@ -481,8 +505,7 @@ class NameView(arcade.View):
         """" This will update the text Input """
         self.label.text = self.input_field.text
         self.input_field_text = self.label.text
-        print("HIIIIIIIIIIIII")
-        print(self.input_field)
+
 
     def on_click(self, event):
         """ This triggers text to be updated from
@@ -519,17 +542,15 @@ class NameView(arcade.View):
 
     def on_click_next(self, event):
         """ If the user presses the  button, start the game. """
-        # TODO: create player object and add to settings
-        self.player_one.set_name(self.input_field_text[0])
-        self.settings.add_current_players(self.player_one)
-        for i in range(len(self.settings.current_players)):
-            print("BIIIIIIIIIIIIIIIIIIIIII")
-            print(self.settings.current_players[i])
-        # change screen
-        #self.curr_tile = current_tile.current_tile()
-        #self.curr_meeple = current_meeple.current_meeple()
-        #game_view = GameView(self.curr_tile, self.curr_meeple, self.settings)
-        #game_view.setup()
+
+        # Add players to settings
+        for i in range(self.settings.get_player_count()):
+            p = player.Player()
+            p.set_name(self.input_field[i].text)
+            self.settings.add_current_players(p)
+            if i == 0:
+                self.settings.set_current_player(p)
+
         game_view = ColorView(self.settings)
         self.window.show_view(game_view)
 
@@ -701,45 +722,28 @@ class ScoreboardView(arcade.View):
                          font_size=50,
                          anchor_x="center",
                          font_name="Kenney Future")
-        # TODO: Player and Numbers maybe in for loop
-        # for i in player.player_count
-        # arcade.draw_text(player.get_name(), 150,
-        #                  self.window.height - 150,
-        #                  arcade.color.BLACK,
-        #                  font_size=20,
-        #                  anchor_x="left",
-        #                  font_name="Kenney Future")
-        # arcade.draw_text(player.get_score(), 400,
-        #                  self.window.height - 150,
-        #                  arcade.color.BLACK,
-        #                  font_size=20,
-        #                  anchor_x="left",
-        #                  font_name="Kenney Future")
-        arcade.draw_text("Player 1", 150,
-                         self.window.height - 150,
+        # set initial line (x,y)
+        name_line = 150
+        score_line = 400
+        height_line = self.window.height - 150
+        # for each player, print name and score
+        for player in self.settings.current_players:
+            arcade.draw_text(player.name, name_line,
+                         height_line,
                          arcade.color.BLACK,
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
-        arcade.draw_text("20", 400,
-                         self.window.height - 150,
+            arcade.draw_text(player.score, score_line,
+                         height_line,
                          arcade.color.BLACK,
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
-        # Player and Numbers maybe in for loop?
-        arcade.draw_text("Player 2", 150,
-                         self.window.height - 250,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="left",
-                         font_name="Kenney Future")
-        arcade.draw_text("30", 400,
-                         self.window.height - 250,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="left",
-                         font_name="Kenney Future")
+            # increment line height
+            height_line -= 60
+
+
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
