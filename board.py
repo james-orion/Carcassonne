@@ -4,7 +4,7 @@ This file is part of Carcassonne board view
 """
 import arcade
 import arcade.gui
-
+import random
 import current_tile
 import current_meeple
 import game_settings
@@ -85,8 +85,10 @@ class GameView(arcade.View):
             for i in self.tile_list:
                 self.settings.tiles.append((count,i))
                 count+=1
-
-
+            print(self.settings.tiles)
+            # shuffle list
+            random.shuffle(self.settings.tiles)
+        print(self.settings.tiles)
         # Add tile grid
         self.grid_sprite_list = arcade.SpriteList()
 
