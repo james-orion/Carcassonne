@@ -459,7 +459,6 @@ class NameView(arcade.View):
                                  "Player 3",
                                  "Player4"]
 
-
         # creating horizontal boxes to allow
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
@@ -717,45 +716,28 @@ class ScoreboardView(arcade.View):
                          font_size=50,
                          anchor_x="center",
                          font_name="Kenney Future")
-        # TODO: Player and Numbers maybe in for loop
-        # for i in player.player_count
-        # arcade.draw_text(player.get_name(), 150,
-        #                  self.window.height - 150,
-        #                  arcade.color.BLACK,
-        #                  font_size=20,
-        #                  anchor_x="left",
-        #                  font_name="Kenney Future")
-        # arcade.draw_text(player.get_score(), 400,
-        #                  self.window.height - 150,
-        #                  arcade.color.BLACK,
-        #                  font_size=20,
-        #                  anchor_x="left",
-        #                  font_name="Kenney Future")
-        arcade.draw_text("Player 1", 150,
-                         self.window.height - 150,
+        # set initial line (x,y)
+        name_line = 150
+        score_line = 400
+        height_line = self.window.height - 150
+        # for each player, print name and score
+        for player in self.settings.current_players:
+            arcade.draw_text(player.name, name_line,
+                         height_line,
                          arcade.color.BLACK,
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
-        arcade.draw_text("20", 400,
-                         self.window.height - 150,
+            arcade.draw_text(player.score, score_line,
+                         height_line,
                          arcade.color.BLACK,
                          font_size=20,
                          anchor_x="left",
                          font_name="Kenney Future")
-        # Player and Numbers maybe in for loop?
-        arcade.draw_text("Player 2", 150,
-                         self.window.height - 250,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="left",
-                         font_name="Kenney Future")
-        arcade.draw_text("30", 400,
-                         self.window.height - 250,
-                         arcade.color.BLACK,
-                         font_size=20,
-                         anchor_x="left",
-                         font_name="Kenney Future")
+            # increment line height
+            height_line -= 60
+
+
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If mouse clicked move to board view """
