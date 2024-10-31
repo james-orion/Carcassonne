@@ -8,8 +8,7 @@
 # TODO add villages
 
 class Meeple:
-    def __init__(self, player, name, color):
-        self.player = player
+    def __init__(self, name, color):
         self.name = name
         self.color = color
         self.is_placed = False
@@ -120,11 +119,6 @@ class Meeple:
     
 
     # getter methods
-    
-    # returns player that Meeple belongs to
-    def get_player(self):
-        return self.player
-
 
     # returns Meeple's name
     def get_name(self):
@@ -157,11 +151,6 @@ class Meeple:
     
 
     # setter methods
-
-    # sets players Meeple blongs to
-    def set_player(self, player):
-        self.player = player
-
 
     # sets Meeple's name
     def set_name(self, name):

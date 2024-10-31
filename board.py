@@ -263,11 +263,11 @@ class GameView(arcade.View):
         self.curr_tile.set_y(100)
         self.curr_tile.set_x(200)
         tile = self.settings.tiles[self.settings.tile_count][1].image
-        self.new_tile = arcade.Sprite(tile,
+        self.tile_sprite = arcade.Sprite(tile,
                                       SPRITE_SCALING_TILE)
-        self.new_tile.center_x = self.curr_tile.get_x()
-        self.new_tile.center_y = self.curr_tile.get_y()
-        self.tile_list.append(self.new_tile)
+        self.tile_sprite.center_x = self.curr_tile.get_x()
+        self.tile_sprite.center_y = self.curr_tile.get_y()
+        self.tile_list.append(self.tile_sprite)
         self.settings.increment_tile_count()
 
 
@@ -315,14 +315,30 @@ class GameView(arcade.View):
             # Allow dragging to be possible
             if clicked_tile:
                 self.dragging_sprite = clicked_tile[0]
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            clicked_tile = arcade.get_sprites_at_point((x, y),self.tile_list)
+            if clicked_tile:
+                self.rotating_tile = clicked_tile[0]
+
+
+
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
 
-        # If Left Mouse Is Relased stop dragging
+        # If Left Mouse is Released stop dragging
         if button == arcade.MOUSE_BUTTON_LEFT:
             self.dragging_sprite = None
             self.dragging_meeple = None
+
+            # Snaps tiles into grid
+            for i in range(len(self.grid)):
+                for j in range(len(self.grid[i])):
+                    # If the tile being dragged overlaps a certain amount with a square in the grid it is snapped into place
+                    if self.grid_sprites[i][j].collides_with_point([self.tile_sprite.center_x, self.tile_sprite.center_y]):
+                        self.tile_sprite.center_x = self.grid_sprites[i][j].center_x
+                        self.tile_sprite.center_y = self.grid_sprites[i][j].center_y
+
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
                                                              self.scoreboard_list)
@@ -355,7 +371,13 @@ class GameView(arcade.View):
                 scoreboard_view = ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
                 scoreboard_view.setup()
                 self.window.show_view(scoreboard_view)
-
+        if button == arcade.MOUSE_BUTTON_RIGHT:
+            # If the right mouse button is clicked then unclicked, rotate tile
+            # TODO: validate that only the current tile can be rotated/moved
+            if self.rotating_tile:
+                self.rotating_tile.change_angle = True
+                self.rotating_tile.angle = 90 + self.rotating_tile.angle
+                self.curr_tile.tile.rotate_tile()
 
 # view to allow user to select color
 class ColorView(arcade.View):
