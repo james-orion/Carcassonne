@@ -46,6 +46,8 @@ class Meeple:
 
     
     # validates that user's placement of Meeple is allowed
+    # if returns True, store placement of Meeple on tile
+    # if return False, prompt user to choose again
     def validate_placement(self, tile):
         # TODO finish implementing - iterate through list of tiles in feature,
         # if there is a Meeple alreay placed, don't allow user to place another;
