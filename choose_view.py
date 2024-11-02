@@ -7,7 +7,6 @@ import name_view
 import game_settings
 
 
-
 class ChooseView(arcade.View):
     """ View to Open Game"""
 
@@ -77,7 +76,7 @@ class ChooseView(arcade.View):
         """ If the user presses the button, the player count
         will be set. and change view"""
         self.settings.set_player_count(1)
-        print(self.settings.get_player_count())
+        self.manager.disable()
         name = name_view.NameView(self.settings)
         self.window.show_view(name)
 
@@ -85,7 +84,7 @@ class ChooseView(arcade.View):
         """ If the user presses the button, the player count
         will be set. and change view"""
         self.settings.set_player_count(2)
-        print(self.settings.get_player_count())
+        self.manager.disable()
         name = name_view.NameView(self.settings)
         self.window.show_view(name)
 
@@ -93,7 +92,7 @@ class ChooseView(arcade.View):
         """ If the user presses the button, the player count
         will be set. and change view"""
         self.settings.set_player_count(3)
-        print(self.settings.get_player_count())
+        self.manager.disable()
         name= name_view.NameView(self.settings)
         self.window.show_view(name)
 
@@ -101,7 +100,8 @@ class ChooseView(arcade.View):
         """ If the user presses the mouse button, the player count
         will be set. and change view """
         self.settings.set_player_count(4)
-        print(self.settings.get_player_count())
+        self.manager.disable()
         name = name_view.NameView(self.settings)
         self.window.show_view(name)
+
 

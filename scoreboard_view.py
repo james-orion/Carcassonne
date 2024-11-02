@@ -79,6 +79,7 @@ class ScoreboardView(arcade.View):
         # switch to game view
         game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
         game.setup()
-        self.window.show_view(game_view)
+        self.window.show_view(game)
+
 
 
