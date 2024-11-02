@@ -1,4 +1,20 @@
-# pass in tile itself instead of just tile sprite
+# view to allow users to place a Meeple on a tile after
+# it was placed. Placement is validated and stored on the
+# game board
+
+# TODO pass in tile itself instead of just tile sprite
+# TODO replace red dot with player's color
+# TODO add button to GameView file and finish connecting
+# TODO finish confirm button functionality
+
+import arcade
+import arcade.gui
+import game_settings
+import game_view
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
 class MeeplePlacementView(arcade.View):
     def __init__(self, curr_tile, curr_meeple, settings, tile):
         super().__init__()
@@ -72,7 +88,7 @@ class MeeplePlacementView(arcade.View):
         self.curr_tile.set_moved(False)
         self.curr_meeple.set_moved(False)
         # switch to game view
-        game_view = GameView(self.curr_tile, self.curr_meeple, self.settings)
+        game_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
         game_view.setup()
         self.window.show_view(game_view)
 
