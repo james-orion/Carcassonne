@@ -104,3 +104,4 @@ class ChooseView(arcade.View):
         name = name_view.NameView(self.settings)
         self.window.show_view(name)
 
+

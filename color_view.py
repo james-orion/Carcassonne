@@ -101,3 +101,4 @@ class ColorView(arcade.View):
             game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
             game.setup()
             self.window.show_view(game)
+

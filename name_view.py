@@ -111,3 +111,4 @@ class NameView(arcade.View):
         self.manager.disable()
         game_view = color_view.ColorView(self.settings)
         self.window.show_view(game_view)
+

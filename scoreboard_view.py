@@ -82,3 +82,4 @@ class ScoreboardView(arcade.View):
         self.window.show_view(game)
 
 
+
