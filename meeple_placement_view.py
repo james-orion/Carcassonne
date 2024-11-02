@@ -4,7 +4,7 @@
 
 # TODO pass in tile itself instead of just tile sprite
 # TODO replace red dot with player's color
-# TODO add button to GameView file and finish connecting
+# TODO add 'place meeple' button to GameView file and finish connecting the two classes
 # TODO finish confirm button functionality
 
 import arcade
@@ -26,6 +26,7 @@ class MeeplePlacementView(arcade.View):
         self.background = arcade.load_texture("images/wood.jpg")
         self.has_choosen = False
         self.valid_placement = True
+        self.user_choice = None
         self.choice_coordinates = None
 
         # create confirm and cancel buttons
@@ -74,14 +75,19 @@ class MeeplePlacementView(arcade.View):
             self.has_choosen = True
             if placement_choice == 0:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2 + 100]
+                self.user_choice = "TOP"
             elif placement_choice == 1:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 225, SCREEN_HEIGHT // 2]
+                self.user_choice = "LEFT"
             elif placement_choice == 2:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 25, SCREEN_HEIGHT // 2]
+                self.user_choice = "RIGHT"
             elif placement_choice == 3:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2]
+                self.user_choice = "BOTTOM"
             elif placement_choice == 4:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2 - 100]
+                self.user_choice = "CENTER"
 
     def on_cancel(self, event):
         # return to GameView as it was previously
@@ -97,7 +103,7 @@ class MeeplePlacementView(arcade.View):
         # if placement is valid, place Meeple and return to GameView
         # if invalid, prompt user to replace Meeple
         '''
-        if self.player.use_meeple(___):
+        if self.player.use_meeple(self.tile, self.user_choice):
             place meeple
             return to game
         else:
