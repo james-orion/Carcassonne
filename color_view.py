@@ -81,6 +81,7 @@ class ColorView(arcade.View):
     # undos last color selection, or returns to name selection if no colors have been chosen
     def on_back(self, event):
         if len(self.selected_colors) == 0:
+            self.manager.disable()
             choose = choose_view.ChooseView()
             self.window.show_view(choose)
         else:
@@ -96,6 +97,7 @@ class ColorView(arcade.View):
                 #self.players[i].set_color(self.selected_colors[i])
             self.curr_tile = current_tile.current_tile()
             self.curr_meeple = current_meeple.current_meeple()
+            self.manager.disable()
             game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
             game.setup()
             self.window.show_view(game)
