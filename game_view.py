@@ -242,6 +242,7 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
+        
         # TODO: Validate if tile can be placed in its spot, current bug if tile doesn't move
         # get player count for indexing
         count = self.settings.get_player_count() - 1
