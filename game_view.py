@@ -149,7 +149,6 @@ class GameView(arcade.View):
         if self.settings.current_round == 1:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
-
         # Keep location of placed tile sprites
         for item in self.settings.placed_tiles:
             object = item[0][1]
@@ -243,6 +242,8 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
+        
+        # TODO: Validate if tile can be placed in its spot, current bug if tile doesn't move
         # get player count for indexing
         count = self.settings.get_player_count() - 1
         # if the last player to go, increment current round
@@ -264,9 +265,20 @@ class GameView(arcade.View):
                     current_player = self.settings.current_players[player+1]
                     self.settings.set_current_player(current_player)
                     break
+        # update_tiles
+        new_list = []
+        # save sprite locations
+        self.curr_tile.set_x(self.tile_sprite.center_x)
+        self.curr_tile.set_y(self.tile_sprite.center_y)
+        # update the placed tiles, with new coordinates
+        for item in self.settings.placed_tiles:
+            if item == self.settings.placed_tiles[-1]:
+                new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
+            else:
+                new_list.append(item)
+        self.settings.placed_tiles = new_list
 
         # change tile to next tile in list,
-        # TODO: add a random incremnt, this is just to see it if works
         self.curr_tile.set_moved(False)
         self.curr_tile.set_y(100)
         self.curr_tile.set_x(200)
@@ -394,12 +406,14 @@ class GameView(arcade.View):
                 self.curr_tile.set_moved(True)
                 self.curr_tile.set_x(self.tile_sprite.center_x)
                 self.curr_tile.set_y(self.tile_sprite.center_y)
+                # TODO: there is a bug here need to fix, same as above
                 # update the placed tiles, with new coordinates
                 for item in self.settings.placed_tiles:
                     if item == self.settings.placed_tiles[-1]:
                         new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
                     else:
                         new_list.append(item)
+                self.settings.placed_tiles = new_list
                 self.curr_meeple.set_moved(True)
                 self.curr_meeple.set_x(self.player_sprite.center_x)
                 self.curr_meeple.set_y(self.player_sprite.center_y)
