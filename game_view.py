@@ -338,7 +338,9 @@ class GameView(arcade.View):
             clicked_tile = arcade.get_sprites_at_point((x, y)
                                                        ,self.tile_list)
             if clicked_tile:
-                self.rotating_tile = clicked_tile[0]
+                # if current tile is clicked and is the newest tile, rotating is possible
+                if clicked_tile[0] == self.tile_list[-1]:
+                    self.rotating_tile = clicked_tile[0]
 
 
 
