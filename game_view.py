@@ -136,13 +136,31 @@ class GameView(arcade.View):
         self.scoreboard_sprite.center_x = 750
         self.scoreboard_sprite.center_y = 475
         self.scoreboard_list.append(self.scoreboard_sprite)
-        # Tile Sprite
+
+        # Start Tile Sprite
         tile = self.start_tile.image
         self.tile_sprite = arcade.Sprite(tile,
                                          SPRITE_SCALING_TILE)
-        self.tile_sprite.center_x = self.curr_tile.get_x()
-        self.tile_sprite.center_y = self.curr_tile.get_y()
+        self.tile_sprite.center_x = SCREEN_WIDTH/2
+        self.tile_sprite.center_y = SCREEN_HEIGHT/2
         self.tile_list.append(self.tile_sprite)
+
+        # if first round add start tile to placed tile
+        if self.settings.current_round == 1:
+            self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
+                                           SCREEN_HEIGHT/2)
+        # TODO: need to figure out how to add tiles when clicking help screen
+        # # Keep location of placed tile sprites
+        # for item in self.settings.placed_tiles:
+        #     object = item[0][1]
+        #     tile = object.image
+        #     self.tile_sprite = arcade.Sprite(tile,
+        #                                      SPRITE_SCALING_TILE)
+        #     print(item[1])
+        #     print(item[2])
+        #     self.tile_sprite.center_x = item[1]
+        #     self.tile_sprite.center_y = item[2]
+        #     self.tile_list.append(self.tile_sprite)
 
         # Help Sprite
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
@@ -176,16 +194,16 @@ class GameView(arcade.View):
         # Drawing Text, Need From Player Class?
         start_x = 500
         start_y = 75
-        # player.Player.get_name()
+        # Player text from player class
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
                          arcade.color.WHITE,
-                         30,
+                         20,
                          font_name="Kenney Future")
 
 
-        # Drawing Text, For Meeples. Need Meeple count from player?
+        # Drawing Text, For Meeples.
         start_meeple_x = 10
         start_meeple_y = 50
         arcade.draw_text("# Meeples",
@@ -195,7 +213,7 @@ class GameView(arcade.View):
                          12,
                          font_name="Kenney Future")
 
-        # Drawing Text, For Tile. Need Tile From Tile Class?
+        # Drawing Text, For Tile.
         start_tile_x = 200
         start_tile_y = 50
         arcade.draw_text("Your Tile",
@@ -212,9 +230,8 @@ class GameView(arcade.View):
         need it. """
 
         # if tile moved update with new location
+
         if self.curr_tile.get_moved():
-            print("moved")
-            print(self.curr_tile.get_x())
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
@@ -250,6 +267,12 @@ class GameView(arcade.View):
                     current_player = self.settings.current_players[player+1]
                     self.settings.set_current_player(current_player)
                     break
+
+        # TODO: validate if tile is in validate spot
+        if self.settings.tile_count != 0 :
+            # add placed tile to placed_tile list in settings
+            self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
+                                      self.curr_tile.get_x, self.curr_tile.get_y)
         # change tile to next tile in list,
         # TODO: add a random incremnt, this is just to see it if works
         self.curr_tile.set_moved(False)
@@ -295,7 +318,7 @@ class GameView(arcade.View):
         # If Left Button on Mouse Clicked on Tile
         if button == arcade.MOUSE_BUTTON_LEFT:
             clicked_tile = arcade.get_sprites_at_point((x, y),
-                                                       self.tile_list)
+                                                          self.tile_list)
 
             clicked_meeple = arcade.get_sprites_at_point((x, y),
                                                          self.player_list)
@@ -307,9 +330,13 @@ class GameView(arcade.View):
 
             # Allow dragging to be possible
             if clicked_tile:
-                self.dragging_sprite = clicked_tile[0]
+                # if current tile is clicked and is the newest tile, dragging is possible
+                if clicked_tile[0] == self.tile_list[-1]:
+                    self.dragging_sprite = clicked_tile[0]
+
         if button == arcade.MOUSE_BUTTON_RIGHT:
-            clicked_tile = arcade.get_sprites_at_point((x, y),self.tile_list)
+            clicked_tile = arcade.get_sprites_at_point((x, y)
+                                                       ,self.tile_list)
             if clicked_tile:
                 self.rotating_tile = clicked_tile[0]
 
@@ -327,8 +354,10 @@ class GameView(arcade.View):
             # Snaps tiles into grid
             for i in range(len(self.grid)):
                 for j in range(len(self.grid[i])):
-                    # If the tile being dragged overlaps a certain amount with a square in the grid it is snapped into place
-                    if self.grid_sprites[i][j].collides_with_point([self.tile_sprite.center_x, self.tile_sprite.center_y]):
+                    # If the tile being dragged overlaps a certain amount with a
+                    # square in the grid it is snapped into place
+                    if (self.grid_sprites[i][j].collides_with_point
+                        ([self.tile_sprite.center_x, self.tile_sprite.center_y])):
                         self.tile_sprite.center_x = self.grid_sprites[i][j].center_x
                         self.tile_sprite.center_y = self.grid_sprites[i][j].center_y
 
@@ -364,6 +393,7 @@ class GameView(arcade.View):
                 scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
+
         if button == arcade.MOUSE_BUTTON_RIGHT:
             # If the right mouse button is clicked then unclicked, rotate tile
             # TODO: validate that only the current tile can be rotated/moved

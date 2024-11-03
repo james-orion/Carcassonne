@@ -33,9 +33,16 @@ class game_settings:
         self.player_count = count
 
     def increment_tile_count(self):
-        """ This sets player count"""
+        """ This increments to next tile"""
         self.tile_count += 1
 
+    def add_placed_tile(self, tile, x, y):
+        """This adds to placed tiles"""
+        self.placed_tiles.append((tile, x, y))
+
+    def get_placed_tiles(self):
+        """This returns the placed tiles"""
+        return self.placed_tiles
 
     def get_tile_count(self):
         """"   This returns the current round"""
