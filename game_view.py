@@ -149,18 +149,16 @@ class GameView(arcade.View):
         if self.settings.current_round == 1:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
-        # TODO: need to figure out how to add tiles when clicking help screen
-        # # Keep location of placed tile sprites
-        # for item in self.settings.placed_tiles:
-        #     object = item[0][1]
-        #     tile = object.image
-        #     self.tile_sprite = arcade.Sprite(tile,
-        #                                      SPRITE_SCALING_TILE)
-        #     print(item[1])
-        #     print(item[2])
-        #     self.tile_sprite.center_x = item[1]
-        #     self.tile_sprite.center_y = item[2]
-        #     self.tile_list.append(self.tile_sprite)
+
+        # Keep location of placed tile sprites
+        for item in self.settings.placed_tiles:
+            object = item[0][1]
+            tile = object.image
+            self.tile_sprite = arcade.Sprite(tile,
+                                             SPRITE_SCALING_TILE)
+            self.tile_sprite.center_x = item[1]
+            self.tile_sprite.center_y = item[2]
+            self.tile_list.append(self.tile_sprite)
 
         # Help Sprite
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
@@ -230,7 +228,6 @@ class GameView(arcade.View):
         need it. """
 
         # if tile moved update with new location
-
         if self.curr_tile.get_moved():
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
@@ -268,11 +265,6 @@ class GameView(arcade.View):
                     self.settings.set_current_player(current_player)
                     break
 
-        # TODO: validate if tile is in validate spot
-        if self.settings.tile_count != 0 :
-            # add placed tile to placed_tile list in settings
-            self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
-                                      self.curr_tile.get_x, self.curr_tile.get_y)
         # change tile to next tile in list,
         # TODO: add a random incremnt, this is just to see it if works
         self.curr_tile.set_moved(False)
@@ -285,6 +277,11 @@ class GameView(arcade.View):
         self.tile_sprite.center_y = self.curr_tile.get_y()
         self.tile_list.append(self.tile_sprite)
         self.settings.increment_tile_count()
+        # TODO: validate if tile is in valid spot
+        if self.settings.tile_count != 0:
+            # add placed tile to placed_tile list in settings
+            self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count - 1],
+                                          self.tile_sprite.center_x, self.tile_sprite.center_y)
 
 
     def on_resize(self, width, height):
@@ -338,8 +335,9 @@ class GameView(arcade.View):
             clicked_tile = arcade.get_sprites_at_point((x, y)
                                                        ,self.tile_list)
             if clicked_tile:
-                self.rotating_tile = clicked_tile[0]
-
+                # if current tile is clicked and is the newest tile, rotating is possible
+                if clicked_tile[0] == self.tile_list[-1]:
+                    self.rotating_tile = clicked_tile[0]
 
 
 
@@ -369,10 +367,19 @@ class GameView(arcade.View):
                                                        self.help_list)
             # If help clicked
             if clicked_help:
+                # create new list to updat placed sprites
+                new_list = []
                 # save sprites location
                 self.curr_tile.set_moved(True)
                 self.curr_tile.set_x(self.tile_sprite.center_x)
                 self.curr_tile.set_y(self.tile_sprite.center_y)
+                # update the placed tiles, with new coordinates
+                for item in self.settings.placed_tiles:
+                    if item == self.settings.placed_tiles[-1]:
+                        new_list.append((item[0],self.curr_tile.get_x(),self.curr_tile.get_y()))
+                    else:
+                        new_list.append(item)
+                self.settings.placed_tiles = new_list
                 self.curr_meeple.set_moved(True)
                 self.curr_meeple.set_x(self.player_sprite.center_x)
                 self.curr_meeple.set_y(self.player_sprite.center_y)
@@ -382,10 +389,17 @@ class GameView(arcade.View):
                 self.window.show_view(help)
             # if scoreboard clicked
             if clicked_scoreboard:
+                new_list = []
                 # save sprite locations
                 self.curr_tile.set_moved(True)
                 self.curr_tile.set_x(self.tile_sprite.center_x)
                 self.curr_tile.set_y(self.tile_sprite.center_y)
+                # update the placed tiles, with new coordinates
+                for item in self.settings.placed_tiles:
+                    if item == self.settings.placed_tiles[-1]:
+                        new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
+                    else:
+                        new_list.append(item)
                 self.curr_meeple.set_moved(True)
                 self.curr_meeple.set_x(self.player_sprite.center_x)
                 self.curr_meeple.set_y(self.player_sprite.center_y)

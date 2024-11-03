@@ -9,6 +9,7 @@ class current_tile:
         self.tile_x = 200
         self.tile_y = 100
         self.moved = False
+        self.tile_image = ""
 
     def set_x(self, x):
         """ This sets the curent tile placement"""
@@ -23,6 +24,10 @@ class current_tile:
         """ This sets the moved boolean"""
         self.moved = moved
 
+    def set_tile_image(self, tile_image):
+        """This sets the current tile image"""
+        self.tile_image = tile_image
+
     def get_x(self):
         """"   This returns the current tile placement x"""
         return self.tile_x
@@ -35,4 +40,7 @@ class current_tile:
         """"   This returns the moved boolean """
         return self.moved
 
+    def get_tile_image(self):
+        """This returns the current tile image"""
+        return self.tile_image
 
