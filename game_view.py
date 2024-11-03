@@ -150,17 +150,18 @@ class GameView(arcade.View):
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
         # TODO: need to figure out how to add tiles when clicking help screen
-        # # Keep location of placed tile sprites
-        # for item in self.settings.placed_tiles:
-        #     object = item[0][1]
-        #     tile = object.image
-        #     self.tile_sprite = arcade.Sprite(tile,
-        #                                      SPRITE_SCALING_TILE)
-        #     print(item[1])
-        #     print(item[2])
-        #     self.tile_sprite.center_x = item[1]
-        #     self.tile_sprite.center_y = item[2]
-        #     self.tile_list.append(self.tile_sprite)
+        # Keep location of placed tile sprites
+        for item in self.settings.placed_tiles:
+            print(item)
+            object = item[0][1]
+            tile = object.image
+            self.tile_sprite = arcade.Sprite(tile,
+                                             SPRITE_SCALING_TILE)
+            print(item[1])
+            print(item[2])
+            self.tile_sprite.center_x = item[1]
+            self.tile_sprite.center_y = item[2]
+            self.tile_list.append(self.tile_sprite)
 
         # Help Sprite
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
@@ -341,7 +342,6 @@ class GameView(arcade.View):
                 # if current tile is clicked and is the newest tile, rotating is possible
                 if clicked_tile[0] == self.tile_list[-1]:
                     self.rotating_tile = clicked_tile[0]
-
 
 
 
