@@ -9,8 +9,8 @@ import tile
 import random
 
 # Global Var: Screen Size
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 START = 0
 END = 2000
 STEP = 50

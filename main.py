@@ -3,9 +3,11 @@
 import arcade
 import arcade.gui
 import open_view
+
+
 # Global Var: Screen Size
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 # Global Var: Window Title
 SCREEN_TITLE = "Carcassonne"
 
