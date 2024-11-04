@@ -9,7 +9,7 @@ import tile
 import random
 
 # Global Var: Screen Size
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 1100
 SCREEN_HEIGHT = 650
 START = 0
 END = 2000
@@ -114,6 +114,7 @@ class GameView(arcade.View):
 
 
 
+
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
 
@@ -150,7 +151,7 @@ class GameView(arcade.View):
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
         # Keep location of placed tile sprites
-        for item in self.settings.placed_tiles:
+        for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
             tile = object.image
             self.tile_sprite = arcade.Sprite(tile,
@@ -339,8 +340,11 @@ class GameView(arcade.View):
 
             # Allow dragging to be possible
             if clicked_tile:
+                print("clicked tile",clicked_tile[0])
+                print("tile list end", self.tile_list[-1])
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if clicked_tile[0] == self.tile_list[-1]:
+                if (clicked_tile[0] == self.tile_list[-1] and
+                        clicked_tile[0] != self.tile_list[0]):
                     self.dragging_sprite = clicked_tile[0]
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
@@ -348,7 +352,8 @@ class GameView(arcade.View):
                                                        ,self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
-                if clicked_tile[0] == self.tile_list[-1]:
+                if (clicked_tile[0] == self.tile_list[-1] and
+                        clicked_tile[0] != self.tile_list[0]):
                     self.rotating_tile = clicked_tile[0]
 
 
