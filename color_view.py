@@ -20,7 +20,7 @@ class ColorView(arcade.View):
         # TODO get list of players, for names and number of players
         self.num_players = self.settings.get_player_count()
         self.players = self.settings.get_current_players()
-        self.color_list = [arcade.color.RED, arcade.color.GREEN, arcade.color.BLUE, arcade.color.YELLOW]
+        self.color_list = [arcade.color.RED, arcade.color.BLUE, arcade.color.GREEN, arcade.color.YELLOW]
         self.color_list_string = ["red", "blue", "green", "yellow"]
         self.available_colors = ["red", "blue", "green", "yellow"]
         self.selected_colors = []
