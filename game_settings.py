@@ -56,6 +56,7 @@ class game_settings:
             if key == tile_num:
                 return val
         return 0
+
     def get_placed_tiles(self):
         """This returns the placed tiles"""
         return self.placed_tiles
