@@ -465,9 +465,4 @@ class GameView(arcade.View):
                 self.rotating_tile.change_angle = True
                 self.rotating_tile.angle = 90 + self.rotating_tile.angle
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
-                print("printing the roataiton if its added:",self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0] ))
-                # self.curr_tile.tile.rotate_tile()
-                # TODO: set top/ sides
-                print("before rotate", self.settings.placed_tiles[-1][0][1].get_top())
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
-                print("after rotate",self.settings.placed_tiles[-1][0][1].get_top())
