@@ -3,9 +3,16 @@
 
 import arcade
 import choose_view
+# Global Var: Screen Size
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 
 class OpenView(arcade.View):
     """ View to Open Game"""
+    def __init__(self):
+        super().__init__()
+        # Initialize Background Image
+        self.background = arcade.load_texture("images/screen_savor.jpg")
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
@@ -19,11 +26,17 @@ class OpenView(arcade.View):
     def on_draw(self):
         """ Draw this view """
         self.clear()
+        # Drawing the background image
+        arcade.draw_texture_rectangle(SCREEN_WIDTH / 2,
+                                      SCREEN_HEIGHT / 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT,
+                                      self.background)
         arcade.draw_text("Carcassonne",
                          self.window.width / 2,
                          self.window.height / 2,
-                         arcade.color.WHITE,
-                         font_size=50,
+                         arcade.color.BLACK,
+                         font_size=80,
                          anchor_x="center",
                          font_name="Kenney Future")
 

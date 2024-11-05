@@ -41,6 +41,10 @@ class GameView(arcade.View):
         self.scoreboard_list = None
         self.tile_list = None
         self.help_list = None
+        # Initalize settings
+        self.settings = settings
+        self.start_tile = tile.start
+        self.tile_list = tile.tiles
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
@@ -51,7 +55,7 @@ class GameView(arcade.View):
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
-                           UIFlatButton(text="DONE", width=100))
+                           UIFlatButton(text=self.settings.button_text, width=100))
         self.place_meeple_button = ((arcade.gui.
                            UIFlatButton(text="PLACE MEEPLE", width=150)))
         # add box to manager
@@ -73,10 +77,7 @@ class GameView(arcade.View):
                 child=self.h_box,
                 style=None)
         )
-        # Initalize settings
-        self.settings = settings
-        self.start_tile = tile.start
-        self.tile_list = tile.tiles
+
         # load the tiles into settings for first round
         if settings.current_round == 1:
             # count keeps track of tile ID
@@ -153,7 +154,12 @@ class GameView(arcade.View):
         if len(self.settings.placed_tiles) == 0:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
-        print(self.settings.placed_tiles)
+            self.settings.add_feature_tile((99,self.start_tile))
+
+        print("placed tiles",self.settings.placed_tiles)
+        for i in self.tile_list:
+            print("in tile list",i)
+        print(self.settings.feature_container)
        # Keep location of placed tile sprites
         for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
@@ -246,7 +252,9 @@ class GameView(arcade.View):
         """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it. """
-
+        # change button from start to done
+        if self.done_button.text != self.settings.button_text:
+            self.done_button.text = self.settings.button_text
         # if tile moved update with new location
         if self.curr_tile.get_moved():
             self.tile_sprite.center_x = self.curr_tile.get_x()
@@ -263,61 +271,85 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
-        
+        # boolean if you can place tile
+        done_valid = False
         # TODO: Validate if tile can be placed in its spot, current bug if tile doesn't move
-        # get player count for indexing
-        count = self.settings.get_player_count() - 1
-        # if the last player to go, increment current round
-        if self.settings.get_current_player() == self.settings.current_players[count]:
-            round = self.settings.get_current_round() + 1
-            self.settings.set_current_round(round)
+        # TODO: change this next line
+        # check tile sides to see if it can be added to list
+        if self.settings.feature_container[0]:
+             if self.settings.feature_container[0][1].get_right() == self.settings.placed_tiles[-1][0][1].get_left():
+                    self.settings.add_feature_tile(self.settings.placed_tiles[-1][0])
+                    done_valid = True
+        print("printing tile feature",self.settings.feature_container)
+        print(self.settings.tile_count)
+        if done_valid:
+            # get player count for indexing
+            count = self.settings.get_player_count() - 1
+            # if the last player to go, increment current round
+            if self.settings.get_current_player() == self.settings.current_players[count]:
+                round = self.settings.get_current_round() + 1
+                self.settings.set_current_round(round)
 
-        # get current player
-        current_player = self.settings.get_current_player()
-        # increment player to next player in the list
-        for player in range(len(self.settings.current_players)):
-            if current_player == self.settings.current_players[player]:
-                # if current player is last in list, current player is first
-                if current_player == self.settings.current_players[-1]:
-                    current_player = self.settings.current_players[0]
-                    self.settings.set_current_player(current_player)
+            # get current player
+            current_player = self.settings.get_current_player()
+            # increment player to next player in the list
+            for player in range(len(self.settings.current_players)):
+                if current_player == self.settings.current_players[player]:
+                    # if current player is last in list, current player is first
+                    if current_player == self.settings.current_players[-1]:
+                        current_player = self.settings.current_players[0]
+                        self.settings.set_current_player(current_player)
+                    else:
+                        # increment to next player in list
+                        current_player = self.settings.current_players[player+1]
+                        self.settings.set_current_player(current_player)
+                        break
+            # update_tiles
+            new_list = []
+            # save sprite locations
+            self.curr_tile.set_x(self.tile_sprite.center_x)
+            self.curr_tile.set_y(self.tile_sprite.center_y)
+            # update the placed tiles, with new coordinates
+            for item in self.settings.placed_tiles:
+                print("Printing item ", item)
+                print("printing top ", item[0][1].get_top())
+                if item == self.settings.placed_tiles[-1]:
+                    new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
                 else:
-                    # increment to next player in list
-                    current_player = self.settings.current_players[player+1]
-                    self.settings.set_current_player(current_player)
-                    break
-        # update_tiles
-        new_list = []
-        # save sprite locations
-        self.curr_tile.set_x(self.tile_sprite.center_x)
-        self.curr_tile.set_y(self.tile_sprite.center_y)
-        # update the placed tiles, with new coordinates
-        for item in self.settings.placed_tiles:
-            print("Printing item ", item)
-            print("printing top ", item[0][1].get_top())
-            if item == self.settings.placed_tiles[-1]:
-                new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
-            else:
-                new_list.append(item)
-        self.settings.placed_tiles = new_list
+                    new_list.append(item)
+            self.settings.placed_tiles = new_list
 
-        # change tile to next tile in list,
-        self.curr_tile.set_moved(False)
-        self.curr_tile.set_y(100)
-        self.curr_tile.set_x(200)
-        tile = self.settings.tiles[self.settings.tile_count][1].image
-        self.tile_sprite = arcade.Sprite(tile,
-                                      SPRITE_SCALING_TILE)
-        self.tile_sprite.center_x = self.curr_tile.get_x()
-        self.tile_sprite.center_y = self.curr_tile.get_y()
-        self.tile_list.append(self.tile_sprite)
-        self.settings.increment_tile_count()
-        # TODO: validate if tile is in valid spot
-        if self.settings.tile_count != 0:
-            # add placed tile to placed_tile list in settings
-            self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count - 1],
-                                          self.tile_sprite.center_x, self.tile_sprite.center_y)
-
+            # change tile to next tile in list,
+            self.curr_tile.set_moved(False)
+            self.curr_tile.set_y(100)
+            self.curr_tile.set_x(200)
+            tile = self.settings.tiles[self.settings.tile_count][1].image
+            self.tile_sprite = arcade.Sprite(tile,
+                                          SPRITE_SCALING_TILE)
+            self.tile_sprite.center_x = self.curr_tile.get_x()
+            self.tile_sprite.center_y = self.curr_tile.get_y()
+            self.tile_list.append(self.tile_sprite)
+            self.settings.increment_tile_count()
+            # TODO: validate if tile is in valid spot
+            if self.settings.tile_count != 0:
+                # add placed tile to placed_tile list in settings
+                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count - 1],
+                                              self.tile_sprite.center_x, self.tile_sprite.center_y)
+        # if button is start then display the new button
+        if self.settings.button_text == "START":
+            # change tile to next tile in list,
+            self.curr_tile.set_moved(False)
+            self.curr_tile.set_y(100)
+            self.curr_tile.set_x(200)
+            tile = self.settings.tiles[self.settings.tile_count][1].image
+            self.tile_sprite = arcade.Sprite(tile,
+                                             SPRITE_SCALING_TILE)
+            self.tile_sprite.center_x = self.curr_tile.get_x()
+            self.tile_sprite.center_y = self.curr_tile.get_y()
+            self.tile_list.append(self.tile_sprite)
+            self.settings.increment_tile_count()
+            self.settings.set_button_text("DONE")
+            self.setup()
 
     def on_place_meeple(self, event):
         # TODO make sure tile has been placed in current round as well
@@ -386,6 +418,8 @@ class GameView(arcade.View):
 
             # Allow dragging to be possible
             if clicked_tile:
+                print("clicked_tile", clicked_tile[0])
+                print("NEW LAST IN TILE LIST", self.tile_list[-1])
                 # if current tile is clicked and is the newest tile, dragging is possible
                 if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
                     self.dragging_sprite = clicked_tile[0]

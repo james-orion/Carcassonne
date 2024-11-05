@@ -15,7 +15,8 @@ class game_settings:
         self.placed_tiles = []
         self.tile_count = 0
         self.total_rotation = {}
-
+        self.feature_container = []
+        self.button_text = "START"
 
     def set_current_round(self, round):
         """ This sets the current round """
@@ -42,6 +43,9 @@ class game_settings:
         """ This sets player count"""
         self.player_count = count
 
+    def set_button_text(self, text):
+        """ This increments to next tile"""
+        self.button_text =text
     def increment_tile_count(self):
         """ This increments to next tile"""
         self.tile_count += 1
@@ -49,6 +53,20 @@ class game_settings:
     def add_placed_tile(self, tile, x, y):
         """This adds to placed tiles"""
         self.placed_tiles.append((tile, x, y))
+
+    def add_feature_tile(self, tile,):
+        """This checks to see if feature is in list, if so
+        it connects to list or builds a new list"""
+        if self.feature_container == []:
+            self.feature_container.append(tile)
+        else:
+            for i in self.feature_container:
+                if tile in self.feature_container:
+                    pass
+                else:
+                    self.feature_container.append(tile)
+
+
 
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""

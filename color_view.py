@@ -28,9 +28,9 @@ class ColorView(arcade.View):
         # create forward and back buttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
-        self.v_box = (arcade.gui.UIBoxLayout())
+        self.v_box = (arcade.gui.UIBoxLayout(vertical=False))
         back_button = (arcade.gui.UIFlatButton(text="BACK", width=100))
-        self.v_box.add(back_button.with_space_around(left=10))
+        self.v_box.add(back_button.with_space_around(left=10, right=100))
         back_button.on_click = self.on_back
         next_button = (arcade.gui.UIFlatButton(text="NEXT", width=100))
         self.v_box.add(next_button.with_space_around(left=10))
