@@ -4,7 +4,7 @@
 
 # TODO pass in tile itself instead of just tile sprite
 # TODO replace red dot with player's color
-# TODO add 'place meeple' button to GameView file and finish connecting the two classes
+# TODO finish connecting with game_view
 # TODO finish confirm button functionality
 
 import arcade
@@ -19,6 +19,7 @@ class MeeplePlacementView(arcade.View):
     def __init__(self, curr_tile, curr_meeple, settings, tile):
         super().__init__()
         self.player = settings.current_player
+        # self.player_color = player.get_color() need from player class
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
         self.settings = settings
