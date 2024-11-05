@@ -6,8 +6,8 @@ import arcade.gui
 import game_view
 
 # Global Var: Screen Size
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 
 class ScoreboardView(arcade.View):
     """ View to show Scoreboard """
