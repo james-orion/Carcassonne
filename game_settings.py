@@ -14,6 +14,7 @@ class game_settings:
         self.current_player = ""
         self.placed_tiles = []
         self.tile_count = 0
+        self.total_rotation = {}
 
 
     def set_current_round(self, round):
@@ -23,6 +24,15 @@ class game_settings:
     def add_current_players(self, player):
         """ This adds players """
         self.current_players.append(player)
+
+    def increment_rotation(self, tile):
+        """ This increments the rotation of a tile"""
+        # If tile already exists, increment its rotation by 90
+        if tile in self.total_rotation:
+            self.total_rotation[tile] += 90
+        # If tile doesn't exist, add it with an initial rotation to 90
+        else:
+            self.total_rotation[tile] = 90
 
     def set_current_player(self, player):
         """ This sets current player """
@@ -39,6 +49,12 @@ class game_settings:
     def add_placed_tile(self, tile, x, y):
         """This adds to placed tiles"""
         self.placed_tiles.append((tile, x, y))
+
+    def get_rotation_click(self, tile_num):
+        """This returns the total rotation on tile"""
+        for key, val in dict(self.total_rotation.items()).items():
+            if key == tile_num:
+                return val
 
     def get_placed_tiles(self):
         """This returns the placed tiles"""
