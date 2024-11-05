@@ -83,7 +83,7 @@ class NameView(arcade.View):
         self.clear()
         arcade.draw_text("Enter Names",
                          self.window.width / 2,
-                         self.window.height - 50,
+                         self.window.height - 100,
                          arcade.color.WHITE,
                          font_size=40,
                          anchor_x="center",
@@ -95,6 +95,7 @@ class NameView(arcade.View):
     def on_back(self, event):
         """ If the user presses button change view to go back to the st
             screen. """
+        self.manager.disable()
         choose = choose_view.ChooseView()
         self.window.show_view(choose)
 
