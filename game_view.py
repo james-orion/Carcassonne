@@ -9,7 +9,8 @@ import tile
 import random
 
 # Global Var: Screen Size
-SCREEN_WIDTH = 1100
+
+SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 START = 0
 END = 2000
@@ -134,8 +135,8 @@ class GameView(arcade.View):
         scoreboard = ":resources:onscreen_controls/shaded_dark/hamburger.png"
         self.scoreboard_sprite = arcade.Sprite(scoreboard,
                                                SPRITE_SCALING_SCORE)
-        self.scoreboard_sprite.center_x = 750
-        self.scoreboard_sprite.center_y = 475
+        self.scoreboard_sprite.center_x = 900
+        self.scoreboard_sprite.center_y = 515
         self.scoreboard_list.append(self.scoreboard_sprite)
 
         # Start Tile Sprite
@@ -168,8 +169,8 @@ class GameView(arcade.View):
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
         self.help_sprite = arcade.Sprite(help,
                                          SPRITE_SCALING_HELP)
-        self.help_sprite.center_x = 750
-        self.help_sprite.center_y = 550
+        self.help_sprite.center_x = 900
+        self.help_sprite.center_y = 600
         self.help_list.append(self.help_sprite)
 
     def on_draw(self):
@@ -179,12 +180,14 @@ class GameView(arcade.View):
         # Start the Rendering Process
         arcade.start_render()
 
+
         # Drawing the background image
-        arcade.draw_texture_rectangle(SCREEN_WIDTH / 2,
-                                      SCREEN_HEIGHT / 2,
+        arcade.draw_texture_rectangle(SCREEN_WIDTH/2,
+                                      SCREEN_HEIGHT/2,
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT,
                                       self.background)
+
         # Drawing Sprite Lists
         self.grid_sprite_list.draw()
         self.scoreboard_list.draw()
@@ -194,7 +197,7 @@ class GameView(arcade.View):
         # Drawing Button
         self.manager.draw()
         # Drawing Text, Need From Player Class?
-        start_x = 500
+        start_x = 600
         start_y = 75
         # Player text from player class
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
