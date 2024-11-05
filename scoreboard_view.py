@@ -49,8 +49,8 @@ class ScoreboardView(arcade.View):
                          anchor_x="center",
                          font_name="Kenney Future")
         # set initial line (x,y)
-        name_line = 150
-        score_line = 400
+        name_line = 250
+        score_line = 550
         height_line = self.window.height - 150
         # for each player, print name and score
         for player in self.settings.current_players:

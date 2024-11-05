@@ -55,8 +55,8 @@ class GameView(arcade.View):
         self.place_meeple_button = ((arcade.gui.
                            UIFlatButton(text="PLACE MEEPLE", width=150)))
         # add box to manager
-        self.h_box.add(self.place_meeple_button.with_space_around( top=400))
-        self.h_box.add(self.done_button.with_space_around( top=400))
+        self.h_box.add(self.place_meeple_button.with_space_around( top=500, right= 50))
+        self.h_box.add(self.done_button.with_space_around( top=500))
         # create event for done
         self.done_button.on_click = self.on_done
         self.place_meeple_button.on_click = self.on_place_meeple
@@ -118,7 +118,6 @@ class GameView(arcade.View):
                 self.grid_sprites[row].append(sprite)
 
 
-
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
 
@@ -137,8 +136,8 @@ class GameView(arcade.View):
         # Scoreboard Sprite
         scoreboard = ":resources:onscreen_controls/shaded_dark/hamburger.png"
         self.scoreboard_sprite = arcade.Sprite(scoreboard,
-                                               SPRITE_SCALING_SCORE)
-        self.scoreboard_sprite.center_x = 900
+                                               SPRITE_SCALING_HELP)
+        self.scoreboard_sprite.center_x = 950
         self.scoreboard_sprite.center_y = 515
         self.scoreboard_list.append(self.scoreboard_sprite)
 
@@ -151,9 +150,10 @@ class GameView(arcade.View):
         self.tile_list.append(self.tile_sprite)
 
         # if first round add start tile to placed tile
-        if self.settings.current_round == 1:
+        if len(self.settings.placed_tiles) == 0:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
+        print(self.settings.placed_tiles)
        # Keep location of placed tile sprites
         for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
@@ -172,7 +172,7 @@ class GameView(arcade.View):
         help = ":resources:onscreen_controls/shaded_dark/gear.png"
         self.help_sprite = arcade.Sprite(help,
                                          SPRITE_SCALING_HELP)
-        self.help_sprite.center_x = 900
+        self.help_sprite.center_x = 950
         self.help_sprite.center_y = 600
         self.help_list.append(self.help_sprite)
 
@@ -199,9 +199,19 @@ class GameView(arcade.View):
         self.player_list.draw()
         # Drawing Button
         self.manager.draw()
-        # Drawing Text, Need From Player Class?
-        start_x = 600
-        start_y = 75
+        # Drawing Text, from settings round #
+        start_x= 50
+        start_y = 600
+        # Player text from player class
+        arcade.draw_text("ROUND " + str(self.settings.get_current_round()) ,
+                         start_x,
+                         start_y,
+                         arcade.color.WHITE,
+                         30,
+                         font_name="Kenney Future")
+        # Drawing Text, Need From Player Class
+        start_x = 700
+        start_y = 50
         # Player text from player class
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
