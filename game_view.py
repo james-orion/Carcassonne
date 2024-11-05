@@ -377,7 +377,7 @@ class GameView(arcade.View):
             # Allow dragging to be possible
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if clicked_tile[0] == self.tile_list[-1]:
+                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
                     self.dragging_sprite = clicked_tile[0]
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
@@ -385,7 +385,7 @@ class GameView(arcade.View):
                                                        ,self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
-                if clicked_tile[0] == self.tile_list[-1]:
+                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
                     self.rotating_tile = clicked_tile[0]
 
 
