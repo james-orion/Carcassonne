@@ -12,8 +12,8 @@ import arcade.gui
 import game_settings
 import game_view
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 
 class MeeplePlacementView(arcade.View):
     def __init__(self, curr_tile, curr_meeple, settings, tile):
@@ -94,9 +94,9 @@ class MeeplePlacementView(arcade.View):
         self.curr_tile.set_moved(False)
         self.curr_meeple.set_moved(False)
         # switch to game view
-        game_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
-        game_view.setup()
-        self.window.show_view(game_view)
+        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+        new_view.setup()
+        self.window.show_view(new_view)
 
     def on_confirm(self, event):
         # check whether Meeple placement is valid

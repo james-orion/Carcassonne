@@ -6,6 +6,7 @@ import arcade.gui
 import scoreboard_view
 import help_view
 import tile
+import meeple_placement_view
 import random
 
 # Global Var: Screen Size
@@ -301,7 +302,27 @@ class GameView(arcade.View):
 
 
     def on_place_meeple(self, event):
-        print("test")
+        # TODO make sure tile has been placed in current round as well
+        if len(self.settings.get_placed_tiles()) > 1:
+            # create new list to update placed sprites
+            new_list = []
+            # save sprites location
+            self.curr_tile.set_moved(True)
+            self.curr_tile.set_x(self.tile_sprite.center_x)
+            self.curr_tile.set_y(self.tile_sprite.center_y)
+            # update the placed tiles, with new coordinates
+            for item in self.settings.placed_tiles:
+                if item == self.settings.placed_tiles[-1]:
+                    new_list.append((item[0],self.curr_tile.get_x(),self.curr_tile.get_y()))
+                else:
+                    new_list.append(item)
+            self.settings.placed_tiles = new_list
+            self.curr_meeple.set_moved(True)
+            self.curr_meeple.set_x(self.player_sprite.center_x)
+            self.curr_meeple.set_y(self.player_sprite.center_y)
+            # change view to help screen
+            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite)
+            self.window.show_view(new_view)
 
 
     def on_resize(self, width, height):
