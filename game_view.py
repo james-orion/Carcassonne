@@ -9,8 +9,8 @@ import tile
 import random
 
 # Global Var: Screen Size
-SCREEN_WIDTH = 1100
-SCREEN_HEIGHT = 650
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 START = 0
 END = 2000
 STEP = 50
@@ -21,8 +21,8 @@ SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
-ROW_COUNT = 7
-COLUMN_COUNT = 11
+ROW_COUNT = 6
+COLUMN_COUNT = 6
 MARGIN = 5
 WIDTH = 60
 HEIGHT = 60
@@ -51,10 +51,14 @@ class GameView(arcade.View):
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
                            UIFlatButton(text="DONE", width=100))
+        self.place_meeple_button = ((arcade.gui.
+                           UIFlatButton(text="PLACE MEEPLE", width=150)))
         # add box to manager
+        self.h_box.add(self.place_meeple_button.with_space_around( top=400))
         self.h_box.add(self.done_button.with_space_around( top=400))
         # create event for done
         self.done_button.on_click = self.on_done
+        self.place_meeple_button.on_click = self.on_place_meeple
         # Styling container for button
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -102,7 +106,7 @@ class GameView(arcade.View):
         for row in range(ROW_COUNT):
             self.grid_sprites.append([])
             for column in range(COLUMN_COUNT):
-                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 75
+                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 200
                 y = row * (HEIGHT + MARGIN) + (HEIGHT / 2 + MARGIN) + 150
                 #TODO: Update this when a tile is placed.
                 sprite_color = arcade.make_transparent_color([0,0,0], 100)
@@ -111,7 +115,6 @@ class GameView(arcade.View):
                 sprite.center_y = y
                 self.grid_sprite_list.append(sprite)
                 self.grid_sprites[row].append(sprite)
-
 
 
 
@@ -142,17 +145,16 @@ class GameView(arcade.View):
         tile = self.start_tile.image
         self.tile_sprite = arcade.Sprite(tile,
                                          SPRITE_SCALING_TILE)
-        self.tile_sprite.center_x = self.grid_sprites[3][5].center_x
-        self.tile_sprite.center_y = self.grid_sprites[3][5].center_y
+        self.tile_sprite.center_x = SCREEN_WIDTH/2
+        self.tile_sprite.center_y = SCREEN_HEIGHT/2
         self.tile_list.append(self.tile_sprite)
-
 
         # if first round add start tile to placed tile
         if self.settings.current_round == 1:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
         # Keep location of placed tile sprites
-        for i,item in enumerate(self.settings.placed_tiles[1:],1):
+        for item in self.settings.placed_tiles:
             object = item[0][1]
             tile = object.image
             self.tile_sprite = arcade.Sprite(tile,
@@ -298,6 +300,10 @@ class GameView(arcade.View):
                                           self.tile_sprite.center_x, self.tile_sprite.center_y)
 
 
+    def on_place_meeple(self, event):
+        print("test")
+
+
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
 
@@ -341,11 +347,8 @@ class GameView(arcade.View):
 
             # Allow dragging to be possible
             if clicked_tile:
-                print("clicked tile",clicked_tile[0])
-                print("tile list end", self.tile_list[-1])
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if (clicked_tile[0] == self.tile_list[-1] and
-                        clicked_tile[0] != self.tile_list[0]):
+                if clicked_tile[0] == self.tile_list[-1]:
                     self.dragging_sprite = clicked_tile[0]
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
@@ -353,8 +356,7 @@ class GameView(arcade.View):
                                                        ,self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
-                if (clicked_tile[0] == self.tile_list[-1] and
-                        clicked_tile[0] != self.tile_list[0]):
+                if clicked_tile[0] == self.tile_list[-1]:
                     self.rotating_tile = clicked_tile[0]
 
 
