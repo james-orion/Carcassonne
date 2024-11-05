@@ -265,6 +265,8 @@ class GameView(arcade.View):
             self.tile_sprite.center_x = self.curr_meeple.get_x()
             self.tile_sprite.center_y = self.curr_meeple.get_y()
 
+
+
     def on_done(self, event):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
@@ -304,6 +306,17 @@ class GameView(arcade.View):
                         current_player = self.settings.current_players[player+1]
                         self.settings.set_current_player(current_player)
                         break
+
+
+            # creates a matrix matching the grid with a 1 if there is a tile there and 0 if not
+            grid_placements = []
+            for i in range(len(self.grid_sprites)):
+                grid_placements.append([])
+                for j in range(len(self.grid_sprites[i])):
+                    grid_placements[i].append(0)
+                    if(self.grid_sprites[i][j].collides_with_list(self.tile_list)):
+                        grid_placements[i][j] = 1
+
             # update_tiles
             new_list = []
             # save sprite locations
