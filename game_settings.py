@@ -52,10 +52,10 @@ class game_settings:
 
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
-        for key, val in dict(self.total_rotation.items()).items():
+        for key, val in self.total_rotation.items():
             if key == tile_num:
                 return val
-
+        return 0
     def get_placed_tiles(self):
         """This returns the placed tiles"""
         return self.placed_tiles
