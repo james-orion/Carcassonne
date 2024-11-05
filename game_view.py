@@ -6,10 +6,10 @@ import arcade.gui
 import scoreboard_view
 import help_view
 import tile
+import meeple_placement_view
 import random
 
 # Global Var: Screen Size
-
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 START = 0
@@ -52,10 +52,14 @@ class GameView(arcade.View):
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
                            UIFlatButton(text="DONE", width=100))
+        self.place_meeple_button = ((arcade.gui.
+                           UIFlatButton(text="PLACE MEEPLE", width=150)))
         # add box to manager
+        self.h_box.add(self.place_meeple_button.with_space_around( top=400))
         self.h_box.add(self.done_button.with_space_around( top=400))
         # create event for done
         self.done_button.on_click = self.on_done
+        self.place_meeple_button.on_click = self.on_place_meeple
         # Styling container for button
         self.manager.add(
             arcade.gui.UIAnchorWidget(
@@ -115,7 +119,6 @@ class GameView(arcade.View):
 
 
 
-
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
 
@@ -151,7 +154,7 @@ class GameView(arcade.View):
         if self.settings.current_round == 1:
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
-        # Keep location of placed tile sprites
+       # Keep location of placed tile sprites
         for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
             tile = object.image
@@ -306,6 +309,30 @@ class GameView(arcade.View):
                                           self.tile_sprite.center_x, self.tile_sprite.center_y)
 
 
+    def on_place_meeple(self, event):
+        # TODO make sure tile has been placed in current round as well
+        if len(self.settings.get_placed_tiles()) > 1:
+            # create new list to update placed sprites
+            new_list = []
+            # save sprites location
+            self.curr_tile.set_moved(True)
+            self.curr_tile.set_x(self.tile_sprite.center_x)
+            self.curr_tile.set_y(self.tile_sprite.center_y)
+            # update the placed tiles, with new coordinates
+            for item in self.settings.placed_tiles:
+                if item == self.settings.placed_tiles[-1]:
+                    new_list.append((item[0],self.curr_tile.get_x(),self.curr_tile.get_y()))
+                else:
+                    new_list.append(item)
+            self.settings.placed_tiles = new_list
+            self.curr_meeple.set_moved(True)
+            self.curr_meeple.set_x(self.player_sprite.center_x)
+            self.curr_meeple.set_y(self.player_sprite.center_y)
+            # change view to help screen
+            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite)
+            self.window.show_view(new_view)
+
+
     def on_resize(self, width, height):
         """ This method is automatically called when the window is resized. """
 
@@ -349,11 +376,8 @@ class GameView(arcade.View):
 
             # Allow dragging to be possible
             if clicked_tile:
-                print("clicked tile",clicked_tile[0])
-                print("tile list end", self.tile_list[-1])
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if (clicked_tile[0] == self.tile_list[-1] and
-                        clicked_tile[0] != self.tile_list[0]):
+                if clicked_tile[0] == self.tile_list[-1]:
                     self.dragging_sprite = clicked_tile[0]
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
@@ -361,8 +385,7 @@ class GameView(arcade.View):
                                                        ,self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
-                if (clicked_tile[0] == self.tile_list[-1] and
-                        clicked_tile[0] != self.tile_list[0]):
+                if clicked_tile[0] == self.tile_list[-1]:
                     self.rotating_tile = clicked_tile[0]
 
 

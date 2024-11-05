@@ -18,20 +18,22 @@ class Meeple:
 
     
     # place Meeple on game board and store information about where it was placed
-    def place_meeple(self, tile, user_selection):
-        if user_selection == "TOP":
-            self.feature_type == tile.get_top()
-        elif user_selection == "LEFT":
-            self.feature_type == tile.get_left()
-        elif user_selection == "RIGHT":
-            self.feature_type == tile.get_right()
-        elif user_selection == "BOTTOM":
-            self.feature_type == tile.get_bottom()
-        else:
-            self.feature_type == tile.get_building()
-
+    def place_meeple(self, tile, user_choice):
         if self.validate_placement(tile):
+            # record feature type Meeple was placed on
             self.is_placed = True
+            if user_choice == "TOP":
+                self.feature_type == tile.get_top()
+            elif user_choice == "LEFT":
+                self.feature_type == tile.get_left()
+            elif user_choice == "RIGHT":
+                self.feature_type == tile.get_right()
+            elif user_choice == "BOTTOM":
+                self.feature_type == tile.get_bottom()
+            else:
+                self.feature_type == tile.get_building()
+            
+            # update Meeple's sprite
             if self.feature_type == "field":
                 self.orientation = "horizontal"
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_horizontal_sprite.png\""
@@ -40,7 +42,6 @@ class Meeple:
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_sprite.png\""
             return True
         else:
-            self.feature_type = None
             return False
 
     

@@ -20,7 +20,7 @@ class ColorView(arcade.View):
         # TODO get list of players, for names and number of players
         self.num_players = self.settings.get_player_count()
         self.players = self.settings.get_current_players()
-        self.color_list = [arcade.color.RED, arcade.color.GREEN, arcade.color.BLUE, arcade.color.YELLOW]
+        self.color_list = [arcade.color.RED, arcade.color.BLUE, arcade.color.GREEN, arcade.color.YELLOW]
         self.color_list_string = ["red", "blue", "green", "yellow"]
         self.available_colors = ["red", "blue", "green", "yellow"]
         self.selected_colors = []
@@ -35,7 +35,7 @@ class ColorView(arcade.View):
         next_button = (arcade.gui.UIFlatButton(text="NEXT", width=100))
         self.v_box.add(next_button.with_space_around(left=10))
         next_button.on_click = self.on_click_next
-        self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center", anchor_y="center",align_y=-160, child=self.v_box, style=None))
+        self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center", anchor_y="center",align_y=-180, child=self.v_box, style=None))
 
     def on_click(self):
         self.update_text()
@@ -57,11 +57,11 @@ class ColorView(arcade.View):
         arcade.draw_text("All Players Must Select a Color Before Clicking Next", self.window.width / 2, SCREEN_HEIGHT // 2 - 270, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
         for i, color in enumerate(self.color_list):
             # draw a square for each color
-            arcade.draw_text(f"{self.color_list_string[i]}", 175 + i * 150, SCREEN_HEIGHT // 2 + 70, arcade.color.WHITE, 14, anchor_x="center", font_name="Kenney Future")
-            arcade.draw_rectangle_filled(175 + i * 150, SCREEN_HEIGHT // 2, 100, 100, color)
+            arcade.draw_text(f"{self.color_list_string[i]}", 245 + i * 175, SCREEN_HEIGHT // 2 + 70, arcade.color.WHITE, 14, anchor_x="center", font_name="Kenney Future")
+            arcade.draw_rectangle_filled(245 + i * 175, SCREEN_HEIGHT // 2, 100, 100, color)
             # if a player has selected a color, show which color they chose
             for j in range(len(self.selected_colors)):
-                x_offset = 120 + self.color_list_string.index(self.selected_colors[j]) * 150
+                x_offset = 185 + self.color_list_string.index(self.selected_colors[j]) * 175
                 arcade.draw_text(f"Player {j + 1}", x_offset, SCREEN_HEIGHT // 2 - 80, arcade.color.WHITE, 16, font_name="Kenney Future") # TODO replace with actual name
 
         self.manager.draw()
