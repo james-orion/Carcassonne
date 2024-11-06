@@ -2,7 +2,6 @@
 # it was placed. Placement is validated and stored on the
 # game board
 
-# TODO pass in tile itself instead of just tile sprite
 # TODO replace red dot with player's color
 # TODO finish connecting with game_view
 # TODO finish confirm button functionality
@@ -16,19 +15,21 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 
 class MeeplePlacementView(arcade.View):
-    def __init__(self, curr_tile, curr_meeple, settings, tile):
+    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite):
         super().__init__()
         self.player = settings.current_player
-        # self.player_color = player.get_color() need from player class
+        # self.player_color = player.get_color() # need from Player class
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
         self.settings = settings
-        self.tile_image = tile
+        self.tile_image = tile_sprite
+        self.tile = self.settings.get_placed_tiles()[-1][0][1]
         self.background = arcade.load_texture("images/wood.jpg")
         self.has_choosen = False
         self.valid_placement = True
         self.user_choice = None
         self.choice_coordinates = None
+        self.meeple_coord_mods = None
 
         # create confirm and cancel buttons
         self.manager = arcade.gui.UIManager()
@@ -51,7 +52,7 @@ class MeeplePlacementView(arcade.View):
         box_width = int((SCREEN_WIDTH) * 0.75)
         box_height = int((SCREEN_HEIGHT) * 0.75)
         arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, box_width, box_height, arcade.color.STEEL_BLUE)
-        arcade.draw_rectangle_filled(SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2, 275, 275, arcade.color.WHITE) # TODO replace with tile photo
+        arcade.draw_rectangle_filled(SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2, 275, 275, arcade.color.WHITE)
         self.tile_image.scale = 2.5
         self.tile_image.center_x = SCREEN_WIDTH // 2 - 125
         self.tile_image.center_y = SCREEN_HEIGHT // 2
@@ -76,19 +77,24 @@ class MeeplePlacementView(arcade.View):
             self.has_choosen = True
             if placement_choice == 0:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2 + 100]
+                self.meeple_coord_mods = [0, 10]
                 self.user_choice = "TOP"
             elif placement_choice == 1:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 225, SCREEN_HEIGHT // 2]
+                self.meeple_coord_mods = [-10, 0]
                 self.user_choice = "LEFT"
             elif placement_choice == 2:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 25, SCREEN_HEIGHT // 2]
+                self.meeple_coord_mods = [10, 0]
                 self.user_choice = "RIGHT"
             elif placement_choice == 3:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2]
-                self.user_choice = "BOTTOM"
+                self.meeple_coord_mods = [0, 0]
+                self.user_choice = "CENTER"
             elif placement_choice == 4:
                 self.choice_coordinates = [SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2 - 100]
-                self.user_choice = "CENTER"
+                self.meeple_coord_mods = [0, -10]
+                self.user_choice = "BOTTOM"
 
     def on_cancel(self, event):
         # return to GameView as it was previously
@@ -103,11 +109,20 @@ class MeeplePlacementView(arcade.View):
         # check whether Meeple placement is valid
         # if placement is valid, place Meeple and return to GameView
         # if invalid, prompt user to replace Meeple
-        '''
-        if self.player.use_meeple(self.tile, self.user_choice):
-            place meeple
-            return to game
+        if self.player.use_meeple(self.tile, self.user_choice) and self.has_choosen == True: # update in Player class
+            # set coordinates for placed Meeple
+            tile_x_coord = self.curr_tile.get_x()
+            tile_y_coord = self.curr_tile.get_y()
+            new_meeple_coord_x = tile_x_coord + self.meeple_coord_mods[0]
+            new_meeple_coord_y = tile_y_coord + self.meeple_coord_mods[1]
+            self.curr_meeple.set_x(new_meeple_coord_x)
+            self.curr_meeple.set_y(new_meeple_coord_y)
+            # return to GameView as it was previously
+            self.curr_tile.set_moved(False)
+            self.curr_meeple.set_moved(False)
+            # switch to game view
+            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+            new_view.setup()
+            self.window.show_view(new_view)
         else:
             self.valid_placement = False
-        '''
-        pass
