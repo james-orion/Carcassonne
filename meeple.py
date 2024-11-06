@@ -23,18 +23,18 @@ class Meeple:
             # record feature type Meeple was placed on
             self.is_placed = True
             if user_choice == "TOP":
-                self.feature_type == tile.get_top()
+                self.feature_type = tile.get_top()
             elif user_choice == "LEFT":
-                self.feature_type == tile.get_left()
+                self.feature_type = tile.get_left()
             elif user_choice == "RIGHT":
-                self.feature_type == tile.get_right()
+                self.feature_type = tile.get_right()
             elif user_choice == "BOTTOM":
-                self.feature_type == tile.get_bottom()
+                self.feature_type = tile.get_bottom()
             else:
-                self.feature_type == tile.get_building()
+                self.feature_type = tile.get_building()
             
             # update Meeple's sprite
-            if self.feature_type == "field":
+            if str(self.feature_type) == "Side.FIELD":
                 self.orientation = "horizontal"
                 self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_horizontal_sprite.png\""
             else:
