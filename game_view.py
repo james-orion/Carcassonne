@@ -376,7 +376,6 @@ class GameView(arcade.View):
                 if count_valid == len(check_tile_features):
                     done_valid = True
 
-            # TODO: add valid checkers for all sides, if all true set done_valid to true
             if done_valid:
                 # set coordinates back to -1 for next tile
                 self.settings.previous_coor_x = -1
@@ -402,7 +401,6 @@ class GameView(arcade.View):
                             current_player = self.settings.current_players[player+1]
                             self.settings.set_current_player(current_player)
                             break
-
 
                 # update_tiles
                 new_list = []
