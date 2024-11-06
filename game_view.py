@@ -22,8 +22,8 @@ SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
 # Global Var: Text
 DEFAULT_LINE_HEIGHT = 45
-ROW_COUNT = 6
-COLUMN_COUNT = 6
+ROW_COUNT = 7
+COLUMN_COUNT = 11
 MARGIN = 5
 WIDTH = 60
 HEIGHT = 60
@@ -108,8 +108,8 @@ class GameView(arcade.View):
         for row in range(ROW_COUNT):
             self.grid_sprites.append([])
             for column in range(COLUMN_COUNT):
-                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 200
-                y = row * (HEIGHT + MARGIN) + (HEIGHT / 2 + MARGIN) + 150
+                x = column * (WIDTH + MARGIN) + (WIDTH / 2 + MARGIN) + 75
+                y = row * (HEIGHT + MARGIN) + (HEIGHT / 2 + MARGIN) + 125
                 #TODO: Update this when a tile is placed.
                 sprite_color = arcade.make_transparent_color([0,0,0], 100)
                 sprite = arcade.SpriteSolidColor(WIDTH, HEIGHT, sprite_color)
@@ -146,14 +146,14 @@ class GameView(arcade.View):
         tile = self.start_tile.image
         self.tile_sprite = arcade.Sprite(tile,
                                          SPRITE_SCALING_TILE)
-        self.tile_sprite.center_x = SCREEN_WIDTH/2
-        self.tile_sprite.center_y = SCREEN_HEIGHT/2
+        self.tile_sprite.center_x = self.grid_sprites[3][5].center_x
+        self.tile_sprite.center_y = self.grid_sprites[3][5].center_y
         self.tile_list.append(self.tile_sprite)
 
         # if first round add start tile to placed tile
         if len(self.settings.placed_tiles) == 0:
-            self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
-                                           SCREEN_HEIGHT/2)
+            self.settings.add_placed_tile((99,self.start_tile), self.grid_sprites[3][5].center_x,
+                                           self.grid_sprites[3][5].center_y)
             self.settings.add_feature_tile((99,self.start_tile))
 
         print("placed tiles",self.settings.placed_tiles)
