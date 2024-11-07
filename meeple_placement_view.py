@@ -2,9 +2,10 @@
 # it was placed. Placement is validated and stored on the
 # game board
 
-# TODO replace red dot with player's color
 # TODO remove dragging of Meeples
+# TODO fix bug that allows multiple Meeples to be placed on the same turn
 # TODO change scaling and color differences
+# TODO remove curr_meeple?
 
 import arcade
 import arcade.gui
