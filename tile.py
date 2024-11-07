@@ -130,145 +130,97 @@ start = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bott
 
 tiles = []
 
-monastery_road = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY'], image = 'images/img1.png') # x2
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY'], image = 'images/img1.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], building = Building['MONASTERY'], image = 'images/img1.png'))
 
-tiles.append(monastery_road)
-tiles.append(monastery_road)
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY'], image = 'images/img2.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY'], image = 'images/img2.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY'], image = 'images/img2.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY'], image = 'images/img2.png'))
 
-monastery = Tile(top = Side['FIELD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], building = Building['MONASTERY'], image = 'images/img2.png') # x4
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['CITY'], shield = True, image = 'images/img3.png'))
 
-tiles.append(monastery)
-tiles.append(monastery)
-tiles.append(monastery)
-tiles.append(monastery)
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD'], image = 'images/img4.png'))
+tiles.append( Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD'], image = 'images/img4.png'))
+tiles.append( Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD'], image = 'images/img4.png'))
 
-city_surrounded = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['CITY'], shield = True, image = 'images/img3.png') # one of these
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png'))
 
-tiles.append(city_surrounded)
+tiles.append(Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img6.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img6.png'))
 
-top_city_w_road = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['FIELD'], image = 'images/img4.png') # x3
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], image = 'images/img7.png'))
 
-tiles.append(top_city_w_road)
-tiles.append(top_city_w_road)
-tiles.append(top_city_w_road)
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], is_connected = False, image = 'images/img8.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], is_connected = False, image = 'images/img8.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], is_connected = False, image = 'images/img8.png'))
 
-top_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['FIELD'], image = 'images/img5.png') # x5
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['FIELD'], bottom = Side['FIELD'], is_connected = False, image = 'images/img9.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['FIELD'], bottom = Side['FIELD'], is_connected = False, image = 'images/img9.png'))
 
-tiles.append(top_city)
-tiles.append(top_city)
-tiles.append(top_city)
-tiles.append(top_city)
-tiles.append(top_city)
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img10.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img10.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img10.png'))
 
-left_right_city_shield = Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img6.png') # x2
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img11.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img11.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img11.png'))
 
-tiles.append(left_right_city_shield)
-tiles.append(left_right_city_shield)
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img12.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img12.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img12.png'))
 
-left_right_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], image = 'images/img7.png') # x1
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img13.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img13.png'))
 
-tiles.append(left_right_city)
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img14.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img14.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img14.png'))
 
-top_bottom_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], is_connected = False, image = 'images/img8.png') # x3
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], shield = True, image = 'images/img15.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], shield = True, image = 'images/img15.png'))
 
-tiles.append(top_bottom_city)
-tiles.append(top_bottom_city)
-tiles.append(top_bottom_city)
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img16.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img16.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img16.png'))
 
-top_left_city = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['FIELD'], bottom = Side['FIELD'], is_connected = False, image = 'images/img9.png') # x2
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img17.png'))
 
-tiles.append(top_left_city)
-tiles.append(top_left_city)
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img18.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img18.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img18.png'))
 
-top_city_right_road = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img10.png') # x3
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['ROAD'], shield = True, image = 'images/img19.png'))
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['ROAD'], shield = True, image = 'images/img19.png'))
 
-tiles.append(top_city_right_road)
-tiles.append(top_city_right_road)
-tiles.append(top_city_right_road)
+tiles.append(Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['ROAD'], image = 'images/img20.png'))
 
-top_city_left_road = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img11.png') # x3
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
+tiles.append(Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png'))
 
-tiles.append(top_city_left_road)
-tiles.append(top_city_left_road)
-tiles.append(top_city_left_road)
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png'))
 
-top_city_village = Tile(top = Side['CITY'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img12.png') # x3
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img23.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img23.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img23.png'))
+tiles.append(Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img23.png'))
 
-tiles.append(top_city_village)
-tiles.append(top_city_village)
-tiles.append(top_city_village)
-
-top_right_city_shield = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img13.png') # x2
-
-tiles.append(top_right_city_shield)
-tiles.append(top_right_city_shield)
-
-top_right_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img14.png') # x3
-
-tiles.append(top_right_city)
-tiles.append(top_right_city)
-tiles.append(top_right_city)
-
-top_left_city_shield_road = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], shield = True, image = 'images/img15.png') # x2
-
-tiles.append(top_left_city_shield_road)
-tiles.append(top_left_city_shield_road)
-
-top_left_city_road =  Tile(top = Side['CITY'], left = Side['CITY'], right = Side['ROAD'], bottom = Side['ROAD'], image = 'images/img16.png') # x3
-
-tiles.append(top_left_city_road)
-tiles.append(top_left_city_road)
-tiles.append(top_left_city_road)
-
-top_left_right_city_shield = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], shield = True, image = 'images/img17.png') # x1
-
-tiles.append(top_left_right_city_shield)
-
-top_left_right_city = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img18.png') # x3
-
-tiles.append(top_left_right_city)
-tiles.append(top_left_right_city)
-tiles.append(top_left_right_city)
-
-top_left_right_city_road_shield = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['ROAD'], shield = True, image = 'images/img19.png') # x2
-
-tiles.append(top_left_right_city_road_shield)
-tiles.append(top_left_right_city_road_shield)
-
-top_left_right_city_road = Tile(top = Side['CITY'], left = Side['CITY'], right = Side['CITY'], bottom = Side['ROAD'], image = 'images/img20.png') # x1
-
-tiles.append(top_left_right_city_road)
-
-top_bottom_road = Tile(top = Side['ROAD'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img21.png') # x8
-
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-tiles.append(top_bottom_road)
-
-left_bottom_road = Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['FIELD'], bottom = Side['ROAD'], image = 'images/img22.png') # x9
-
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-tiles.append(left_bottom_road)
-
-left_right_bottom_village = Tile(top = Side['FIELD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img23.png') # x4
-
-tiles.append(left_right_bottom_village)
-tiles.append(left_right_bottom_village)
-tiles.append(left_right_bottom_village)
-tiles.append(left_right_bottom_village)
-
-village = Tile(top = Side['ROAD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img24.png') # x1
-
-tiles.append(village)
+tiles.append(Tile(top = Side['ROAD'], left = Side['ROAD'], right = Side['ROAD'], bottom = Side['ROAD'], building = Building['VILLAGE'], image = 'images/img24.png'))
