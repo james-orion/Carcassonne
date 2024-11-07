@@ -93,8 +93,8 @@ class ColorView(arcade.View):
         # TODO randomly assign remaining colors to computer players
         # TODO assign colors to players once list is implemented
         if len(self.selected_colors) == self.num_players:
-            #for i in range(self.num_players):
-                #self.players[i].set_color(self.selected_colors[i])
+            for i in range(self.num_players):
+                self.players[i].set_color(self.selected_colors[i])
             self.curr_tile = current_tile.current_tile()
             self.curr_meeple = current_meeple.current_meeple()
             self.manager.disable()

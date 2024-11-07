@@ -19,7 +19,7 @@ class game_settings:
         self.button_text = "START"
         self.previous_coor_x = -1
         self.previous_coor_y = -1
-        self.feature_list = []
+        self.meeples = []
 
     def set_current_round(self, round):
         """ This sets the current round """
@@ -76,22 +76,7 @@ class game_settings:
                 if og_tile in row and "field" in row:
                     row.append(tile)
 
-    def initalize_feature(self, tile):
-        """This initalizes the feature to list from start tile """
-        og_city = ["city",tile]
-        og_road = ["road",tile]
-        og_field = ["field",tile]
-        self.feature_list.append(og_road)
-        self.feature_list.append(og_city)
-        self.feature_list.append(og_field)
-
-    def update_feature_tile(self, tile):
-        """This checks to see if feature is in list, if so
-        it connects to list or builds a new list"""
-
-        pass
-
-
+    
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
         for key, val in self.total_rotation.items():
@@ -131,5 +116,8 @@ class game_settings:
         """ Adds a tile to the list of placed tiles"""
         self.placed_tiles.append(tile)
 
+    def add_meeple(self, meeple):
+        self.meeples.append(meeple)
 
-
+    def get_meeples(self):
+        return self.meeples
