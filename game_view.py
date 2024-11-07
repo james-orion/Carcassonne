@@ -356,6 +356,7 @@ class GameView(arcade.View):
                             side = "bottom"
                         has_neighbor = True
                         check_tile_features.append((neighbor_x, neighbor_y,side))
+
             print("has neighbor", has_neighbor)
             print("tiles around", check_tile_features)
             if check_tile_features != []:

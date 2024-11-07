@@ -49,6 +49,7 @@ class game_settings:
     def set_button_text(self, text):
         """ This sets the button text"""
         self.button_text = text
+
         
     def increment_tile_count(self):
         """ This increments to next tile"""
