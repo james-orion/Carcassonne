@@ -9,6 +9,7 @@ class current_meeple:
         self.meeple_x = 100
         self.meeple_y = 100
         self.moved = False
+        self.image = None
 
     def set_x(self, x):
         """ This sets the curent meeple placement"""
@@ -22,6 +23,10 @@ class current_meeple:
         """ This sets the moved boolean"""
         self.moved = moved
 
+    def set_meeple_image(self, meeple_image):
+        """This sets the current meeple image"""
+        self.meeple_image = meeple_image
+
     def get_x(self):
         """"   This returns the current meeple placement x"""
         return self.meeple_x
@@ -34,6 +39,8 @@ class current_meeple:
         """"   This returns the meeple boolean """
         return self.moved
 
-
+    def get_meeple_image(self):
+        """This returns the current meeple image"""
+        return self.meeple_image
 
 

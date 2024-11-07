@@ -19,7 +19,7 @@ class game_settings:
         self.button_text = "START"
         self.previous_coor_x = -1
         self.previous_coor_y = -1
-        self.feature_list = []
+        self.meeples = []
 
     def set_current_round(self, round):
         """ This sets the current round """
@@ -57,7 +57,6 @@ class game_settings:
     def add_placed_tile(self, tile, x, y):
         """This adds to placed tiles"""
         self.placed_tiles.append((tile, x, y))
-
 
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
@@ -98,5 +97,8 @@ class game_settings:
         """ Adds a tile to the list of placed tiles"""
         self.placed_tiles.append(tile)
 
+    def add_meeple(self, meeple):
+        self.meeples.append(meeple)
 
-
+    def get_meeples(self):
+        return self.meeples

@@ -27,6 +27,7 @@ class Player:
             
         # Initial score set to 0
         self.score = 0
+        self.color = None
         
         # Initialize a list of Meeple objects for the player
         self.meeples = [Meeple(self, "red") for i in range(meeple_count)]
@@ -39,13 +40,15 @@ class Player:
         self.score += points
 
     """ Function to place a meeple on a tile if available. """
-    def use_meeple(self, tile):
+    def use_meeple(self, tile, user_choice):
         for meeple in self.meeples:
             # Check if meeple is in player's hand (not placed)
             if not meeple.is_placed:
                 # Place meeple on the tile
-                meeple.place_meeple(tile)
-                return True
+                if meeple.place_meeple(tile, user_choice):
+                    return True, meeple
+                else:
+                    return False
         # If no meeples are available, print warning message
         # print(f"{self.name}: you have no meeples left to place.")
         return False
@@ -96,10 +99,18 @@ class Player:
     def get_score(self):
         return self.score
 
-    ''' Function to get player score '''
+    ''' Function to get player color '''
+    def get_color(self):
+        #return self.color
+        return self.color
 
     def set_name(self,name):
         self.name = name
+    
+    def set_color(self, color):
+        self.color = color
+        for meeple in self.meeples:
+            meeple.set_color(color)
 
 #-----------------------------------------------------------------------------------
 '''

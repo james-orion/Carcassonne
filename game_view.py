@@ -16,7 +16,8 @@ START = 0
 END = 2000
 STEP = 50
 # Global Var: Sprite Scaling
-SPRITE_SCALING_PLAYER = 0.2
+SPRITE_SCALING_PLAYER_VERTICAL = 0.1
+SPRITE_SCALING_PLAYER_HORIZONTAL = 0.2
 SPRITE_SCALING_SCORE = 1
 SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
@@ -128,12 +129,21 @@ class GameView(arcade.View):
         self.tile_list = arcade.SpriteList()
         self.help_list = arcade.SpriteList()
         # Meeple sprite
-        img = "images/Meeple.jpg"
-        self.player_sprite = arcade.Sprite(img,
-                                           SPRITE_SCALING_PLAYER)
-        self.player_sprite.center_x = self.curr_meeple.get_x()
-        self.player_sprite.center_y = self.curr_meeple.get_y()
-        self.player_list.append(self.player_sprite)
+        #img = "images/Meeple.jpg"
+        #self.player_sprite = arcade.Sprite(img,
+        #                                   SPRITE_SCALING_PLAYER)
+        #self.player_sprite.center_x = self.curr_meeple.get_x()
+        #self.player_sprite.center_y = self.curr_meeple.get_y()
+        #self.player_list.append(self.player_sprite)
+        for meeple in self.settings.get_meeples():
+            img = meeple.get_meeple_sprite()
+            if len(img) > 32:
+                self.player_sprite = arcade.Sprite(img, SPRITE_SCALING_PLAYER_HORIZONTAL)
+            else:
+                self.player_sprite = arcade.Sprite(img, SPRITE_SCALING_PLAYER_VERTICAL)
+            self.player_sprite.center_x = meeple.x_coord
+            self.player_sprite.center_y = meeple.y_coord
+            self.player_list.append(self.player_sprite)
         # Scoreboard Sprite
         scoreboard = ":resources:onscreen_controls/shaded_dark/hamburger.png"
         self.scoreboard_sprite = arcade.Sprite(scoreboard,
@@ -459,8 +469,8 @@ class GameView(arcade.View):
                     new_list.append(item)
             self.settings.placed_tiles = new_list
             self.curr_meeple.set_moved(True)
-            self.curr_meeple.set_x(self.player_sprite.center_x)
-            self.curr_meeple.set_y(self.player_sprite.center_y)
+            #self.curr_meeple.set_x(self.player_sprite.center_x)
+            #self.curr_meeple.set_y(self.player_sprite.center_y)
             # change view to help screen
             new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite)
             self.window.show_view(new_view)

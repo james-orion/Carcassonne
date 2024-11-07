@@ -2,9 +2,10 @@
 # it was placed. Placement is validated and stored on the
 # game board
 
-# TODO replace red dot with player's color
-# TODO finish connecting with game_view
-# TODO finish confirm button functionality
+# TODO remove dragging of Meeples
+# TODO fix bug that allows multiple Meeples to be placed on the same turn
+# TODO change scaling and color differences
+# TODO remove curr_meeple?
 
 import arcade
 import arcade.gui
@@ -18,7 +19,7 @@ class MeeplePlacementView(arcade.View):
     def __init__(self, curr_tile, curr_meeple, settings, tile_sprite):
         super().__init__()
         self.player = settings.current_player
-        # self.player_color = player.get_color() # need from Player class
+        self.player_color = self.player.get_color().upper().strip()
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
         self.settings = settings
@@ -65,10 +66,18 @@ class MeeplePlacementView(arcade.View):
         arcade.draw_text("4. CENTER", self.window.width / 2 + 150, self.window.height - 375, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
         arcade.draw_text("5. BOTTOM", self.window.width / 2 + 150, self.window.height - 425, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
         if self.has_choosen:
-            arcade.draw_circle_filled(self.choice_coordinates[0], self.choice_coordinates[1], 20, arcade.color.RED) # TODO replace with user's color
+            if self.player_color == "RED":
+                color = arcade.color.RED
+            elif self.player_color == "GREEN":
+                color = arcade.color.GREEN
+            elif self.player_color == "BLUE":
+                color = arcade.color.BLUE
+            else:
+                color = arcade.color.YELLOW
+            arcade.draw_circle_filled(self.choice_coordinates[0], self.choice_coordinates[1], 20, color)
         self.manager.draw()
         if self.valid_placement == False:
-            arcade.draw_text("Meeple Placement is Invlaid, Please Try Again",  self.window.width // 2, self.window.height // 2 + 185, arcade.color.WHITE, font_size=12, anchor_x="center", font_name="Kenney Future")
+            arcade.draw_text("Meeple Placement is Invlaid, Please Try Again",  self.window.width // 2, self.window.height // 2 + 205, arcade.color.WHITE, font_size=12, anchor_x="center", font_name="Kenney Future")
 
 
     def on_key_press(self, key, modifiers):
@@ -109,14 +118,20 @@ class MeeplePlacementView(arcade.View):
         # check whether Meeple placement is valid
         # if placement is valid, place Meeple and return to GameView
         # if invalid, prompt user to replace Meeple
-        if self.player.use_meeple(self.tile, self.user_choice) and self.has_choosen == True: # update in Player class
+        results = self.player.use_meeple(self.tile, self.user_choice)
+        if  results [0] and self.has_choosen == True:
             # set coordinates for placed Meeple
             tile_x_coord = self.curr_tile.get_x()
             tile_y_coord = self.curr_tile.get_y()
             new_meeple_coord_x = tile_x_coord + self.meeple_coord_mods[0]
             new_meeple_coord_y = tile_y_coord + self.meeple_coord_mods[1]
+            results[1].set_x_coord(new_meeple_coord_x)
+            results[1].set_y_coord(new_meeple_coord_y)
             self.curr_meeple.set_x(new_meeple_coord_x)
             self.curr_meeple.set_y(new_meeple_coord_y)
+            # update sprite
+            self.curr_meeple.set_meeple_image(results[1].get_meeple_sprite())
+            self.settings.add_meeple(results[1])
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             self.curr_meeple.set_moved(False)
