@@ -27,6 +27,7 @@ class Player:
             
         # Initial score set to 0
         self.score = 0
+        self.color = None
         
         # Initialize a list of Meeple objects for the player
         self.meeples = [Meeple(self, "red") for i in range(meeple_count)]
@@ -101,10 +102,15 @@ class Player:
     ''' Function to get player color '''
     def get_color(self):
         #return self.color
-        return self.meeples[0].get_color()
+        return self.color
 
     def set_name(self,name):
         self.name = name
+    
+    def set_color(self, color):
+        self.color = color
+        for meeple in self.meeples:
+            meeple.set_color(color)
 
 #-----------------------------------------------------------------------------------
 '''
