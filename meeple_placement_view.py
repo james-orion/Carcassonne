@@ -3,8 +3,8 @@
 # game board
 
 # TODO replace red dot with player's color
-# TODO finish connecting with game_view
-# TODO finish confirm button functionality
+# TODO remove dragging of Meeples
+# TODO change scaling and color differences
 
 import arcade
 import arcade.gui
@@ -76,7 +76,7 @@ class MeeplePlacementView(arcade.View):
             arcade.draw_circle_filled(self.choice_coordinates[0], self.choice_coordinates[1], 20, color)
         self.manager.draw()
         if self.valid_placement == False:
-            arcade.draw_text("Meeple Placement is Invlaid, Please Try Again",  self.window.width // 2, self.window.height // 2 + 185, arcade.color.WHITE, font_size=12, anchor_x="center", font_name="Kenney Future")
+            arcade.draw_text("Meeple Placement is Invlaid, Please Try Again",  self.window.width // 2, self.window.height // 2 + 205, arcade.color.WHITE, font_size=12, anchor_x="center", font_name="Kenney Future")
 
 
     def on_key_press(self, key, modifiers):
@@ -124,10 +124,13 @@ class MeeplePlacementView(arcade.View):
             tile_y_coord = self.curr_tile.get_y()
             new_meeple_coord_x = tile_x_coord + self.meeple_coord_mods[0]
             new_meeple_coord_y = tile_y_coord + self.meeple_coord_mods[1]
+            results[1].set_x_coord(new_meeple_coord_x)
+            results[1].set_y_coord(new_meeple_coord_y)
             self.curr_meeple.set_x(new_meeple_coord_x)
             self.curr_meeple.set_y(new_meeple_coord_y)
             # update sprite
             self.curr_meeple.set_meeple_image(results[1].get_meeple_sprite())
+            self.settings.add_meeple(results[1])
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             self.curr_meeple.set_moved(False)

@@ -40,10 +40,10 @@ class Meeple:
             # update Meeple's sprite
             if self.feature_type == "FIELD":
                 self.orientation = "horizontal"
-                self.meeple_sprite = "/meeple_sprites/" + self.color + "_horizontal_meeple.png"
+                self.meeple_sprite = "meeple_sprites/" + self.color + "_horizontal_meeple.png"
             else:
                 self.orientation = "vertical"
-                self.meeple_sprite = "/meeple_sprites/" + self.color + "_meeple.png"
+                self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
             return True
         else:
             return False
@@ -205,7 +205,7 @@ class Meeple:
 
     def set_y_coord(self, y_coord):
         self.y_coord = y_coord
-        
+
 
 # test cases
 # test constructor and getter methods
