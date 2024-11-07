@@ -49,6 +49,7 @@ class game_settings:
     def set_button_text(self, text):
         """ This sets the button text"""
         self.button_text = text
+
         
     def increment_tile_count(self):
         """ This increments to next tile"""
@@ -58,25 +59,6 @@ class game_settings:
         """This adds to placed tiles"""
         self.placed_tiles.append((tile, x, y))
 
-    def add_tile_to_list(self, og_tile, tile, side):
-        """This adds to tile to list of feature based on the side it is connected to"""
-        print("PRINTING SIDE SENT TO FUNCTION", side)
-        print("PRINTING OG_TILE SENT TO FUNCTION", og_tile)
-        print("PRINTING tile SENT TO FUNCTION", tile)
-        if side == self.placed_tiles[0][0][1].top:
-            for row in self.feature_list:
-                if og_tile in row and "city" in row:
-                    row.append(tile)
-        elif side == self.placed_tiles[0][0][1].left:
-            for row in self.feature_list:
-                if og_tile in row and "road" in row:
-                    row.append(tile)
-        else:
-            for row in self.feature_list:
-                if og_tile in row and "field" in row:
-                    row.append(tile)
-
-    
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
         for key, val in self.total_rotation.items():
