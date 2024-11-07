@@ -79,7 +79,7 @@ class GameView(arcade.View):
         )
 
         # load the tiles into settings for first round
-        if settings.current_round == 1:
+        if settings.tile_count == 0:
             # count keeps track of tile ID
             count = 0
             for i in self.tile_list:
@@ -156,7 +156,7 @@ class GameView(arcade.View):
             self.settings.add_placed_tile((99,self.start_tile), SCREEN_WIDTH/2,
                                            SCREEN_HEIGHT/2)
 
-
+            self.settings.initalize_feature(self.start_tile)
             # creates a matrix matching the grid with a 1 if there is a tile there and 0 if not
             grid_placements = []
             for i in range(len(self.grid_sprites)):
@@ -181,8 +181,8 @@ class GameView(arcade.View):
             self.tile_sprite.center_y = item[2]
             print("TILE ",self.settings.placed_tiles[-1][0][1])
             print("priting roatation",self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
-            self.tile_sprite.change_angle = True
-            self.tile_sprite.angle = self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0])
+            #self.tile_sprite.change_angle = True
+            self.tile_sprite.angle = self.settings.get_rotation_click(self.settings.placed_tiles[i][0][0])
             self.tile_list.append(self.tile_sprite)
 
 
@@ -284,6 +284,7 @@ class GameView(arcade.View):
         current player, otherwise it will increment next
         player
         """
+        print("printing feature list", self.settings.feature_list)
         # if button is start then display the new button
         if self.settings.button_text == "START":
             # change tile to next tile in list,
@@ -355,30 +356,81 @@ class GameView(arcade.View):
                 for tile in check_tile_features:
                     if tile[2] == "left":
                         if (self.settings.feature_container[tile[0]][tile[1]].right ==
-                        self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y].left):
+                        self.settings.placed_tiles[-1][0][1].left):
                             print("SIDE IS left connected to previous tile right")
                             count_valid += 1
+                            self.settings.add_tile_to_list(self.settings.feature_container[tile[0]][tile[1]],
+                                                           self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y],
+                                                           self.settings.feature_container[tile[0]][tile[1]].right)
                     if tile[2] == "right":
                         if (self.settings.feature_container[tile[0]][tile[1]].left ==
-                        self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y].right):
+                        self.settings.placed_tiles[-1][0][1].right):
                             print("SIDE IS right connected to previous tile left")
                             count_valid += 1
+                            self.settings.add_tile_to_list(self.settings.feature_container[tile[0]][tile[1]],
+                                                           self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y],
+                                                           self.settings.feature_container[tile[0]][tile[1]].left)
                     if tile[2] == "top":
+                        print("printing neighbor on top's bottom", self.settings.feature_container[tile[0]][tile[1]].bottom)
+                        print("printing current tile's top",
+                              self.settings.placed_tiles[-1][0][1].top)
                         if (self.settings.feature_container[tile[0]][tile[1]].bottom ==
-                        self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y].top):
+                        self.settings.placed_tiles[-1][0][1].top):
                             print("SIDE IS top connected to previous tile bottom")
                             count_valid += 1
+                            self.settings.add_tile_to_list(self.settings.feature_container[tile[0]][tile[1]],
+                                                           self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y],
+                                                           self.settings.feature_container[tile[0]][tile[1]].top)
                     if tile[2] == "bottom":
                         if (self.settings.feature_container[tile[0]][tile[1]].top ==
-                        self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y].bottom):
+                        self.settings.placed_tiles[-1][0][1].bottom):
                             print("SIDE Bottom connected, to previous tile top")
                             count_valid += 1
+                            self.settings.add_tile_to_list(self.settings.feature_container[tile[0]][tile[1]],
+                                                           self.settings.feature_container[
+                                                               self.settings.previous_coor_x][
+                                                               self.settings.previous_coor_y],
+                                                           self.settings.feature_container[tile[0]][tile[1]].bottom)
+
+                    if check_tile_features:
+                        print("Checking features for valid match:")
+                    for tile in check_tile_features:
+                        print(f"Tile at ({tile[0]}, {tile[1]}) with side {tile[2]}")
+
                 print("image", self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y].image)
                 # if all surrounding sides are valid, turn is over
+                print("printing count", count_valid)
+
                 if count_valid == len(check_tile_features):
                     done_valid = True
+                    self.rotating_tile = None
+
 
             if done_valid:
+                # TODO: adding the tile to the list is the tile isn't completely surrounded
+                # case if count_valid is 1
+                for item in check_tile_features:
+                    if item[2] == "left":
+                        pass
+                    elif item[2] == "right":
+                        pass
+                    elif item[2] == "top":
+                        pass
+                    else:
+                        pass
+                # case if count_valid is 2
+                # case if count_valid is 3
+                # case if count_valid if 4
+                remaing_sides = 4 - len(check_tile_features)
+                print("remaining sides----------------", remaing_sides)
+                tile_c= self.settings.feature_container[self.settings.previous_coor_x][self.settings.previous_coor_y]
+                if remaing_sides < 4:
+                    pass
+                # check if three are the sides are the same
+                # if two are the sides are the same
+                # if all different
+                # check if all sides are the same
+
                 # set coordinates back to -1 for next tile
                 self.settings.previous_coor_x = -1
                 self.settings.previous_coor_y = -1
@@ -583,6 +635,7 @@ class GameView(arcade.View):
                 self.curr_tile.set_y(self.tile_sprite.center_y)
                 # update the placed tiles, with new coordinates
                 for item in self.settings.placed_tiles:
+
                     if item == self.settings.placed_tiles[-1]:
                         new_list.append((item[0],self.curr_tile.get_x(),self.curr_tile.get_y()))
                     else:
@@ -621,7 +674,8 @@ class GameView(arcade.View):
         if button == arcade.MOUSE_BUTTON_RIGHT:
             # If the right mouse button is clicked then unclicked, rotate tile
             if self.rotating_tile:
-                self.rotating_tile.change_angle = True
+                #self.rotating_tile.change_angle = True
                 self.rotating_tile.angle = 90 + self.rotating_tile.angle
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
+                print("current-tile top",self.settings.placed_tiles[-1][0][1].top)

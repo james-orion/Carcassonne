@@ -114,10 +114,12 @@ class Tile:
     def rotate_tile(self):
         """Method to rotate a tile one side in a counter-clockwise direction"""
         temp_top = self.get_top()
-        self.set_top(self.get_right())
-        self.set_right(self.get_bottom())
-        self.set_bottom(self.get_left())
-        self.set_left(temp_top)
+        self.set_top(self.get_right())  # Top becomes right
+        self.set_right(self.get_bottom())  # Right becomes bottom
+        self.set_bottom(self.get_left())  # Bottom becomes left
+        self.set_left(temp_top)  # Left becomes the original top
+        print(
+            f"Tile rotated: top={self.get_top()}, left={self.get_left()}, right={self.get_right()}, bottom={self.get_bottom()}")
 
 # Create tiles for base game
 
@@ -163,7 +165,7 @@ left_right_city_shield = Tile(top = Side['FIELD'], left = Side['CITY'], right = 
 tiles.append(left_right_city_shield)
 tiles.append(left_right_city_shield)
 
-left_right_city = Tile(top = Side['FIELD'], left = Side['CITY'], right = Side['CITY'], bottom = Side['FIELD'], image = 'images/img7.png') # x1
+left_right_city = Tile(top = Side['CITY'], left = Side['FIELD'], right = Side['FIELD'], bottom = Side['CITY'], image = 'images/img7.png') # x1
 
 tiles.append(left_right_city)
 

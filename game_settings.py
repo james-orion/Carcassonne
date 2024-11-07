@@ -19,6 +19,7 @@ class game_settings:
         self.button_text = "START"
         self.previous_coor_x = -1
         self.previous_coor_y = -1
+        self.feature_list = []
 
     def set_current_round(self, round):
         """ This sets the current round """
@@ -57,6 +58,33 @@ class game_settings:
         """This adds to placed tiles"""
         self.placed_tiles.append((tile, x, y))
 
+    def add_tile_to_list(self, og_tile, tile, side):
+        """This adds to tile to list of feature based on the side it is connected to"""
+        print("PRINTING SIDE SENT TO FUNCTION", side)
+        print("PRINTING OG_TILE SENT TO FUNCTION", og_tile)
+        print("PRINTING tile SENT TO FUNCTION", tile)
+        if side == self.placed_tiles[0][0][1].top:
+            for row in self.feature_list:
+                if og_tile in row and "city" in row:
+                    row.append(tile)
+        elif side == self.placed_tiles[0][0][1].left:
+            for row in self.feature_list:
+                if og_tile in row and "road" in row:
+                    row.append(tile)
+        else:
+            for row in self.feature_list:
+                if og_tile in row and "field" in row:
+                    row.append(tile)
+
+    def initalize_feature(self, tile):
+        """This initalizes the feature to list from start tile """
+        og_city = ["city",tile]
+        og_road = ["road",tile]
+        og_field = ["field",tile]
+        self.feature_list.append(og_road)
+        self.feature_list.append(og_city)
+        self.feature_list.append(og_field)
+
     def update_feature_tile(self, tile):
         """This checks to see if feature is in list, if so
         it connects to list or builds a new list"""
@@ -67,6 +95,7 @@ class game_settings:
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
         for key, val in self.total_rotation.items():
+            print("This is the key", key, "this is its val", val)
             if key == tile_num:
                 return val
         return 0
