@@ -15,6 +15,8 @@ class Meeple:
         self.feature_type = None
         self.orientation = None
         self.meeple_sprite = None
+        self.x_coord = None
+        self.y_coord = None
 
     
     # place Meeple on game board and store information about where it was placed
@@ -38,10 +40,10 @@ class Meeple:
             # update Meeple's sprite
             if self.feature_type == "FIELD":
                 self.orientation = "horizontal"
-                self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_horizontal_sprite.png\""
+                self.meeple_sprite = "/meeple_sprites/" + self.color + "_horizontal_meeple.png"
             else:
                 self.orientation = "vertical"
-                self.meeple_sprite = "\"/meeple_sprites/" + self.color + "_sprite.png\""
+                self.meeple_sprite = "/meeple_sprites/" + self.color + "_meeple.png"
             return True
         else:
             return False
@@ -93,6 +95,8 @@ class Meeple:
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
+        self.x_coord = None
+        self.y_coord = None
         return points
     
 
@@ -118,6 +122,8 @@ class Meeple:
         self.is_placed = False
         self.feature_type = None
         self.orientation = None
+        self.x_coord = None
+        self.y_coord = None
         return points
     
 
@@ -153,6 +159,14 @@ class Meeple:
         return self.meeple_sprite
     
 
+    def get_x_coord(self):
+        return self.x_coord
+    
+
+    def get_y_coord(self):
+        return self.y_coord
+    
+
     # setter methods
 
     # sets Meeple's name
@@ -184,6 +198,14 @@ class Meeple:
     def set_meeple_sprite(self, meeple_sprite):
         self.meeple_sprite = meeple_sprite
     
+
+    def set_x_coord(self, x_coord):
+        self.x_coord = x_coord
+
+
+    def set_y_coord(self, y_coord):
+        self.y_coord = y_coord
+        
 
 # test cases
 # test constructor and getter methods
