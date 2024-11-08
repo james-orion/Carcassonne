@@ -16,8 +16,8 @@ START = 0
 END = 2000
 STEP = 50
 # Global Var: Sprite Scaling
-SPRITE_SCALING_PLAYER_VERTICAL = 0.1
-SPRITE_SCALING_PLAYER_HORIZONTAL = 0.2
+SPRITE_SCALING_PLAYER_VERTICAL = 0.05
+SPRITE_SCALING_PLAYER_HORIZONTAL = 0.1
 SPRITE_SCALING_SCORE = 1
 SPRITE_SCALING_TILE = 0.5
 SPRITE_SCALING_HELP = 1
@@ -129,12 +129,6 @@ class GameView(arcade.View):
         self.tile_list = arcade.SpriteList()
         self.help_list = arcade.SpriteList()
         # Meeple sprite
-        #img = "images/Meeple.jpg"
-        #self.player_sprite = arcade.Sprite(img,
-        #                                   SPRITE_SCALING_PLAYER)
-        #self.player_sprite.center_x = self.curr_meeple.get_x()
-        #self.player_sprite.center_y = self.curr_meeple.get_y()
-        #self.player_list.append(self.player_sprite)
         for meeple in self.settings.get_meeples():
             img = meeple.get_meeple_sprite()
             if len(img) > 32:
@@ -281,9 +275,9 @@ class GameView(arcade.View):
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
         # if meeple moved update with new location
-        if self.curr_meeple.get_moved():
-            self.tile_sprite.center_x = self.curr_meeple.get_x()
-            self.tile_sprite.center_y = self.curr_meeple.get_y()
+        #if self.curr_meeple.get_moved():
+        #    self.tile_sprite.center_x = self.curr_meeple.get_x()
+        #    self.tile_sprite.center_y = self.curr_meeple.get_y()
 
 
 
@@ -399,6 +393,8 @@ class GameView(arcade.View):
 
 
             if done_valid:
+                # reset meeple placement variables
+                self.settings.set_meeple_placed_current_round(False)
                 # set coordinates back to -1 for next tile
                 self.settings.previous_coor_x = -1
                 self.settings.previous_coor_y = -1
@@ -455,7 +451,7 @@ class GameView(arcade.View):
 
     def on_place_meeple(self, event):
         # TODO make sure tile has been placed in current round as well
-        if len(self.settings.get_placed_tiles()) > 1:
+        if len(self.settings.get_placed_tiles()) > 1 and self.settings.get_meeple_placed_current_round() == False:
             # create new list to update placed sprites
             new_list = []
             # save sprites location
@@ -469,9 +465,6 @@ class GameView(arcade.View):
                 else:
                     new_list.append(item)
             self.settings.placed_tiles = new_list
-            self.curr_meeple.set_moved(True)
-            #self.curr_meeple.set_x(self.player_sprite.center_x)
-            #self.curr_meeple.set_y(self.player_sprite.center_y)
             # change view to help screen
             new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite)
             self.window.show_view(new_view)
@@ -511,13 +504,8 @@ class GameView(arcade.View):
             clicked_tile = arcade.get_sprites_at_point((x, y),
                                                           self.tile_list)
 
-            clicked_meeple = arcade.get_sprites_at_point((x, y),
-                                                         self.player_list)
             new_meeple = arcade.get_sprites_at_point((x, y),
                                                      self.player_list)
-            # meeples, allow dragging
-            if clicked_meeple:
-                self.dragging_meeple = new_meeple[0]
 
             # Allow dragging to be possible
             if clicked_tile:
@@ -609,9 +597,6 @@ class GameView(arcade.View):
                     else:
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
-                self.curr_meeple.set_moved(True)
-                self.curr_meeple.set_x(self.player_sprite.center_x)
-                self.curr_meeple.set_y(self.player_sprite.center_y)
                 # change view to help screen
                 help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings)
                 help.setup()
@@ -631,9 +616,6 @@ class GameView(arcade.View):
                     else:
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
-                self.curr_meeple.set_moved(True)
-                self.curr_meeple.set_x(self.player_sprite.center_x)
-                self.curr_meeple.set_y(self.player_sprite.center_y)
                 # change view to scoreboard
                 scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
                 scoreboard.setup()
