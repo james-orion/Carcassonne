@@ -307,91 +307,7 @@ class GameView(arcade.View):
             self.setup()
 
         else:
-            # boolean if you can place tile
-            done_valid = False
-            # check if new tile in matrix is adjacent to another tile
-            neighbors = [
-                # up
-                (self.settings.previous_coor_x+1, self.settings.previous_coor_y),
-                # down
-                (self.settings.previous_coor_x-1, self.settings.previous_coor_y ),
-                # left
-                (self.settings.previous_coor_x, self.settings.previous_coor_y - 1),
-                # right
-                (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
-            ]
-            # get neighbor coordinates
-            right_neighbor = neighbors[3]
-            left_neighbor =neighbors[2]
-            top_neighbor = neighbors[0]
-            bottom_neighbor =neighbors[1]
-            has_neighbor = False
-            check_tile_features = []
-            # check if there is a neighboring tile
-            for x, y in neighbors:
-                # check if the coordinate is within the bounds of the matrix
-                if 0 <= x < ROW_COUNT and 0 <= y < COLUMN_COUNT:
-                    if self.settings.feature_container[x][y] != 0:
-                        if (x, y) == right_neighbor:
-                            neighbor_x = right_neighbor[0]
-                            neighbor_y = right_neighbor[1]
-                            side = "right"
-                        elif (x, y) == left_neighbor:
-                            neighbor_x = left_neighbor[0]
-                            neighbor_y = left_neighbor[1]
-                            side = "left"
-                        elif (x, y) == top_neighbor:
-                            neighbor_x = top_neighbor[0]
-                            neighbor_y = top_neighbor[1]
-                            side = "top"
-                        elif (x, y) == bottom_neighbor:
-                            neighbor_x = bottom_neighbor[0]
-                            neighbor_y = bottom_neighbor[1]
-                            side = "bottom"
-                        has_neighbor = True
-                        check_tile_features.append((neighbor_x, neighbor_y,side))
-
-            print("has neighbor", has_neighbor)
-            print("tiles around", check_tile_features)
-            if check_tile_features != []:
-                # check if neighboring tile has the same feature where it connects
-                count_valid = 0
-                for tile in check_tile_features:
-                    if tile[2] == "left":
-                        if (self.settings.feature_container[tile[0]][tile[1]].right ==
-                        self.settings.placed_tiles[-1][0][1].left):
-                            print("SIDE IS left connected to previous tile right")
-                            count_valid += 1
-
-                    if tile[2] == "right":
-                        if (self.settings.feature_container[tile[0]][tile[1]].left ==
-                        self.settings.placed_tiles[-1][0][1].right):
-                            print("SIDE IS right connected to previous tile left")
-                            count_valid += 1
-
-                    if tile[2] == "top":
-                        print("printing neighbor on top's bottom", self.settings.feature_container[tile[0]][tile[1]].bottom)
-                        print("printing current tile's top",
-                              self.settings.placed_tiles[-1][0][1].top)
-                        if (self.settings.feature_container[tile[0]][tile[1]].bottom ==
-                        self.settings.placed_tiles[-1][0][1].top):
-                            print("SIDE IS top connected to previous tile bottom")
-                            count_valid += 1
-
-                    if tile[2] == "bottom":
-                        if (self.settings.feature_container[tile[0]][tile[1]].top ==
-                        self.settings.placed_tiles[-1][0][1].bottom):
-                            print("SIDE Bottom connected, to previous tile top")
-                            count_valid += 1
-
-
-
-
-                if count_valid == len(check_tile_features):
-                    done_valid = True
-                    self.rotating_tile = None
-
-
+            done_valid = self.validate_placement()
             if done_valid:
                 # reset meeple placement variables
                 self.settings.set_meeple_placed_current_round(False)
@@ -629,3 +545,86 @@ class GameView(arcade.View):
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
                 print("current-tile top",self.settings.placed_tiles[-1][0][1].top)
+
+    def validate_placement(self):
+        # boolean if you can place tile
+        done_valid = False
+        # check if new tile in matrix is adjacent to another tile
+        neighbors = [
+            # up
+            (self.settings.previous_coor_x + 1, self.settings.previous_coor_y),
+            # down
+            (self.settings.previous_coor_x - 1, self.settings.previous_coor_y),
+            # left
+            (self.settings.previous_coor_x, self.settings.previous_coor_y - 1),
+            # right
+            (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
+        ]
+        # get neighbor coordinates
+        right_neighbor = neighbors[3]
+        left_neighbor = neighbors[2]
+        top_neighbor = neighbors[0]
+        bottom_neighbor = neighbors[1]
+        has_neighbor = False
+        check_tile_features = []
+        # check if there is a neighboring tile
+        for x, y in neighbors:
+            # check if the coordinate is within the bounds of the matrix
+            if 0 <= x < ROW_COUNT and 0 <= y < COLUMN_COUNT:
+                if self.settings.feature_container[x][y] != 0:
+                    if (x, y) == right_neighbor:
+                        neighbor_x = right_neighbor[0]
+                        neighbor_y = right_neighbor[1]
+                        side = "right"
+                    elif (x, y) == left_neighbor:
+                        neighbor_x = left_neighbor[0]
+                        neighbor_y = left_neighbor[1]
+                        side = "left"
+                    elif (x, y) == top_neighbor:
+                        neighbor_x = top_neighbor[0]
+                        neighbor_y = top_neighbor[1]
+                        side = "top"
+                    elif (x, y) == bottom_neighbor:
+                        neighbor_x = bottom_neighbor[0]
+                        neighbor_y = bottom_neighbor[1]
+                        side = "bottom"
+                    has_neighbor = True
+                    check_tile_features.append((neighbor_x, neighbor_y, side))
+
+        print("has neighbor", has_neighbor)
+        print("tiles around", check_tile_features)
+        if check_tile_features != []:
+            # check if neighboring tile has the same feature where it connects
+            count_valid = 0
+            for tile in check_tile_features:
+                if tile[2] == "left":
+                    if (self.settings.feature_container[tile[0]][tile[1]].right ==
+                            self.settings.placed_tiles[-1][0][1].left):
+                        print("SIDE IS left connected to previous tile right")
+                        count_valid += 1
+
+                if tile[2] == "right":
+                    if (self.settings.feature_container[tile[0]][tile[1]].left ==
+                            self.settings.placed_tiles[-1][0][1].right):
+                        print("SIDE IS right connected to previous tile left")
+                        count_valid += 1
+
+                if tile[2] == "top":
+                    print("printing neighbor on top's bottom", self.settings.feature_container[tile[0]][tile[1]].bottom)
+                    print("printing current tile's top",
+                          self.settings.placed_tiles[-1][0][1].top)
+                    if (self.settings.feature_container[tile[0]][tile[1]].bottom ==
+                            self.settings.placed_tiles[-1][0][1].top):
+                        print("SIDE IS top connected to previous tile bottom")
+                        count_valid += 1
+
+                if tile[2] == "bottom":
+                    if (self.settings.feature_container[tile[0]][tile[1]].top ==
+                            self.settings.placed_tiles[-1][0][1].bottom):
+                        print("SIDE Bottom connected, to previous tile top")
+                        count_valid += 1
+
+            if count_valid == len(check_tile_features):
+                done_valid = True
+                self.rotating_tile = None
+        return done_valid
