@@ -35,6 +35,11 @@ class Tile:
         self.shield = shield
         self.is_connected = is_connected
         self.image = image
+        self.meeple_placed_top = False
+        self.meeple_placed_left = False
+        self.meeple_placed_right = False
+        self.meeple_placed_center = False
+        self.meeple_placed_bottom = False
 
     # Getters
     def get_top(self):
@@ -68,6 +73,26 @@ class Tile:
     def get_image(self):
         """Method to return the image associated with a tile"""
         return self.image
+
+    def get_meeple_placed_top(self):
+        """Method to return whether a Meeple is placed on the top of a tile"""
+        return self.meeple_placed_top
+
+    def get_meeple_placed_left(self):
+        """Method to return whether a Meeple is placed on the left of a tile"""
+        return self.meeple_placed_left
+
+    def get_meeple_placed_right(self):
+        """Method to return whether a Meeple is placed on the right of a tile"""
+        return self.meeple_placed_right
+
+    def get_meeple_placed_center(self):
+        """Method to return whether a Meeple is placed on the center of a tile"""
+        return self.meeple_placed_center
+
+    def get_meeple_placed_bottom(self):
+        """Method to return whether a Meeple is placed on the bottom of a tile"""
+        return self.meeple_placed_bottom
 
     # Setters
     def set_top(self, new_top: Side):
@@ -109,6 +134,26 @@ class Tile:
     def set_image(self, new_image):
         """Method to set the image associated with a tile"""
         self.image = new_image
+    
+    def set_meeple_placed_top(self, new_placement):
+        """Method to place Meeple on top of tile"""
+        self.meeple_placed_top = new_placement
+    
+    def set_meeple_placed_left(self, new_placement):
+        """Method to place Meeple on left of tile"""
+        self.meeple_placed_left = new_placement
+    
+    def set_meeple_placed_right(self, new_placement):
+        """Method to place Meeple on right of tile"""
+        self.meeple_placed_right = new_placement
+    
+    def set_meeple_placed_center(self, new_placement):
+        """Method to place Meeple on center of tile"""
+        self.meeple_placed_center = new_placement
+    
+    def set_meeple_placed_bottom(self, new_placement):
+        """Method to place Meeple on bottom of tile"""
+        self.meeple_placed_bottom = new_placement
 
     # Function to rotate tiles
     def rotate_tile(self):

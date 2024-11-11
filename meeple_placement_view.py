@@ -2,8 +2,7 @@
 # it was placed. Placement is validated and stored on the
 # game board
 
-# TODO remove dragging of Meeples
-# TODO fix bug that allows multiple Meeples to be placed on the same turn
+# TODO fix bug that allows tile to be dragged after Meeple placed
 # TODO change scaling and color differences
 # TODO remove curr_meeple?
 

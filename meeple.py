@@ -13,7 +13,6 @@ class Meeple:
         self.color = color
         self.is_placed = False
         self.feature_type = None
-        self.orientation = None
         self.meeple_sprite = None
         self.x_coord = None
         self.y_coord = None
@@ -21,29 +20,39 @@ class Meeple:
     
     # place Meeple on game board and store information about where it was placed
     def place_meeple(self, tile, user_choice):
-        if self.validate_placement(tile):
-            # record feature type Meeple was placed on
-            self.is_placed = True
-            temp_feature_type = ""
-            if user_choice == "TOP":
+        # record feature type Meeple was placed on
+        temp_feature_type = ""
+        if user_choice == "TOP":
+            if tile.get_top() == "FIELD":
+                return False
+            else:
                 temp_feature_type = str(tile.get_top())
-            elif user_choice == "LEFT":
+        elif user_choice == "LEFT":
+            if tile.get_left() == "FIELD":
+                return False
+            else:
                 temp_feature_type = str(tile.get_left())
-            elif user_choice == "RIGHT":
+        elif user_choice == "RIGHT":
+            if tile.get_right() == "FIELD":
+                return False
+            else:
                 temp_feature_type = str(tile.get_right())
-            elif user_choice == "BOTTOM":
+        elif user_choice == "BOTTOM":
+            if tile.get_bottom() == "FIELD":
+                return False
+            else:
                 temp_feature_type = str(tile.get_bottom())
+        else:
+            if tile.get_building == None:
+                return False
             else:
                 temp_feature_type = str(tile.get_building())
-            self.feature_type = temp_feature_type.split(".")[1]
+        self.feature_type = temp_feature_type.split(".")[1]
             
-            # update Meeple's sprite
-            if self.feature_type == "FIELD":
-                self.orientation = "horizontal"
-                self.meeple_sprite = "meeple_sprites/" + self.color + "_horizontal_meeple.png"
-            else:
-                self.orientation = "vertical"
-                self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
+        if self.validate_placement(tile):
+            # update Meeple's sprite and placement boolean
+            self.is_placed = True
+            self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
             return True
         else:
             return False
@@ -62,14 +71,20 @@ class Meeple:
         if self.feature_type == "ROAD":
             pass
         # if placing as knight, make sure only meeple in city
-        if self.feature_type == "CITY":
+        elif self.feature_type == "CITY":
             pass
         # if placing as monk/nun, make sure only meeple in monestary
-        if self.feature_type == "MONASTERY":
-            pass
-        # if placing farmer, make sure only Meeple on field
+        elif self.feature_type == "MONASTERY":
+            if tile.get_meeple_placed_center() == True:
+                return False
+            else:
+                tile.set_meeple_placed_center(False)
+        # if placing on village, make sure only meeple on village
         else:
-            pass
+            if tile.get_meeple_placed_center() == True:
+                return False
+            else:
+                tile.set_meeple_placed_center(False)
         return True
 
 
@@ -78,6 +93,7 @@ class Meeple:
         points = 0
         # TODO find some way to check if feature is completed, then iterate
         # through list of tiles to determine total number of points
+        # NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
 
         # calculate points won by meeple in feature
         if self.feature_type == "ROAD":
@@ -88,13 +104,14 @@ class Meeple:
             pass
         elif self.feature_type == "MONASTERY":
             points = 9
+        # village scoring?
         else:
             return 0
 
         # unplace and reset meeple
         self.is_placed = False
         self.feature_type = None
-        self.orientation = None
+        self.meeple_sprite = None
         self.x_coord = None
         self.y_coord = None
         return points
@@ -103,6 +120,7 @@ class Meeple:
     # determines how many points a Meeple scores for an incomplete feature or 
     # for a field at the end of the game
     def end_of_game_scoring(self):
+        # NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
         points = 0
         # determine of feature is partially complete
         if self.feature_type == "ROAD":
@@ -121,7 +139,7 @@ class Meeple:
         # unplace and reset meeple
         self.is_placed = False
         self.feature_type = None
-        self.orientation = None
+        self.meeple_sprite = None
         self.x_coord = None
         self.y_coord = None
         return points
@@ -147,11 +165,6 @@ class Meeple:
     # returns feature Meeple is placed on
     def get_feature_type(self):
         return self.feature_type
-    
-
-    # returns orientation of Meeple
-    def get_orientation(self):
-        return self.orientation
     
 
     # returns Meeple's sprite
@@ -187,11 +200,6 @@ class Meeple:
     # sets feature Meeple is placed on
     def set_feature_type(self, feature_type):
         self.feature_type = feature_type
-    
-
-    # sets orientation of Meeple
-    def set_orientation(self, orientation):
-        self.orientation = orientation
     
 
     # set Meeple's sprite
