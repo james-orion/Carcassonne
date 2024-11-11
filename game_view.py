@@ -8,6 +8,7 @@ import help_view
 import tile
 import meeple_placement_view
 import random
+import feature_placement
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
@@ -31,6 +32,7 @@ HEIGHT = 60
 BOARD_X = 400
 BOARD_Y = 400
 
+
 class GameView(arcade.View):
 
     def __init__(self, curr_tile, curr_meeple, settings):
@@ -46,6 +48,8 @@ class GameView(arcade.View):
         self.settings = settings
         self.start_tile = tile.start
         self.tile_list = tile.tiles
+        # TODO: HERRRRRRRRRRRR
+        self.feat = feature_placement.feature_placements()
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
@@ -174,12 +178,7 @@ class GameView(arcade.View):
                     grid_placements[i].append(0)
             self.settings.feature_container = grid_placements
 
-            # print(check_adjacent)
-            for grid in self.settings.feature_container:
-                print(grid)
 
-
-        print("print containter list:",self.settings.feature_container)
        # Keep location of placed tile sprites
         for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
@@ -188,8 +187,6 @@ class GameView(arcade.View):
                                              SPRITE_SCALING_TILE)
             self.tile_sprite.center_x = item[1]
             self.tile_sprite.center_y = item[2]
-            print("TILE ",self.settings.placed_tiles[-1][0][1])
-            print("priting roatation",self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
             #self.tile_sprite.change_angle = True
             self.tile_sprite.angle = self.settings.get_rotation_click(self.settings.placed_tiles[i][0][0])
             self.tile_list.append(self.tile_sprite)
@@ -357,8 +354,6 @@ class GameView(arcade.View):
                         has_neighbor = True
                         check_tile_features.append((neighbor_x, neighbor_y,side))
 
-            print("has neighbor", has_neighbor)
-            print("tiles around", check_tile_features)
             if check_tile_features != []:
                 # check if neighboring tile has the same feature where it connects
                 count_valid = 0
@@ -366,36 +361,65 @@ class GameView(arcade.View):
                     if tile[2] == "left":
                         if (self.settings.feature_container[tile[0]][tile[1]].right ==
                         self.settings.placed_tiles[-1][0][1].left):
-                            print("SIDE IS left connected to previous tile right")
                             count_valid += 1
 
                     if tile[2] == "right":
                         if (self.settings.feature_container[tile[0]][tile[1]].left ==
                         self.settings.placed_tiles[-1][0][1].right):
-                            print("SIDE IS right connected to previous tile left")
                             count_valid += 1
 
                     if tile[2] == "top":
-                        print("printing neighbor on top's bottom", self.settings.feature_container[tile[0]][tile[1]].bottom)
-                        print("printing current tile's top",
-                              self.settings.placed_tiles[-1][0][1].top)
                         if (self.settings.feature_container[tile[0]][tile[1]].bottom ==
                         self.settings.placed_tiles[-1][0][1].top):
-                            print("SIDE IS top connected to previous tile bottom")
                             count_valid += 1
 
                     if tile[2] == "bottom":
                         if (self.settings.feature_container[tile[0]][tile[1]].top ==
                         self.settings.placed_tiles[-1][0][1].bottom):
-                            print("SIDE Bottom connected, to previous tile top")
+
                             count_valid += 1
-
-
 
 
                 if count_valid == len(check_tile_features):
                     done_valid = True
                     self.rotating_tile = None
+                    self.feat.add_tile(self.settings.previous_coor_x,
+                                                                    self.settings.previous_coor_y,
+                                                                    self.settings.placed_tiles[-1][0][1])
+                    print(check_tile_features)
+                    if check_tile_features != []:
+                        for tile in check_tile_features:
+                            if tile[2] == "left":
+                                self.feat.add_location(tile[0],
+                                                                                    tile[1],
+                                                                                    self.settings.previous_coor_x,
+                                                                                    self.settings.previous_coor_y,
+                                                                                    "left",
+                                                                                    "right")
+
+                            if tile[2] == "right":
+                                self.feat.add_location(tile[0],
+                                                                                    tile[1],
+                                                                                    self.settings.previous_coor_x,
+                                                                                    self.settings.previous_coor_y,
+                                                                                    "right",
+                                                                                    "left")
+
+                            if tile[2] == "top":
+                                self.feat.add_location(tile[0],
+                                                                                    tile[1],
+                                                                                    self.settings.previous_coor_x,
+                                                                                    self.settings.previous_coor_y,
+                                                                                    "bottom",
+                                                                                    "top")
+
+                            if tile[2] == "bottom":
+                               self.feat.add_location(tile[0],
+                                                                                    tile[1],
+                                                                                    self.settings.previous_coor_x,
+                                                                                    self.settings.previous_coor_y,
+                                                                                    "top",
+                                                                                    "bottom")
 
 
             if done_valid:
@@ -483,7 +507,7 @@ class GameView(arcade.View):
         # TODO: use this to resize
         super().on_resize(width, height)
 
-        print(f"Window resized to: {width}, {height}")
+
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """ Called whenever the mouse moves. """
@@ -552,7 +576,6 @@ class GameView(arcade.View):
 
 
             # if tile in matrix set current position to moved, by passing first tile
-            print("last tile", self.settings.placed_tiles[-1][0][1])
             if self.settings.placed_tiles[-1][0][1] != self.settings.placed_tiles[0][0][1]:
                 for row in self.settings.feature_container:
                     if self.settings.placed_tiles[-1][0][1] in row:
@@ -573,6 +596,8 @@ class GameView(arcade.View):
                         # update postion in matrix for start tile
                         if self.settings.placed_tiles[-1][0][1] == self.settings.placed_tiles[0][0][1]:
                             self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
+                            print("hiiiiiiiiiii")
+                            self.feat.inital_location(self.settings.feature_container)
                         # update position of new tile into the matrix, with coordiantes
                         else:
                             if self.settings.previous_coor_x == -1:
@@ -584,6 +609,7 @@ class GameView(arcade.View):
             print("We are printing here!-------------")
             for grid in self.settings.feature_container:
                 print(grid)
+
 
 
             # If scoreboard was clicked then released
@@ -646,4 +672,3 @@ class GameView(arcade.View):
                 self.rotating_tile.angle = 90 + self.rotating_tile.angle
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
-                print("current-tile top",self.settings.placed_tiles[-1][0][1].top)
