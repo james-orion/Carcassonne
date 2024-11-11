@@ -546,6 +546,19 @@ class GameView(arcade.View):
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
                 print("current-tile top",self.settings.placed_tiles[-1][0][1].top)
 
+    def on_new_tile(self):
+        can_place = False
+        for i in range(len(self.settings.feature_container)):
+            for j in range(len(self.settings.feature_container[i])):
+                for k in range (4):
+                    # TODO: assume we place curr tile at [i][j] --- don't actually do it
+                    if self.validate_placement():
+                        can_place = True
+                    #TODO: rotate the current tile
+        if can_place == False:
+            # TODO: figure out how to give new tile, if no more tiles, end game
+
+
     def validate_placement(self):
         # boolean if you can place tile
         done_valid = False
