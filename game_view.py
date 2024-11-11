@@ -387,16 +387,16 @@ class GameView(arcade.View):
                                                                                     tile[1],
                                                                                     self.settings.previous_coor_x,
                                                                                     self.settings.previous_coor_y,
-                                                                                    "left",
-                                                                                    "right")
+                                                                                    "right",
+                                                                                    "left")
 
                             if tile[2] == "right":
                                 self.feat.add_location(tile[0],
                                                                                     tile[1],
                                                                                     self.settings.previous_coor_x,
                                                                                     self.settings.previous_coor_y,
-                                                                                    "right",
-                                                                                    "left")
+                                                                                    "left",
+                                                                                    "right")
 
                             if tile[2] == "top":
                                 self.feat.add_location(tile[0],
