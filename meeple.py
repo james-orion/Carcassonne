@@ -21,7 +21,7 @@ class Meeple:
 
     
     # place Meeple on game board and store information about where it was placed
-    def place_meeple(self, tile, user_choice):
+    def place_meeple(self, tile, user_choice, settings):
         # record feature type Meeple was placed on
         temp_feature_type = ""
         if user_choice == "TOP":
@@ -51,7 +51,7 @@ class Meeple:
                 temp_feature_type = str(tile.get_building())
         self.feature_type = temp_feature_type.split(".")[1]
             
-        if self.validate_placement(tile):
+        if self.validate_placement(tile, settings):
             # update Meeple's sprite and placement boolean
             self.is_placed = True
             self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
@@ -64,12 +64,14 @@ class Meeple:
     # validates that user's placement of Meeple is allowed
     # if returns True, store placement of Meeple on tile
     # if return False, prompt user to choose again
-    def validate_placement(self, tile):
+    def validate_placement(self, tile, settings):
         # TODO finish implementing - iterate through list of tiles in feature,
         # if there is a Meeple alreay placed, don't allow user to place another;
         # if there isn't a Meeple placed anywhere on the feature, allow user to
         # place one
-
+        for i in range(len(settings.feature_container)):
+            for j in range(len(settings.feature_container[i])):
+                print(settings.feature_container[i][j])
         # if placing as highwayman, make sure only meeple on stretch of road
         if self.feature_type == "ROAD":
             pass

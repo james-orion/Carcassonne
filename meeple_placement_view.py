@@ -113,7 +113,7 @@ class MeeplePlacementView(arcade.View):
         # check whether Meeple placement is valid
         # if placement is valid, place Meeple and return to GameView
         # if invalid, prompt user to replace Meeple
-        results = self.player.use_meeple(self.tile, self.user_choice)
+        results = self.player.use_meeple(self.tile, self.user_choice, self.settings)
         valid_placement = results[0]
         current_meeple = results[1]
         if  valid_placement == True and self.has_choosen == True:
