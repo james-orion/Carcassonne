@@ -20,6 +20,7 @@ class game_settings:
         self.previous_coor_x = -1
         self.previous_coor_y = -1
         self.meeples = []
+        self.meeple_placed_current_round = False
 
 
     def set_current_round(self, round):
@@ -103,3 +104,9 @@ class game_settings:
 
     def get_meeples(self):
         return self.meeples
+    
+    def get_meeple_placed_current_round(self):
+        return self.meeple_placed_current_round
+    
+    def set_meeple_placed_current_round(self, is_placed):
+        self.meeple_placed_current_round = is_placed
