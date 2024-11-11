@@ -37,7 +37,7 @@ BOARD_Y = 400
 
 class GameView(arcade.View):
 
-    def __init__(self, curr_tile, curr_meeple, settings):
+    def __init__(self, curr_tile, curr_meeple, settings, feature):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
@@ -51,7 +51,7 @@ class GameView(arcade.View):
         self.start_tile = tile.start
         self.tile_list = tile.tiles
         # TODO: HERRRRRRRRRRRR
-        self.feat = feature_placement.feature_placements()
+        self.feat = feature
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
@@ -625,7 +625,7 @@ class GameView(arcade.View):
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
                 # change view to help screen
-                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings)
+                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 help.setup()
                 self.window.show_view(help)
             # if scoreboard clicked
@@ -644,7 +644,7 @@ class GameView(arcade.View):
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
                 # change view to scoreboard
-                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
+                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
 

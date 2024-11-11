@@ -12,11 +12,12 @@ SCREEN_HEIGHT = 650
 class HelpView(arcade.View):
     """ View to show Help View"""
 
-    def __init__(self, curr_tile, curr_meeple, settings):
+    def __init__(self, curr_tile, curr_meeple, settings, feat):
         super().__init__()
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
         self.settings = settings
+        self.feat = feat
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -53,6 +54,6 @@ class HelpView(arcade.View):
         self.curr_tile.set_moved(False)
         self.curr_meeple.set_moved(False)
         # switch to game view
-        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
         game.setup()
         self.window.show_view(game)

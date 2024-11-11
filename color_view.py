@@ -7,7 +7,7 @@ import current_tile
 import current_meeple
 import choose_view
 import game_view
-
+import feature_placement
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -98,7 +98,8 @@ class ColorView(arcade.View):
             self.curr_tile = current_tile.current_tile()
             self.curr_meeple = current_meeple.current_meeple()
             self.manager.disable()
-            game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+            feature = feature_placement.feature_placements()
+            game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature)
             game.setup()
             self.window.show_view(game)
 
