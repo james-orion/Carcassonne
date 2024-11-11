@@ -15,7 +15,7 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 
 class MeeplePlacementView(arcade.View):
-    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite):
+    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite, feature):
         super().__init__()
         self.player = settings.current_player
         self.player_color = self.player.get_color().upper().strip()
@@ -30,6 +30,7 @@ class MeeplePlacementView(arcade.View):
         self.user_choice = None
         self.choice_coordinates = None
         self.meeple_coord_mods = None
+        self.feature = feature
 
         # create confirm and cancel buttons
         self.manager = arcade.gui.UIManager()
@@ -75,7 +76,6 @@ class MeeplePlacementView(arcade.View):
         if self.valid_placement == False:
             arcade.draw_text("Meeple Placement is Invlaid, Please Try Again",  self.window.width // 2, self.window.height // 2 + 205, arcade.color.WHITE, font_size=12, anchor_x="center", font_name="Kenney Future")
 
-
     def on_key_press(self, key, modifiers):
         if key in (arcade.key.KEY_1, arcade.key.KEY_2, arcade.key.KEY_3, arcade.key.KEY_4, arcade.key.KEY_5):
             placement_choice = key - arcade.key.KEY_1
@@ -105,7 +105,7 @@ class MeeplePlacementView(arcade.View):
         # return to GameView as it was previously
         self.curr_tile.set_moved(False)
         # switch to game view
-        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature)
         new_view.setup()
         self.window.show_view(new_view)
 
@@ -130,7 +130,7 @@ class MeeplePlacementView(arcade.View):
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             # switch to game view
-            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings)
+            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature)
             new_view.setup()
             self.window.show_view(new_view)
         else:

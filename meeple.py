@@ -5,7 +5,9 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-# TODO add villages
+# TODO validate placement for roads and citites
+# TODO implement in game scoring for roads and cities
+# TODO implement end of game scoring for all features
 
 class Meeple:
     def __init__(self, name, color):
@@ -43,7 +45,6 @@ class Meeple:
             else:
                 temp_feature_type = str(tile.get_bottom())
         else:
-            print(str(tile.get_building()))
             if str(tile.get_building()) == "Building.NONE":
                 return False
             else:
@@ -56,6 +57,7 @@ class Meeple:
             self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
             return True
         else:
+            self.feature_type = None
             return False
 
     
@@ -80,17 +82,17 @@ class Meeple:
                 return False
             else:
                 tile.set_meeple_placed_center(False)
-        # if placing on village, make sure only meeple on village
-        else:
-            if tile.get_meeple_placed_center() == True:
-                return False
-            else:
-                tile.set_meeple_placed_center(False)
         return True
 
 
     # determines how many points a Meeple scores once a feature is completed
-    def meeple_score(self):
+    def meeple_score(self, settings):
+        """meeples = settings.get_meeples()
+        for meeple in meeples:
+            if self == meeple:
+                print("THIS WORKS")
+            else:
+                print("Nope")"""
         points = 0
         # TODO find some way to check if feature is completed, then iterate
         # through list of tiles to determine total number of points
@@ -103,11 +105,9 @@ class Meeple:
         elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
             pass
-        elif self.feature_type == "MONASTERY":
-            points = 9
-        # village scoring?
         else:
-            return 0
+            # 9 points for a monastery
+            points = 9
 
         # unplace and reset meeple
         self.is_placed = False
@@ -118,8 +118,8 @@ class Meeple:
         return points
     
 
-    # determines how many points a Meeple scores for an incomplete feature or 
-    # for a field at the end of the game
+    # determines how many points a Meeple scores for an incomplete feature 
+    # at the end of the game
     def end_of_game_scoring(self):
         # NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
         points = 0
@@ -130,11 +130,8 @@ class Meeple:
         elif self.feature_type == "CITY":
             # points = 1 per each tile in partial city, extra 1 if tile with coat of arms
             pass
-        elif self.feature_type == "MONASTERY":
-            # points = number of tiles surrounding monestary + 1 for monestary itself
-            pass
         else:
-            # points = 3 points per completed city the field is touching
+            # points = number of tiles surrounding monestary + 1 for monestary itself
             pass
 
         # unplace and reset meeple
