@@ -23,27 +23,28 @@ class Meeple:
         # record feature type Meeple was placed on
         temp_feature_type = ""
         if user_choice == "TOP":
-            if tile.get_top() == "FIELD":
+            if str(tile.get_top()) == "Side.FIELD":
                 return False
             else:
                 temp_feature_type = str(tile.get_top())
         elif user_choice == "LEFT":
-            if tile.get_left() == "FIELD":
+            if str(tile.get_left()) == "Side.FIELD":
                 return False
             else:
                 temp_feature_type = str(tile.get_left())
         elif user_choice == "RIGHT":
-            if tile.get_right() == "FIELD":
+            if str(tile.get_right()) == "Side.FIELD":
                 return False
             else:
                 temp_feature_type = str(tile.get_right())
         elif user_choice == "BOTTOM":
-            if tile.get_bottom() == "FIELD":
+            if str(tile.get_bottom()) == "Side.FIELD":
                 return False
             else:
                 temp_feature_type = str(tile.get_bottom())
         else:
-            if tile.get_building == None:
+            print(str(tile.get_building()))
+            if str(tile.get_building()) == "Building.NONE":
                 return False
             else:
                 temp_feature_type = str(tile.get_building())

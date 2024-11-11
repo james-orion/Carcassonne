@@ -45,7 +45,7 @@ class Player:
             # Check if meeple is in player's hand (not placed)
             if not meeple.is_placed:
                 # Place meeple on the tile
-                if meeple.place_meeple(tile, user_choice):
+                if meeple.place_meeple(tile, user_choice) == True:
                     return True, meeple
                 else:
                     return False, None

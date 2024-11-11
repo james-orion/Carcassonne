@@ -114,17 +114,19 @@ class MeeplePlacementView(arcade.View):
         # if placement is valid, place Meeple and return to GameView
         # if invalid, prompt user to replace Meeple
         results = self.player.use_meeple(self.tile, self.user_choice)
-        if  results [0] and self.has_choosen == True:
+        valid_placement = results[0]
+        current_meeple = results[1]
+        if  valid_placement == True and self.has_choosen == True:
             self.settings.set_meeple_placed_current_round(True)
             # set coordinates for placed Meeple
             tile_x_coord = self.curr_tile.get_x()
             tile_y_coord = self.curr_tile.get_y()
             new_meeple_coord_x = tile_x_coord + self.meeple_coord_mods[0]
             new_meeple_coord_y = tile_y_coord + self.meeple_coord_mods[1]
-            results[1].set_x_coord(new_meeple_coord_x)
-            results[1].set_y_coord(new_meeple_coord_y)
+            current_meeple.set_x_coord(new_meeple_coord_x)
+            current_meeple.set_y_coord(new_meeple_coord_y)
             # update sprite
-            self.settings.add_meeple(results[1])
+            self.settings.add_meeple(current_meeple)
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             # switch to game view
