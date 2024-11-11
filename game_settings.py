@@ -22,6 +22,7 @@ class game_settings:
         self.meeples = []
         self.meeple_placed_current_round = False
 
+
     def set_current_round(self, round):
         """ This sets the current round """
         self.current_round = round
@@ -51,7 +52,7 @@ class game_settings:
         """ This sets the button text"""
         self.button_text = text
 
-        
+
     def increment_tile_count(self):
         """ This increments to next tile"""
         self.tile_count += 1
@@ -63,7 +64,6 @@ class game_settings:
     def get_rotation_click(self, tile_num):
         """This returns the total rotation on tile"""
         for key, val in self.total_rotation.items():
-            print("This is the key", key, "this is its val", val)
             if key == tile_num:
                 return val
         return 0
