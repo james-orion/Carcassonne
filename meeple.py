@@ -82,8 +82,18 @@ class Meeple:
 
         # if placing as highwayman, make sure only meeple on stretch of road
         if self.feature_type == "ROAD":
-            # TODO remove tiles with buildings in center or with sides that aren't roads
+            # TODO handle tiles with villages in center (img 12, 23, 24)
             connected_tiles = self.find_connected_tiles(tile, settings)
+            roads_on_tile = 0
+            for tile in connected_tiles:
+                if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
+                    return False
+                elif str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
+                    return False
+                if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
+                    return False
+                if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
+                    return False
         # if placing as knight, make sure only meeple in city
         elif self.feature_type == "CITY":
             connected_tiles = self.find_connected_tiles(tile, settings)
@@ -105,7 +115,10 @@ class Meeple:
 
 
     def find_connected_tiles(self, tile, settings):
+        # TODO fix bug with tiles placed on edges
         game_tiles = settings.feature_container
+        game_board_height = len(game_tiles) - 1
+        game_board_width = len(game_tiles[0]) - 1
         tile_coords = []
         connected_tiles = []
         found_connected = False
@@ -120,14 +133,18 @@ class Meeple:
                         if tile == game_tiles[i][j]:
                             tile_coords[0] = i
                             tile_coords[1] = j
-                if (game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0) and (str(tile.get_bottom()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
-                    connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
-                elif (game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0) and (str(tile.get_right()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
-                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
-                elif (game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0) and (str(tile.get_left()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
-                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
-                elif (game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0) and (str(tile.get_top()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
-                    connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
+                if (tile_coords[0] - 1 >= 0):
+                    if (game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0) and (str(tile.get_bottom()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                if (tile_coords[1] + 1 <= game_board_width):
+                    if (game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0) and (str(tile.get_right()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
+                if (tile_coords[1] - 1 >= 0):
+                    if (game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0) and (str(tile.get_left()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
+                if (tile_coords[0] + 1 <= game_board_height):
+                    if (game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0) and (str(tile.get_top()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
             if num_connected == len(connected_tiles):
                 found_connected = True
         return connected_tiles
