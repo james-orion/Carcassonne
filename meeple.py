@@ -69,15 +69,14 @@ class Meeple:
         # if there is a Meeple alreay placed, don't allow user to place another;
         # if there isn't a Meeple placed anywhere on the feature, allow user to
         # place one
-        for i in range(len(settings.feature_container)):
-            for j in range(len(settings.feature_container[i])):
-                print(settings.feature_container[i][j])
+
         # if placing as highwayman, make sure only meeple on stretch of road
         if self.feature_type == "ROAD":
-            pass
+            # TODO remove tiles with buildings in center or with sides that aren't roads
+            connected_tiles = self.find_connected_tiles(tile, settings)
         # if placing as knight, make sure only meeple in city
         elif self.feature_type == "CITY":
-            pass
+            connected_tiles = self.find_connected_tiles(tile, settings)
         # if placing as monk/nun, make sure only meeple in monestary
         elif self.feature_type == "MONASTERY":
             if tile.get_meeple_placed_center() == True:
@@ -85,6 +84,35 @@ class Meeple:
             else:
                 tile.set_meeple_placed_center(False)
         return True
+
+
+    def find_connected_tiles(self, tile, settings):
+        game_tiles = settings.feature_container
+        tile_coords = []
+        connected_tiles = []
+        found_connected = False
+        num_connected = 0
+        tile_coords = [0, 0]
+        connected_tiles.append(tile)
+        while found_connected == False:
+            num_connected = len(connected_tiles)
+            for tile in connected_tiles:
+                for i in range(len(game_tiles)):
+                    for j in range(len(game_tiles[i])):
+                        if tile == game_tiles[i][j]:
+                            tile_coords[0] = i
+                            tile_coords[1] = j
+                if (game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0) and (str(tile.get_bottom()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
+                    connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                elif (game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0) and (str(tile.get_right()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
+                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
+                elif (game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0) and (str(tile.get_left()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
+                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
+                elif (game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0) and (str(tile.get_top()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
+                    connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
+            if num_connected == len(connected_tiles):
+                found_connected = True
+        return connected_tiles
 
 
     # determines how many points a Meeple scores once a feature is completed
