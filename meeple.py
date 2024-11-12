@@ -53,6 +53,16 @@ class Meeple:
             
         if self.validate_placement(tile, settings):
             # update Meeple's sprite and placement boolean
+            if user_choice == "TOP":
+                tile.set_meeple_placed_top(True)
+            elif user_choice == "LEFT":
+                tile.set_meeple_placed_left(True)
+            elif user_choice == "RIGHT":
+                tile.set_meeple_placed_right(True)
+            elif user_choice == "BOTTOM":
+                tile.set_meeple_placed_bottom(True)
+            else:
+                tile.set_meeple_placed_center(True)
             self.is_placed = True
             self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
             return True
@@ -77,12 +87,20 @@ class Meeple:
         # if placing as knight, make sure only meeple in city
         elif self.feature_type == "CITY":
             connected_tiles = self.find_connected_tiles(tile, settings)
+            for tile in connected_tiles:
+                if str(tile.get_top()) == "Side.CITY" and tile.get_meeple_placed_top() == True:
+                    return False
+                elif str(tile.get_left()) == "Side.CITY" and tile.get_meeple_placed_left() == True:
+                    return False
+                if str(tile.get_right()) == "Side.CITY" and tile.get_meeple_placed_right() == True:
+                    return False
+                if str(tile.get_bottom()) == "Side.CITY" and tile.get_meeple_placed_bottom() == True:
+                    return False
+                
         # if placing as monk/nun, make sure only meeple in monestary
         elif self.feature_type == "MONASTERY":
             if tile.get_meeple_placed_center() == True:
                 return False
-            else:
-                tile.set_meeple_placed_center(False)
         return True
 
 
