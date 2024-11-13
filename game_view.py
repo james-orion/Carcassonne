@@ -27,6 +27,7 @@ SPRITE_SCALING_HELP = 1
 DEFAULT_LINE_HEIGHT = 45
 ROW_COUNT = 7
 COLUMN_COUNT = 11
+TOTAL_TILES = 72
 MARGIN = 5
 WIDTH = 60
 HEIGHT = 60
@@ -490,7 +491,7 @@ class GameView(arcade.View):
                         # update postion in matrix for start tile
                         if self.settings.placed_tiles[-1][0][1] == self.settings.placed_tiles[0][0][1]:
                             self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
-                            print("hiiiiiiiiiii")
+                            #print("hiiiiiiiiiii")
                             self.feat.inital_location(self.settings.feature_container)
                         # update position of new tile into the matrix, with coordiantes
                         else:
@@ -500,9 +501,9 @@ class GameView(arcade.View):
                                 self.settings.previous_coor_y = j
 
 
-            print("We are printing here!-------------")
-            for grid in self.settings.feature_container:
-                print(grid)
+            #print("We are printing here!-------------")
+            #for grid in self.settings.feature_container:
+                #print(grid)
 
 
 
@@ -587,24 +588,27 @@ class GameView(arcade.View):
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
+            print("There is nowhere the tile can be placed")
             # if there are more tiles in tile list
-            #TODO: there is a bug where it doesn't generate new tile, and instead doesn't let the old tile move or anything
-            #TODO: delete prev tile sprite from board when generating new tile
-            if self.settings.tile_count != len(self.settings.placed_tiles):
+            if len(self.settings.placed_tiles) < len(self.settings.tiles) + 1:
+                print("Number of tiles is less than total number of tiles")
+                print(self.settings.tile_count)
+                self.tile_sprite.kill()
+                self.settings.increment_tile_count()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
                 self.curr_tile.set_x(200)
-                tile = self.settings.tiles[self.settings.tile_count][1].image
+                tile = self.settings.tiles[self.settings.tile_count-1][1].image
                 self.tile_sprite = arcade.Sprite(tile,
                                                  SPRITE_SCALING_TILE)
                 self.tile_sprite.center_x = self.curr_tile.get_x()
                 self.tile_sprite.center_y = self.curr_tile.get_y()
                 self.tile_list.append(self.tile_sprite)
-                # add unused tile to placed_tiles
-                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
+                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count-1],
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
-                self.settings.increment_tile_count()
+                self.on_new_tile()
             else:
+                print("All tiles have been used, the game is over")
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 

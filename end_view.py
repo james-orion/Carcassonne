@@ -38,7 +38,7 @@ class EndView(arcade.View):
         # Title for Score board
         arcade.draw_text("The game is over!",
                          self.window.width / 2 + 30,
-                         self.window.height - 60,
+                         self.window.height - 75,
                          arcade.color.BLACK,
                          font_size=50,
                          anchor_x="center",
@@ -47,7 +47,7 @@ class EndView(arcade.View):
         # set initial line (x,y)
         name_line = 250
         score_line = 550
-        height_line = self.window.height - 150
+        height_line = self.window.height - 400
         # for each player, print name and score
         for player in self.settings.current_players:
             arcade.draw_text(player.name, name_line,
@@ -67,7 +67,7 @@ class EndView(arcade.View):
 
         arcade.draw_text("The winner is: ",
                          self.window.width / 2 + 30,
-                         self.window.height - 120,
+                         self.window.height - 150,
                          arcade.color.BLACK,
                          font_size=50,
                          anchor_x="center",
@@ -79,7 +79,7 @@ class EndView(arcade.View):
                 winning_player = player
         arcade.draw_text(winning_player.name,
                          self.window.width / 2 + 30,
-                         self.window.height - 150,
+                         self.window.height - 250,
                          arcade.color.BLACK,
                          font_size=50,
                          anchor_x="center",
