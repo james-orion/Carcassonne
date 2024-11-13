@@ -53,6 +53,7 @@ def tile_test_getters():
 
 def tile_test_rotation():
     """A function to test the rotation method of the tile class"""
+    # No longer works because of changes made to tile class
     tile3 = tile.top_bottom_road
     tile3.rotate_tile()
     test_tile = tile.Tile(top=tile.Side['FIELD'], left=tile.Side['ROAD'], right=tile.Side['ROAD'], bottom=tile.Side['FIELD'],

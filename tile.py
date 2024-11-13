@@ -155,6 +155,10 @@ class Tile:
         """Method to place Meeple on bottom of tile"""
         self.meeple_placed_bottom = new_placement
 
+    def copy(self):
+        return Tile(top=self.top, left=self.left, bottom=self.bottom, right=self.right,
+                    image=self.image, shield=self.shield, building=self.building, is_connected=self.is_connected)
+
     # Function to rotate tiles
     def rotate_tile(self):
         """Method to rotate a tile one side in a counter-clockwise direction"""
@@ -163,8 +167,8 @@ class Tile:
         self.set_right(self.get_bottom())  # Right becomes bottom
         self.set_bottom(self.get_left())  # Bottom becomes left
         self.set_left(temp_top)  # Left becomes the original top
-        print(
-            f"Tile rotated: top={self.get_top()}, left={self.get_left()}, right={self.get_right()}, bottom={self.get_bottom()}")
+        #print(
+        #    f"Tile rotated: top={self.get_top()}, left={self.get_left()}, right={self.get_right()}, bottom={self.get_bottom()}")
 
 # Create tiles for base game
 
