@@ -12,7 +12,7 @@ class feature_placements:
     def inital_location(self, l):
         """This is set for the intial placement of
         the start tile with its edges"""
-        #print("This is printing the feature_placementttt: " )
+        print("This is printing the feature_placementttt: " )
         tile = {}
         j_loc = -1
         i_loc = -1
@@ -34,13 +34,13 @@ class feature_placements:
                     j_loc = j
                     i_loc = i
         self.tiles_on_board[i_loc][j_loc] = tile
-        #print(self.tiles_on_board)
+        print(self.tiles_on_board)
 
 
     def add_location(self, x_old,y_old, x_new, y_new, old_side_connected, new_side_connected):
         """This adds a tile in the feature container
         and updates the sides, for tile on board """
-        #print("this is the updated location!")
+        print("this is the updated location!")
         # place new tile on the board
         for i in range(len(self.tiles_on_board)):
             for j in range(len(self.tiles_on_board[i])):
@@ -64,11 +64,11 @@ class feature_placements:
                             self.tiles_on_board[i][j]['r_connected']= True
                         else:
                             self.tiles_on_board[i][j]['l_connected'] = True
-            #print(self.tiles_on_board[i])
+            print(self.tiles_on_board[i])
 
     def add_tile(self, x_new, y_new, tile_new):
         """This adds a tile to tiles_on_board and sets values to default"""
-        #print("added tile to feature placement!")
+        print("added tile to feature placement!")
         for i in range(len(self.tiles_on_board)):
             for j in range(len(self.tiles_on_board[i])):
                 if i == x_new and j == y_new:
@@ -84,5 +84,4 @@ class feature_placements:
 
                     self.tiles_on_board[i][j] = tile
 
-            #print(self.tiles_on_board[i])
-
+            print(self.tiles_on_board[i])
