@@ -247,7 +247,7 @@ class GameView(arcade.View):
         # Drawing Text, For Meeples.
         start_meeple_x = 10
         start_meeple_y = 50
-        arcade.draw_text("# Meeples",
+        arcade.draw_text(str(self.settings.current_player.get_meeple_count())+ " Meeples",
                          start_meeple_x,
                          start_meeple_y,
                          arcade.color.WHITE,
@@ -296,7 +296,7 @@ class GameView(arcade.View):
             # change tile to next tile in list,
             self.curr_tile.set_moved(False)
             self.curr_tile.set_y(100)
-            self.curr_tile.set_x(200)
+            self.curr_tile.set_x(250)
             tile = self.settings.tiles[self.settings.tile_count][1].image
             self.tile_sprite = arcade.Sprite(tile,
                                              SPRITE_SCALING_TILE)
@@ -321,6 +321,7 @@ class GameView(arcade.View):
                 # right
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
+
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
                 # reset meeple placement variables
@@ -366,7 +367,7 @@ class GameView(arcade.View):
                 # change tile to next tile in list,
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
-                self.curr_tile.set_x(200)
+                self.curr_tile.set_x(250)
                 tile = self.settings.tiles[self.settings.tile_count][1].image
                 self.tile_sprite = arcade.Sprite(tile,
                                               SPRITE_SCALING_TILE)
@@ -673,4 +674,46 @@ class GameView(arcade.View):
             if count_valid == len(check_tile_features):
                 done_valid = True
                 self.rotating_tile = None
+
+                done_valid = True
+                self.rotating_tile = None
+                self.feat.add_tile(self.settings.previous_coor_x,
+                                   self.settings.previous_coor_y,
+                                   self.settings.placed_tiles[-1][0][1])
+                print(check_tile_features)
+                if check_tile_features != []:
+                    for tile in check_tile_features:
+                        if tile[2] == "left":
+                            self.feat.add_location(tile[0],
+                                                   tile[1],
+                                                   self.settings.previous_coor_x,
+                                                   self.settings.previous_coor_y,
+                                                   "right",
+                                                   "left")
+
+                        if tile[2] == "right":
+                            self.feat.add_location(tile[0],
+                                                   tile[1],
+                                                   self.settings.previous_coor_x,
+                                                   self.settings.previous_coor_y,
+                                                   "left",
+                                                   "right")
+
+                        if tile[2] == "top":
+                            self.feat.add_location(tile[0],
+                                                   tile[1],
+                                                   self.settings.previous_coor_x,
+                                                   self.settings.previous_coor_y,
+                                                   "bottom",
+                                                   "top")
+
+                        if tile[2] == "bottom":
+                            self.feat.add_location(tile[0],
+                                                   tile[1],
+                                                   self.settings.previous_coor_x,
+                                                   self.settings.previous_coor_y,
+                                                   "top",
+                                                   "bottom")
+
         return done_valid
+
