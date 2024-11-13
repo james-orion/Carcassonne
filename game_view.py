@@ -241,7 +241,7 @@ class GameView(arcade.View):
         # Drawing Text, For Meeples.
         start_meeple_x = 10
         start_meeple_y = 50
-        arcade.draw_text("# Meeples",
+        arcade.draw_text(str(self.settings.current_player.get_meeple_count())+ " Meeples",
                          start_meeple_x,
                          start_meeple_y,
                          arcade.color.WHITE,
@@ -290,7 +290,7 @@ class GameView(arcade.View):
             # change tile to next tile in list,
             self.curr_tile.set_moved(False)
             self.curr_tile.set_y(100)
-            self.curr_tile.set_x(200)
+            self.curr_tile.set_x(250)
             tile = self.settings.tiles[self.settings.tile_count][1].image
             self.tile_sprite = arcade.Sprite(tile,
                                              SPRITE_SCALING_TILE)
@@ -460,7 +460,7 @@ class GameView(arcade.View):
                 # change tile to next tile in list,
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
-                self.curr_tile.set_x(200)
+                self.curr_tile.set_x(250)
                 tile = self.settings.tiles[self.settings.tile_count][1].image
                 self.tile_sprite = arcade.Sprite(tile,
                                               SPRITE_SCALING_TILE)
