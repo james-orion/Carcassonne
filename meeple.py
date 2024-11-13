@@ -5,7 +5,9 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-# TODO add villages
+# TODO validate placement for roads and citites
+# TODO implement in game scoring for roads and cities
+# TODO implement end of game scoring for all features
 
 class Meeple:
     def __init__(self, name, color):
@@ -19,7 +21,7 @@ class Meeple:
 
     
     # place Meeple on game board and store information about where it was placed
-    def place_meeple(self, tile, user_choice):
+    def place_meeple(self, tile, user_choice, settings):
         # record feature type Meeple was placed on
         temp_feature_type = ""
         if user_choice == "TOP":
@@ -43,26 +45,36 @@ class Meeple:
             else:
                 temp_feature_type = str(tile.get_bottom())
         else:
-            print(str(tile.get_building()))
             if str(tile.get_building()) == "Building.NONE":
                 return False
             else:
                 temp_feature_type = str(tile.get_building())
         self.feature_type = temp_feature_type.split(".")[1]
             
-        if self.validate_placement(tile):
+        if self.validate_placement(tile, settings):
             # update Meeple's sprite and placement boolean
+            if user_choice == "TOP":
+                tile.set_meeple_placed_top(True)
+            elif user_choice == "LEFT":
+                tile.set_meeple_placed_left(True)
+            elif user_choice == "RIGHT":
+                tile.set_meeple_placed_right(True)
+            elif user_choice == "BOTTOM":
+                tile.set_meeple_placed_bottom(True)
+            else:
+                tile.set_meeple_placed_center(True)
             self.is_placed = True
             self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
             return True
         else:
+            self.feature_type = None
             return False
 
     
     # validates that user's placement of Meeple is allowed
     # if returns True, store placement of Meeple on tile
     # if return False, prompt user to choose again
-    def validate_placement(self, tile):
+    def validate_placement(self, tile, settings):
         # TODO finish implementing - iterate through list of tiles in feature,
         # if there is a Meeple alreay placed, don't allow user to place another;
         # if there isn't a Meeple placed anywhere on the feature, allow user to
@@ -70,27 +82,82 @@ class Meeple:
 
         # if placing as highwayman, make sure only meeple on stretch of road
         if self.feature_type == "ROAD":
-            pass
+            # TODO handle tiles with villages in center (img 12, 23, 24)
+            connected_tiles = self.find_connected_tiles(tile, settings)
+            roads_on_tile = 0
+            for tile in connected_tiles:
+                if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
+                    return False
+                elif str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
+                    return False
+                if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
+                    return False
+                if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
+                    return False
         # if placing as knight, make sure only meeple in city
         elif self.feature_type == "CITY":
-            pass
+            connected_tiles = self.find_connected_tiles(tile, settings)
+            for tile in connected_tiles:
+                if str(tile.get_top()) == "Side.CITY" and tile.get_meeple_placed_top() == True:
+                    return False
+                elif str(tile.get_left()) == "Side.CITY" and tile.get_meeple_placed_left() == True:
+                    return False
+                if str(tile.get_right()) == "Side.CITY" and tile.get_meeple_placed_right() == True:
+                    return False
+                if str(tile.get_bottom()) == "Side.CITY" and tile.get_meeple_placed_bottom() == True:
+                    return False
+                
         # if placing as monk/nun, make sure only meeple in monestary
         elif self.feature_type == "MONASTERY":
             if tile.get_meeple_placed_center() == True:
                 return False
-            else:
-                tile.set_meeple_placed_center(False)
-        # if placing on village, make sure only meeple on village
-        else:
-            if tile.get_meeple_placed_center() == True:
-                return False
-            else:
-                tile.set_meeple_placed_center(False)
         return True
 
 
+    def find_connected_tiles(self, tile, settings):
+        # TODO fix bug with tiles placed on edges
+        game_tiles = settings.feature_container
+        game_board_height = len(game_tiles) - 1
+        game_board_width = len(game_tiles[0]) - 1
+        tile_coords = []
+        connected_tiles = []
+        found_connected = False
+        num_connected = 0
+        tile_coords = [0, 0]
+        connected_tiles.append(tile)
+        while found_connected == False:
+            num_connected = len(connected_tiles)
+            for tile in connected_tiles:
+                for i in range(len(game_tiles)):
+                    for j in range(len(game_tiles[i])):
+                        if tile == game_tiles[i][j]:
+                            tile_coords[0] = i
+                            tile_coords[1] = j
+                if (tile_coords[0] - 1 >= 0):
+                    if (game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0) and (str(tile.get_bottom()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                if (tile_coords[1] + 1 <= game_board_width):
+                    if (game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0) and (str(tile.get_right()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
+                if (tile_coords[1] - 1 >= 0):
+                    if (game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0) and (str(tile.get_left()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side." + self.feature_type) and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
+                if (tile_coords[0] + 1 <= game_board_height):
+                    if (game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0) and (str(tile.get_top()) == "Side." + self.feature_type) and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side." + self.feature_type) and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
+                        connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
+            if num_connected == len(connected_tiles):
+                found_connected = True
+        return connected_tiles
+
+
     # determines how many points a Meeple scores once a feature is completed
-    def meeple_score(self):
+    def meeple_score(self, settings):
+        """meeples = settings.get_meeples()
+        for meeple in meeples:
+            if self == meeple:
+                print("THIS WORKS")
+            else:
+                print("Nope")"""
         points = 0
         # TODO find some way to check if feature is completed, then iterate
         # through list of tiles to determine total number of points
@@ -103,11 +170,9 @@ class Meeple:
         elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
             pass
-        elif self.feature_type == "MONASTERY":
-            points = 9
-        # village scoring?
         else:
-            return 0
+            # 9 points for a monastery
+            points = 9
 
         # unplace and reset meeple
         self.is_placed = False
@@ -118,8 +183,8 @@ class Meeple:
         return points
     
 
-    # determines how many points a Meeple scores for an incomplete feature or 
-    # for a field at the end of the game
+    # determines how many points a Meeple scores for an incomplete feature 
+    # at the end of the game
     def end_of_game_scoring(self):
         # NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
         points = 0
@@ -130,11 +195,8 @@ class Meeple:
         elif self.feature_type == "CITY":
             # points = 1 per each tile in partial city, extra 1 if tile with coat of arms
             pass
-        elif self.feature_type == "MONASTERY":
-            # points = number of tiles surrounding monestary + 1 for monestary itself
-            pass
         else:
-            # points = 3 points per completed city the field is touching
+            # points = number of tiles surrounding monestary + 1 for monestary itself
             pass
 
         # unplace and reset meeple
