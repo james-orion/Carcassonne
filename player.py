@@ -40,12 +40,12 @@ class Player:
         self.score += points
 
     """ Function to place a meeple on a tile if available. """
-    def use_meeple(self, tile, user_choice):
+    def use_meeple(self, tile, user_choice, settings):
         for meeple in self.meeples:
             # Check if meeple is in player's hand (not placed)
             if not meeple.is_placed:
                 # Place meeple on the tile
-                if meeple.place_meeple(tile, user_choice):
+                if meeple.place_meeple(tile, user_choice, settings) == True:
                     return True, meeple
                 else:
                     return False, None

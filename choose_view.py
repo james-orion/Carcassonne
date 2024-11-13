@@ -3,15 +3,22 @@
 
 import arcade
 import arcade.gui
+from arcade.examples.tetris import colors
+
 import name_view
 import game_settings
 
+# Global Var: Screen Size
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 650
 
 class ChooseView(arcade.View):
     """ View to Open Game"""
 
     def __init__(self):
         super().__init__()
+        # Initialize Background Image
+        self.background = arcade.load_texture("images/sky.jpg")
         # Initalize manager for container and butttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -45,7 +52,7 @@ class ChooseView(arcade.View):
                 anchor_x="center",
                 anchor_y="center",
                 child=self.h_box,
-                style=None)
+                style=arcade.color.WHITE)
         )
         # creating instance of settings
         self.settings = game_settings.game_settings()
@@ -62,10 +69,15 @@ class ChooseView(arcade.View):
     def on_draw(self):
         """ Draw this view """
         self.clear()
+        arcade.draw_texture_rectangle(SCREEN_WIDTH / 2,
+                                      SCREEN_HEIGHT / 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT,
+                                      self.background)
         arcade.draw_text("How Many Players?",
                          self.window.width / 2,
                          self.window.height - 200,
-                         arcade.color.WHITE,
+                         arcade.color.BLACK,
                          font_size=40,
                          anchor_x="center",
                          font_name="Kenney Future")

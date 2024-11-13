@@ -8,6 +8,7 @@ import help_view
 import tile
 import meeple_placement_view
 import random
+import feature_placement
 import end_view
 
 # Global Var: Screen Size
@@ -34,7 +35,7 @@ BOARD_Y = 400
 
 class GameView(arcade.View):
 
-    def __init__(self, curr_tile, curr_meeple, settings):
+    def __init__(self, curr_tile, curr_meeple, settings, feature):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
@@ -47,6 +48,8 @@ class GameView(arcade.View):
         self.settings = settings
         self.start_tile = tile.start
         self.tile_list = tile.tiles
+        # TODO: HERRRRRRRRRRRR
+        self.feat = feature
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
@@ -393,7 +396,7 @@ class GameView(arcade.View):
                     new_list.append(item)
             self.settings.placed_tiles = new_list
             # change view to help screen
-            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite)
+            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat)
             self.window.show_view(new_view)
 
 
@@ -402,6 +405,8 @@ class GameView(arcade.View):
 
         # TODO: use this to resize
         super().on_resize(width, height)
+
+
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """ Called whenever the mouse moves. """
@@ -485,12 +490,21 @@ class GameView(arcade.View):
                         # update postion in matrix for start tile
                         if self.settings.placed_tiles[-1][0][1] == self.settings.placed_tiles[0][0][1]:
                             self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
+                            print("hiiiiiiiiiii")
+                            self.feat.inital_location(self.settings.feature_container)
                         # update position of new tile into the matrix, with coordiantes
                         else:
                             if self.settings.previous_coor_x == -1:
                                 self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
                                 self.settings.previous_coor_x = i
                                 self.settings.previous_coor_y = j
+
+
+            print("We are printing here!-------------")
+            for grid in self.settings.feature_container:
+                print(grid)
+
+
 
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
@@ -516,7 +530,7 @@ class GameView(arcade.View):
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
                 # change view to help screen
-                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings)
+                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 help.setup()
                 self.window.show_view(help)
             # if scoreboard clicked
@@ -535,7 +549,7 @@ class GameView(arcade.View):
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
                 # change view to scoreboard
-                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings)
+                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
 
@@ -546,6 +560,7 @@ class GameView(arcade.View):
                 self.rotating_tile.angle = 90 + self.rotating_tile.angle
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
+
 
     def on_new_tile(self):
         can_place = False
