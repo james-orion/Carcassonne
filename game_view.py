@@ -594,18 +594,18 @@ class GameView(arcade.View):
                 print("Number of tiles is less than total number of tiles")
                 print(self.settings.tile_count)
                 self.tile_sprite.kill()
-                self.settings.increment_tile_count()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
                 self.curr_tile.set_x(200)
-                tile = self.settings.tiles[self.settings.tile_count-1][1].image
+                tile = self.settings.tiles[self.settings.tile_count][1].image
                 self.tile_sprite = arcade.Sprite(tile,
                                                  SPRITE_SCALING_TILE)
                 self.tile_sprite.center_x = self.curr_tile.get_x()
                 self.tile_sprite.center_y = self.curr_tile.get_y()
                 self.tile_list.append(self.tile_sprite)
-                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count-1],
+                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
+                self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
                 print("All tiles have been used, the game is over")
