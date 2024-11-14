@@ -40,6 +40,10 @@ class GameView(arcade.View):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
+        # inialize sounds
+        self.error_sound = arcade.load_sound(":resources:sounds/error5.wav")
+        self.correct_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+        self.invalid_sound = arcade.load_sound(":resources:sounds/error4.wav")
         # Initalize sprite lists
         self.player_list = None
         self.scoreboard_list = None
@@ -240,7 +244,7 @@ class GameView(arcade.View):
                          start_x,
                          start_y,
                          arcade.color.WHITE,
-                         20,
+                         15,
                          font_name="Kenney Future")
 
 
@@ -324,6 +328,8 @@ class GameView(arcade.View):
 
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
+                # create correct sound
+                self.good_placement = self.correct_sound.play()
                 # reset meeple placement variables
                 self.settings.set_meeple_placed_current_round(False)
                 # set coordinates back to -1 for next tile
@@ -379,6 +385,8 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+            else:
+                self.sound = self.error_sound.play()
 
 
     def on_place_meeple(self, event):
@@ -463,8 +471,10 @@ class GameView(arcade.View):
             try:
                 # if new sprite is on tile already placed then move to start
                 if self.dragging_sprite.collides_with_list(self.tile_list):
-                    self.dragging_sprite.center_x = 200
+                    self.wrong_place = self.error_sound.play()
+                    self.dragging_sprite.center_x = 250
                     self.dragging_sprite.center_y = 100
+
             except AttributeError:
                 pass
             self.dragging_sprite = None
@@ -714,6 +724,7 @@ class GameView(arcade.View):
                                                    self.settings.previous_coor_y,
                                                    "top",
                                                    "bottom")
+
 
         return done_valid
 

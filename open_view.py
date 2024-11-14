@@ -14,6 +14,8 @@ class OpenView(arcade.View):
         # Initialize Background Image
         self.background = arcade.load_texture("images/screen_savor.jpg")
 
+
+
     def on_show_view(self):
         """ This is run once when we switch to this view """
         # TODO: pick a good background, maybe include image
