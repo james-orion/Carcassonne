@@ -21,6 +21,7 @@ class game_settings:
         self.previous_coor_y = -1
         self.meeples = []
         self.meeple_placed_current_round = False
+        self.sound_on = True
 
 
     def set_current_round(self, round):

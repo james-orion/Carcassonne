@@ -15,6 +15,9 @@ SCREEN_TITLE = "Carcassonne"
 def main():
     """ Main function """
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    classical_music_track = arcade.load_sound("images/civ_open.mp3", streaming=True)
+    classical_music_track.play()
+
     start_view = open_view.OpenView()
     window.show_view(start_view)
     arcade.run()
