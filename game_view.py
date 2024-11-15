@@ -8,7 +8,6 @@ import help_view
 import tile
 import meeple_placement_view
 import random
-import feature_placement
 import end_view
 
 # Global Var: Screen Size
@@ -49,11 +48,11 @@ class GameView(arcade.View):
         self.scoreboard_list = None
         self.tile_list = None
         self.help_list = None
+        self.sound_list = None
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
         self.tile_list = tile.tiles
-        # TODO: HERRRRRRRRRRRR
         self.feat = feature
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
@@ -136,6 +135,7 @@ class GameView(arcade.View):
         self.scoreboard_list = arcade.SpriteList()
         self.tile_list = arcade.SpriteList()
         self.help_list = arcade.SpriteList()
+        self.sound_list = arcade.SpriteList()
         # Meeple sprite
         for meeple in self.settings.get_meeples():
             img = meeple.get_meeple_sprite()
@@ -153,6 +153,14 @@ class GameView(arcade.View):
         self.scoreboard_sprite.center_x = 950
         self.scoreboard_sprite.center_y = 515
         self.scoreboard_list.append(self.scoreboard_sprite)
+
+        # Sound
+        self.sound = ":resources:onscreen_controls/shaded_dark/sound_on.png"
+        self.sound_sprite = arcade.Sprite(self.sound,
+                                               SPRITE_SCALING_HELP)
+        self.sound_sprite.center_x = 950
+        self.sound_sprite.center_y = 420
+        self.sound_list.append(self.sound_sprite)
 
         # Start Tile Sprite
         tile = self.start_tile.image
@@ -175,13 +183,7 @@ class GameView(arcade.View):
                 for j in range(len(self.grid_sprites[i])):
                     grid_placements[i].append(0)
             self.settings.feature_container = grid_placements
-            #
-            # # print(check_adjacent)
-            # for grid in self.settings.feature_container:
-            #     print(grid)
 
-
-        #print("print containter list:",self.settings.feature_container)
        # Keep location of placed tile sprites
         for i,item in enumerate(self.settings.placed_tiles[1:],1):
             object = item[0][1]
@@ -224,6 +226,7 @@ class GameView(arcade.View):
         self.help_list.draw()
         self.tile_list.draw()
         self.player_list.draw()
+        self.sound_list.draw()
         # Drawing Button
         self.manager.draw()
         # Drawing Text, from settings round #
@@ -270,9 +273,7 @@ class GameView(arcade.View):
 
 
     def on_update(self, delta_time):
-        """ All the logic to move, and the game logic goes here.
-        Normally, you'll call update() on the sprite lists that
-        need it. """
+        """ All the logic to move"""
         # change button from start to done
         if self.done_button.text != self.settings.button_text:
             self.done_button.text = self.settings.button_text
@@ -282,12 +283,8 @@ class GameView(arcade.View):
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
-        # if meeple moved update with new location
-        #if self.curr_meeple.get_moved():
-        #    self.tile_sprite.center_x = self.curr_meeple.get_x()
-        #    self.tile_sprite.center_y = self.curr_meeple.get_y()
-
-
+        if self.settings.sound_on:
+            self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
     def on_done(self, event):
         """ If the user presses the button, the logic will
@@ -329,7 +326,8 @@ class GameView(arcade.View):
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
                 # create correct sound
-                self.good_placement = self.correct_sound.play()
+                if self.settings.sound_on:
+                    self.good_placement = self.correct_sound.play()
                 # reset meeple placement variables
                 self.settings.set_meeple_placed_current_round(False)
                 # set coordinates back to -1 for next tile
@@ -386,7 +384,8 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
-                self.sound = self.error_sound.play()
+                if self.settings.sound_on:
+                    self.sound = self.error_sound.play()
 
 
     def on_place_meeple(self, event):
@@ -408,15 +407,6 @@ class GameView(arcade.View):
             # change view to help screen
             new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat)
             self.window.show_view(new_view)
-
-
-    def on_resize(self, width, height):
-        """ This method is automatically called when the window is resized. """
-
-        # TODO: use this to resize
-        super().on_resize(width, height)
-
-
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """ Called whenever the mouse moves. """
@@ -471,9 +461,10 @@ class GameView(arcade.View):
             try:
                 # if new sprite is on tile already placed then move to start
                 if self.dragging_sprite.collides_with_list(self.tile_list):
-                    self.wrong_place = self.error_sound.play()
                     self.dragging_sprite.center_x = 250
                     self.dragging_sprite.center_y = 100
+                    if self.settings.sound_on:
+                        self.wrong_place = self.error_sound.play()
 
             except AttributeError:
                 pass
@@ -502,7 +493,6 @@ class GameView(arcade.View):
                         # update postion in matrix for start tile
                         if self.settings.placed_tiles[-1][0][1] == self.settings.placed_tiles[0][0][1]:
                             self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
-                            #print("hiiiiiiiiiii")
                             self.feat.inital_location(self.settings.feature_container)
                         # update position of new tile into the matrix, with coordiantes
                         else:
@@ -512,18 +502,15 @@ class GameView(arcade.View):
                                 self.settings.previous_coor_y = j
 
 
-            #print("We are printing here!-------------")
-            #for grid in self.settings.feature_container:
-                #print(grid)
-
-
-
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
                                                              self.scoreboard_list)
             # If help was clicked then released
             clicked_help = arcade.get_sprites_at_point((x, y),
                                                        self.help_list)
+
+            clicked_sound = arcade.get_sprites_at_point((x, y),
+                                                             self.sound_list)
 
             # If help clicked
             if clicked_help:
@@ -552,7 +539,6 @@ class GameView(arcade.View):
                 self.curr_tile.set_moved(True)
                 self.curr_tile.set_x(self.tile_sprite.center_x)
                 self.curr_tile.set_y(self.tile_sprite.center_y)
-                # TODO: there is a bug here need to fix, same as above
                 # update the placed tiles, with new coordinates
                 for item in self.settings.placed_tiles:
                     if item == self.settings.placed_tiles[-1]:
@@ -564,6 +550,12 @@ class GameView(arcade.View):
                 scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
+
+            if clicked_sound:
+                if self.settings.sound_on:
+                     self.settings.sound_on = False
+                else:
+                    self.settings.sound_on = True
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
             # If the right mouse button is clicked then unclicked, rotate tile
