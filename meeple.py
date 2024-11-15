@@ -92,6 +92,7 @@ class Meeple:
                         return False
                     
         # if placing as knight, make sure only meeple in city
+        # TODO fix issues with unconnected city tiles
         elif self.feature_type == "CITY":
             connected_tiles = self.find_connected_city_tiles(tile, settings)
             for tile in connected_tiles:

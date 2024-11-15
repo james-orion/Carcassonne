@@ -325,6 +325,7 @@ class GameView(arcade.View):
 
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
+                self.feat.check_feature_completed(self.settings)
                 # create correct sound
                 if self.settings.sound_on:
                     self.good_placement = self.correct_sound.play()
