@@ -50,6 +50,7 @@ class GameView(arcade.View):
         self.tile_list = None
         self.help_list = None
         self.sound_list = None
+        self.music_list = None
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
@@ -137,6 +138,7 @@ class GameView(arcade.View):
         self.tile_list = arcade.SpriteList()
         self.help_list = arcade.SpriteList()
         self.sound_list = arcade.SpriteList()
+        self.music_list = arcade.SpriteList()
         # Meeple sprite
         for meeple in self.settings.get_meeples():
             img = meeple.get_meeple_sprite()
@@ -162,6 +164,14 @@ class GameView(arcade.View):
         self.sound_sprite.center_x = 950
         self.sound_sprite.center_y = 420
         self.sound_list.append(self.sound_sprite)
+
+        # Sound
+        self.music = ":resources:onscreen_controls/shaded_dark/music_on.png"
+        self.music_sprite = arcade.Sprite(self.music,
+                                          SPRITE_SCALING_HELP)
+        self.music_sprite.center_x = 950
+        self.music_sprite.center_y = 330
+        self.music_list.append(self.music_sprite)
 
         # Start Tile Sprite
         tile = self.start_tile.image
@@ -225,6 +235,7 @@ class GameView(arcade.View):
         self.tile_list.draw()
         self.player_list.draw()
         self.sound_list.draw()
+        self.music_list.draw()
         # Drawing Button
         self.manager.draw()
         # Drawing Text, from settings round #
