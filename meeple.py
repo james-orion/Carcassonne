@@ -160,7 +160,16 @@ class Meeple:
                             return False
             if num_connected == len(connected_tiles):
                 found_connected = True
-        print(connected_tiles)
+        for tile in connected_tiles:
+                if str(tile.get_building) != "Building.VILLAGE":
+                    if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
+                        return False
+                    if str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
+                        return False
+                    if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
+                        return False
+                    if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
+                        return False   
         return True
 
 
