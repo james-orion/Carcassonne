@@ -20,6 +20,7 @@ class ScoreboardView(arcade.View):
         self.curr_meeple = curr_meeple
         self.settings = settings
         self.feat = feat
+        self.page_sound = arcade.load_sound("images/page.mp3")
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
         pass
@@ -76,6 +77,9 @@ class ScoreboardView(arcade.View):
         # reset boolean for moved sprites for game view
         self.curr_tile.set_moved(False)
         self.curr_meeple.set_moved(False)
+        # sound
+        if self.settings.sound_on:
+            self.sound_page = self.page_sound.play()
         # switch to game view
         game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
         game.setup()
