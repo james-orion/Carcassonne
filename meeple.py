@@ -105,6 +105,7 @@ class Meeple:
 
 
     def find_connected_road_tiles(self, connected_tiles, settings, user_choice):
+        # TODO fix problem when village tiles placed next to another village tile
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
@@ -161,7 +162,7 @@ class Meeple:
             if num_connected == len(connected_tiles):
                 found_connected = True
         for tile in connected_tiles:
-                if str(tile.get_building) != "Building.VILLAGE":
+                if str(tile.get_building()) != "Building.VILLAGE":
                     if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
                         return False
                     if str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
