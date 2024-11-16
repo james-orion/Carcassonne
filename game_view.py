@@ -192,9 +192,6 @@ class GameView(arcade.View):
                                              SPRITE_SCALING_TILE)
             self.tile_sprite.center_x = item[1]
             self.tile_sprite.center_y = item[2]
-            #print("TILE ",self.settings.placed_tiles[-1][0][1])
-            #print("priting roatation",self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
-            #self.tile_sprite.change_angle = True
             self.tile_sprite.angle = self.settings.get_rotation_click(self.settings.placed_tiles[i][0][0])
             self.tile_list.append(self.tile_sprite)
 
@@ -563,10 +560,11 @@ class GameView(arcade.View):
         if button == arcade.MOUSE_BUTTON_RIGHT:
             # If the right mouse button is clicked then unclicked, rotate tile
             if self.rotating_tile:
-                #self.rotating_tile.change_angle = True
                 self.rotating_tile.angle = 90 + self.rotating_tile.angle
                 self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                 self.settings.placed_tiles[-1][0][1].rotate_tile()
+                if self.settings.sound_on:
+                    self.sound_drop = self.drop_sound.play()
 
 
     def on_new_tile(self):
