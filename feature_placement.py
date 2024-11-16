@@ -107,22 +107,22 @@ class feature_placements:
         # if placing a tile with a city as a side find all connected tiles and see if city is complete
         if last_placed.check_is_connected() == True and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
             city = [last_placed]
-            self.check_city_test(city, settings)
+            self.check_city(city, settings)
         if last_placed.check_is_connected() == False and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
             tile_coords = self.get_coords(last_placed)
             cities = [[last_placed], [last_placed], [last_placed], [last_placed]]
             if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.CITY" and tile_coords[0] != len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
                 cities[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
-                self.check_city_test(cities[0], settings)
+                self.check_city(cities[0], settings)
             if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.CITY" and tile_coords[1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
                 cities[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
-                self.check_city_test(cities[1], settings)
+                self.check_city(cities[1], settings)
             if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.CITY" and tile_coords[0] != len(self.tiles_on_board[1]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
                 cities[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
-                self.check_city_test(cities[2], settings)
+                self.check_city(cities[2], settings)
             if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.CITY" and tile_coords[0] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
                 cities[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
-                self.check_city_test(cities[3], settings)
+                self.check_city(cities[3], settings)
         # if placing a tile with a road and without a village, check if that tile completes a feature
         if str(last_placed.get_building()) != "Building.VILLAGE" and (str(last_placed.get_top()) == "Side.ROAD" or str(last_placed.get_left()) == "Side.ROAD" or str(last_placed.get_right()) == "Side.ROAD" or str(last_placed.get_bottom()) == "Side.ROAD"):
             road = [last_placed]
@@ -185,7 +185,7 @@ class feature_placements:
                     tile_coords[1] = col
         return tile_coords
     
-    
+
     def check_city(self, connected_tiles, settings):
         feature_complete = True
         found_connected = False
