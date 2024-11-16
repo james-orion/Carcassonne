@@ -79,6 +79,7 @@ class Meeple:
     # if return False, prompt user to choose again
     def validate_placement(self, tile, settings, user_choice):
         # if placing as highwayman, make sure only meeple on stretch of road
+        # TODO fix isssue with meepls on tiles with villages
         if self.feature_type == "ROAD":
             connected_tiles = self.find_connected_road_tiles(tile, settings, user_choice)
             print(len(connected_tiles))
@@ -221,6 +222,7 @@ class Meeple:
         if self.feature_type == "ROAD":
             # points = number of tiles in the complete road
             # TODO also check whether a meeple of the same color is placed on any of these road tiles so their points don't get counted twice
+            # TODO don't unplace meepls that are on village tiles but on different roads
             for tile in connected_tiles:
                 points += 1
                 if tile.get_meeple_placed_top() == True and str(tile.get_top()) == "Side.ROAD":

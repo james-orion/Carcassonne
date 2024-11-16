@@ -94,7 +94,6 @@ class feature_placements:
     def check_feature_completed(self, settings):
         last_placed = settings.placed_tiles[-1][0][1]
         # check all monastery tiles to see if there are 8 surrounding tiles for any of them
-        # TODO: FIGURE OUT HOW TO REMOVE SPRITE ONCE SCORED
         for row in range(len(self.tiles_on_board)):
             for col in range(len(self.tiles_on_board[row])):
                 if self.tiles_on_board[row][col] != 0 and str(self.tiles_on_board[row][col]['tile'].get_building()) == "Building.MONASTERY":
@@ -106,17 +105,96 @@ class feature_placements:
                                 meeple.get_player().get_meeple_score(meeple, self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'], settings, None)
                             
         # if placing a tile with a city as a side find all connected tiles and see if city is complete
-        # TODO problem with tiles that have seperate cities on different sides (tiles where tile.check_is_connected() == False)
-        # TODO should the boarders count as boundries for cities?
-        if str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY":
-            feature_complete = True
-            found_connected = False
-            num_connected = 0
-            connected_tiles = [last_placed]
-            while found_connected == False:
-                num_connected = len(connected_tiles)
-                for tile in connected_tiles:
-                    tile_coords = self.get_coords(tile)
+        if last_placed.check_is_connected() == True and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
+            city = [last_placed]
+            self.check_city_test(city, settings)
+        if last_placed.check_is_connected() == False and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
+            tile_coords = self.get_coords(last_placed)
+            cities = [[last_placed], [last_placed], [last_placed], [last_placed]]
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.CITY" and tile_coords[0] != len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+                cities[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
+                self.check_city_test(cities[0], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.CITY" and tile_coords[1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+                cities[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
+                self.check_city_test(cities[1], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.CITY" and tile_coords[0] != len(self.tiles_on_board[1]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+                cities[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
+                self.check_city_test(cities[2], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.CITY" and tile_coords[0] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+                cities[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
+                self.check_city_test(cities[3], settings)
+        # if placing a tile with a road and without a village, check if that tile completes a feature
+        if str(last_placed.get_building()) != "Building.VILLAGE" and (str(last_placed.get_top()) == "Side.ROAD" or str(last_placed.get_left()) == "Side.ROAD" or str(last_placed.get_right()) == "Side.ROAD" or str(last_placed.get_bottom()) == "Side.ROAD"):
+            road = [last_placed]
+            self.check_road(road, settings)
+        # last placed tile has a village on it - check all roads starting at that village
+        if str(last_placed.get_building()) == "Building.VILLAGE":
+            tile_coords = self.get_coords(last_placed)
+            roads = [[last_placed], [last_placed], [last_placed], [last_placed]]
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and tile_coords[0] != len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+                roads[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
+                self.check_road(roads[0], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and tile_coords[1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+                roads[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
+                self.check_road(roads[1], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and tile_coords[0] != len(self.tiles_on_board[1]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+                roads[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
+                self.check_road(roads[2], settings)
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and tile_coords[0] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+                roads[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
+                self.check_road(roads[3], settings)
+            
+
+
+    def check_monastery(self, tile_coords):
+        # check if monestary is at the edges of the board
+        if tile_coords[0] == 0:
+            return False
+        if tile_coords[0] == len(self.tiles_on_board) - 1:
+            return False
+        if tile_coords[1] == 0:
+            return False
+        if tile_coords[1] == len(self.tiles_on_board[0]) - 1:
+            return False
+        # check 8 surrounding tiles
+        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1] + 1] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1] + 1] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1] - 1] == 0:
+            return False
+        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1] - 1] == 0:
+            return False
+        return True
+    
+
+    def get_coords(self, tile):
+        tile_coords = [-1, -1]
+        for row in range(len(self.tiles_on_board)):
+            for col in range(len(self.tiles_on_board[row])):
+                if self.tiles_on_board[row][col] != 0 and self.tiles_on_board[row][col]['tile'] == tile:
+                    tile_coords[0] = row
+                    tile_coords[1] = col
+        return tile_coords
+    
+    
+    def check_city(self, connected_tiles, settings):
+        feature_complete = True
+        found_connected = False
+        num_connected = 0
+        while found_connected == False:
+            num_connected = len(connected_tiles)
+            for tile in connected_tiles:
+                tile_coords = self.get_coords(tile)
+                if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].check_is_connected() == True:
                     # if there's a connected tile above, add to list of connected tiles
                     if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['t_connected'] == True and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
                         if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['bottom']) == "Side.CITY":
@@ -149,112 +227,66 @@ class feature_placements:
                     else:
                         if tile_coords[0] != 0 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.CITY" and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] == 0:
                             feature_complete = False
+            if len(connected_tiles) == num_connected:
+                found_connected = True
+        if feature_complete:
+            print("CITY COMPLETE")
+            for meeple in settings.get_meeples():
+                if meeple.get_tile_placed_on() in connected_tiles:
+                    meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
+        else:
+            print("CITY INCOMPLETE")
 
-                if len(connected_tiles) == num_connected:
-                    found_connected = True
-            if feature_complete:
-                print("CITY COMPLETE") # score meeple
-                for meeple in settings.get_meeples():
-                    if meeple.get_tile_placed_on() in connected_tiles:
-                        meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
-            else:
-                print("CITY INCOMPLETE")
 
-        # if placing a tile with road, check if this completes feature - don't add roads if current one has village
-        # TODO problems with villages
-        # TODO should the boarders count as boundries for roads?
-        if str(last_placed.get_top()) == "Side.ROAD" or str(last_placed.get_left()) == "Side.ROAD" or str(last_placed.get_right()) == "Side.ROAD" or str(last_placed.get_bottom()) == "Side.ROAD":
-            feature_complete = True
-            found_connected = False
-            num_connected = 0
-            connected_tiles = [last_placed]
-            while found_connected == False:
-                num_connected = len(connected_tiles)
-                for tile in connected_tiles:
-                    tile_coords = self.get_coords(tile)
-                    if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].get_building()) != "Building.VILLAGE":
-                        # if there's a connected tile above, add to list of connected tiles
-                        if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['t_connected'] == True:
-                            if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['bottom']) == "Side.ROAD":
-                                connected_tiles.append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
-                        #  if tile is not at top of board and there is no connected tile above don't add to list and mark that feature as incomplete
-                        else:
-                            if tile_coords[0] != len(self.tiles_on_board) - 1 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] == 0:
-                                feature_complete = False
-                        # if there's a connected tile to right, add to list of connected tiles
-                        if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['r_connected'] == True:
-                            if self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['left']) == 'Side.ROAD':
-                                connected_tiles.append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
-                        #  if tile is not on right side of board and there is no connected tile on right don't add to list and mark feature as incomplete
-                        else:
-                            if tile_coords[1] != len(self.tiles_on_board[0]) - 1 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] == 0:
-                                feature_complete = False
-                        #  if there's a connected tile on left, add to list of connected tiles
-                        if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['l_connected'] == True:
-                            if self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['right']) == "Side.ROAD":
-                                connected_tiles.append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
-                        # if tile is not on left side of board and there is no connected tile on left don't add to list and mark feature as incomplete
-                        else:
-                            if tile_coords[1] != 0 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] == 0:
-                                feature_complete = False
-                        #  if there's a connected tile below, add to list of connected tiles
-                        if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['b_connected'] == True:
-                            if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['top']) == "Side.ROAD":
-                                connected_tiles.append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
-                        # if tile is not at bottom of board and there is no connected tile below don't add to list and mark that feature as incomplete
-                        else:
-                            if tile_coords[0] != 0 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] == 0:
-                                feature_complete = False
+    def check_road(self, connected_tiles, settings):
+        feature_complete = True
+        found_connected = False
+        num_connected = 0
+        while found_connected == False:
+            num_connected = len(connected_tiles)
+            for tile in connected_tiles:
+                tile_coords = self.get_coords(tile)
+                # if current tile being checked doesn't have a village on it, check all surrounding tiles
+                # if it does have a village don't check tiles beyond it
+                if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].get_building()) != "Building.VILLAGE":
+                    # if there's a connected tile above, add to list of connected tiles
+                    if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['t_connected'] == True and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+                        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['bottom']) == "Side.ROAD":
+                            connected_tiles.append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
+                    #  if tile is not at top of board and there is no connected tile above don't add to list and mark that feature as incomplete
                     else:
-                        # if last_placed has village, check all roads connecting to it
-                        pass
-                if len(connected_tiles) == num_connected:
-                    found_connected = True
-            if feature_complete:
-                print("ROAD COMPLETE") # score meeple
-                print(connected_tiles)
-            else:
-                print("ROAD INCOMPLETE")
-
-
-    def check_monastery(self, tile_coords):
-        # TODO monastery with road?
-
-        # check if monestary is at the edges of the board
-        if tile_coords[0] == 0:
-            return False
-        if tile_coords[0] == len(self.tiles_on_board) - 1:
-            return False
-        if tile_coords[1] == 0:
-            return False
-        if tile_coords[1] == len(self.tiles_on_board[0]) - 1:
-            return False
-
-        # check 8 surrounding tiles
-        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1] + 1] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1] + 1] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0] + 1][tile_coords[1] - 1] == 0:
-            return False
-        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1] - 1] == 0:
-            return False
-        return True
-    
-
-    def get_coords(self, tile):
-        tile_coords = [-1, -1]
-        for row in range(len(self.tiles_on_board)):
-            for col in range(len(self.tiles_on_board[row])):
-                if self.tiles_on_board[row][col] != 0 and self.tiles_on_board[row][col]['tile'] == tile:
-                    tile_coords[0] = row
-                    tile_coords[1] = col
-        return tile_coords
+                        if tile_coords[0] != len(self.tiles_on_board) - 1 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] == 0:
+                            feature_complete = False
+                    # if there's a connected tile to right, add to list of connected tiles
+                    if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['r_connected'] == True and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+                        if self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['left']) == 'Side.ROAD':
+                            connected_tiles.append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
+                    #  if tile is not on right side of board and there is no connected tile on right don't add to list and mark feature as incomplete
+                    else:
+                        if tile_coords[1] != len(self.tiles_on_board[0]) - 1 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] == 0:
+                            feature_complete = False
+                    #  if there's a connected tile on left, add to list of connected tiles
+                    if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['l_connected'] == True and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+                        if self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['right']) == "Side.ROAD":
+                            connected_tiles.append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
+                    # if tile is not on left side of board and there is no connected tile on left don't add to list and mark feature as incomplete
+                    else:
+                        if tile_coords[1] != 0 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] == 0:
+                            feature_complete = False
+                    #  if there's a connected tile below, add to list of connected tiles
+                    if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['b_connected'] == True and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+                        if self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] not in connected_tiles and str(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['top']) == "Side.ROAD":
+                            connected_tiles.append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
+                    # if tile is not at bottom of board and there is no connected tile below don't add to list and mark that feature as incomplete
+                    else:
+                        if tile_coords[0] != 0 and str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] == 0:
+                            feature_complete = False
+            if len(connected_tiles) == num_connected:
+                found_connected = True
+        if feature_complete:
+            for meeple in settings.get_meeples():
+                print("ROAD COMPLETE")
+                if meeple.get_tile_placed_on() in connected_tiles:
+                    meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
+        else:
+            print("ROAD INCOMPLETE")
