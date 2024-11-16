@@ -12,12 +12,13 @@
 import feature_placement
 
 class Meeple:
-    def __init__(self, name, color):
-        self.name = name
+    def __init__(self, player, color):
+        self.player = player
         self.color = color
         self.is_placed = False
         self.feature_type = None
         self.meeple_sprite = None
+        self.tile_placed_on = None
         self.x_coord = None
         self.y_coord = None
 
@@ -66,6 +67,7 @@ class Meeple:
                 tile.set_meeple_placed_center(True)
             self.is_placed = True
             self.meeple_sprite = "meeple_sprites/" + self.color + "_meeple.png"
+            self.tile_placed_on = tile
             return True
         else:
             self.feature_type = None
@@ -211,8 +213,7 @@ class Meeple:
 
 
     # determines how many points a Meeple scores once a feature is completed
-    def meeple_score(self, user_choice, settings, tile):
-        connected_tiles = self.find_connected_tiles(tile, settings)
+    def meeple_score(self, tile, settings):
         points = 0
         # TODO find some way to check if feature is completed, then iterate
         # through list of tiles to determine total number of points
@@ -227,20 +228,17 @@ class Meeple:
             pass
         else:
             # 9 points for a monastery
+            tile.set_meeple_placed_center(False)
             points = 9
 
         # unplace and reset meeple
-        """meeples = settings.get_meeples()
-        for meeple in meeples:
-            if self == meeple:
-                print("THIS WORKS")
-            else:
-                print("Nope")"""
+        settings.get_meeples().remove(self)
         self.is_placed = False
         self.feature_type = None
         self.meeple_sprite = None
         self.x_coord = None
         self.y_coord = None
+        self.tile_placed_on = None
         return points
     
 
@@ -266,14 +264,15 @@ class Meeple:
         self.meeple_sprite = None
         self.x_coord = None
         self.y_coord = None
+        self.tile_placed_on = None
         return points
     
 
     # getter methods
 
-    # returns Meeple's name
-    def get_name(self):
-        return self.name
+    # returns Meeple's player
+    def get_player(self):
+        return self.player
     
 
     # returns color of Meeple
@@ -304,11 +303,15 @@ class Meeple:
         return self.y_coord
     
 
+    def get_tile_placed_on(self):
+        return self.tile_placed_on
+    
+
     # setter methods
 
-    # sets Meeple's name
-    def set_name(self, name):
-        self.name = name
+    # sets Meeple's player
+    def set_player(self, player):
+        self.player = player
     
 
     # sets color of Meeple
@@ -337,6 +340,10 @@ class Meeple:
 
     def set_y_coord(self, y_coord):
         self.y_coord = y_coord
+
+
+    def set_tile_placed_on(self, tile):
+        self.tile_placed_on = tile
 
 
 # test cases
