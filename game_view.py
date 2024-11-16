@@ -40,9 +40,9 @@ class GameView(arcade.View):
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
         # inialize sounds
-        self.error_sound = arcade.load_sound(":resources:sounds/error5.wav")
-        self.correct_sound = arcade.load_sound(":resources:sounds/coin1.wav")
-        self.invalid_sound = arcade.load_sound(":resources:sounds/error4.wav")
+        self.error_sound = arcade.load_sound("images/wrong.mp3")
+        self.correct_sound = arcade.load_sound("images/correct.mp3")
+        self.drop_sound = arcade.load_sound("images/drop.mp3")
         # Initalize sprite lists
         self.player_list = None
         self.scoreboard_list = None
@@ -327,7 +327,8 @@ class GameView(arcade.View):
             if done_valid:
                 # create correct sound
                 if self.settings.sound_on:
-                    self.good_placement = self.correct_sound.play()
+                    arcade.play_sound(self.correct_sound, 1, 1, False, .5)
+
                 # reset meeple placement variables
                 self.settings.set_meeple_placed_current_round(False)
                 # set coordinates back to -1 for next tile
@@ -490,6 +491,8 @@ class GameView(arcade.View):
                         ([self.tile_sprite.center_x, self.tile_sprite.center_y])):
                         self.tile_sprite.center_x = self.grid_sprites[i][j].center_x
                         self.tile_sprite.center_y = self.grid_sprites[i][j].center_y
+                        if self.settings.sound_on:
+                            self.sound_drop = self.drop_sound.play()
                         # update postion in matrix for start tile
                         if self.settings.placed_tiles[-1][0][1] == self.settings.placed_tiles[0][0][1]:
                             self.settings.feature_container[i][j] = self.settings.placed_tiles[-1][0][1]
