@@ -213,19 +213,40 @@ class Meeple:
 
 
     # determines how many points a Meeple scores once a feature is completed
-    def meeple_score(self, tile, settings):
+    def meeple_score(self, tile, settings, connected_tiles):
         points = 0
-        # TODO find some way to check if feature is completed, then iterate
-        # through list of tiles to determine total number of points
-        # NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
+        num_meeples = 0
 
         # calculate points won by meeple in feature
         if self.feature_type == "ROAD":
             # points = number of tiles in the complete road
-            pass
+            # TODO also check whether a meeple of the same color is placed on any of these road tiles so their points don't get counted twice
+            for tile in connected_tiles:
+                points += 1
+                if tile.get_meeple_placed_top() == True and str(tile.get_top()) == "Side.ROAD":
+                    tile.set_meeple_placed_top(False)
+                if tile.get_meeple_placed_left() == True and str(tile.get_left()) == "Side.ROAD":
+                    tile.set_meeple_placed_left(False)
+                if tile.get_meeple_placed_right() == True and str(tile.get_right()) == "Side.ROAD":
+                    tile.set_meeple_placed_right(False)
+                if tile.get_meeple_placed_bottom() == True and str(tile.get_bottom()) == "Side.ROAD":
+                    tile.set_meeple_placed_bottom(False)
         elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
-            pass
+            # TODO also check whether a meeple of the same color is placed on any of these city tiles so their points don't get counted twice
+            for tile in connected_tiles:
+                if tile.has_shield():
+                    points += 4
+                else:
+                    points += 2
+                if tile.get_meeple_placed_top() == True and str(tile.get_top()) == "Side.CITY":
+                    tile.set_meeple_placed_top(False)
+                if tile.get_meeple_placed_left() == True and str(tile.get_left()) == "Side.CITY":
+                    tile.set_meeple_placed_left(False)
+                if tile.get_meeple_placed_right() == True and str(tile.get_right()) == "Side.CITY":
+                    tile.set_meeple_placed_right(False)
+                if tile.get_meeple_placed_bottom() == True and str(tile.get_bottom()) == "Side.CITY":
+                    tile.set_meeple_placed_bottom(False)
         else:
             # 9 points for a monastery
             tile.set_meeple_placed_center(False)

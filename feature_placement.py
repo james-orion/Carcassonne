@@ -103,8 +103,7 @@ class feature_placements:
                     if feature_complete:
                         for meeple in settings.get_meeples():
                             if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'] == meeple.get_tile_placed_on():
-                                print(meeple.get_player())
-                                meeple.get_player().get_meeple_score(meeple, self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'], settings)
+                                meeple.get_player().get_meeple_score(meeple, self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'], settings, None)
                             
         # if placing a tile with a city as a side find all connected tiles and see if city is complete
         # TODO problem with tiles that have seperate cities on different sides (tiles where tile.check_is_connected() == False)
@@ -155,7 +154,9 @@ class feature_placements:
                     found_connected = True
             if feature_complete:
                 print("CITY COMPLETE") # score meeple
-                print(connected_tiles)
+                for meeple in settings.get_meeples():
+                    if meeple.get_tile_placed_on() in connected_tiles:
+                        meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
             else:
                 print("CITY INCOMPLETE")
 
