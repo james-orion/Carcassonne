@@ -43,6 +43,7 @@ class GameView(arcade.View):
         self.error_sound = arcade.load_sound("images/wrong.mp3")
         self.correct_sound = arcade.load_sound("images/correct.mp3")
         self.drop_sound = arcade.load_sound("images/drop.mp3")
+        self.page_sound = arcade.load_sound("images/page.mp3")
         # Initalize sprite lists
         self.player_list = None
         self.scoreboard_list = None
@@ -528,6 +529,9 @@ class GameView(arcade.View):
                     else:
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
+                # sound
+                if self.settings.sound_on:
+                    self.sound_page = self.page_sound.play()
                 # change view to help screen
                 help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 help.setup()
@@ -546,6 +550,11 @@ class GameView(arcade.View):
                     else:
                         new_list.append(item)
                 self.settings.placed_tiles = new_list
+                # sound
+                if self.settings.sound_on:
+                    self.sound_page = self.page_sound.play()
+                if self.settings.sound_on:
+                    self.sound_page = self.page_sound.play()
                 # change view to scoreboard
                 scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
                 scoreboard.setup()
