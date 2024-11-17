@@ -15,10 +15,11 @@ SCREEN_HEIGHT = 650
 class ChooseView(arcade.View):
     """ View to Open Game"""
 
-    def __init__(self):
+    def __init__(self, my_player):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/sky.jpg")
+        self.my_player = my_player
         # Initalize manager for container and butttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -89,7 +90,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(1)
         self.manager.disable()
-        name = name_view.NameView(self.settings)
+        name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
     def on_choose_two(self, event):
@@ -97,7 +98,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(2)
         self.manager.disable()
-        name = name_view.NameView(self.settings)
+        name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
     def on_choose_three(self, event):
@@ -105,7 +106,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(3)
         self.manager.disable()
-        name= name_view.NameView(self.settings)
+        name= name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
     def on_choose_four(self, event):
@@ -113,7 +114,7 @@ class ChooseView(arcade.View):
         will be set. and change view """
         self.settings.set_player_count(4)
         self.manager.disable()
-        name = name_view.NameView(self.settings)
+        name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
 

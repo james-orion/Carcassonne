@@ -12,12 +12,13 @@ SCREEN_HEIGHT = 650
 class HelpView(arcade.View):
     """ View to show Help View"""
 
-    def __init__(self, curr_tile, curr_meeple, settings, feat):
+    def __init__(self, curr_tile, curr_meeple, settings, feat, my_player):
         super().__init__()
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
         self.settings = settings
         self.feat = feat
+        self.my_player = my_player
         self.page_sound = arcade.load_sound("images/page.mp3")
 
     def setup(self):
@@ -58,6 +59,6 @@ class HelpView(arcade.View):
         if self.settings.sound_on:
             self.sound_page = self.page_sound.play()
         # switch to game view
-        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
+        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
         game.setup()
         self.window.show_view(game)
