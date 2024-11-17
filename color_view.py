@@ -19,7 +19,9 @@ class ColorView(arcade.View):
         self.settings = settings
         self.num_players = self.settings.get_player_count()
         self.players = self.settings.get_current_players()
+        self.background = arcade.load_texture("images/wood.jpg")
         self.my_player = my_player
+        self.next_sound = arcade.load_sound("images/next.mp3")
         self.color_list = [arcade.color.RED, arcade.color.BLUE, arcade.color.GREEN, arcade.color.YELLOW]
         self.color_list_string = ["red", "blue", "green", "yellow"]
         self.available_colors = ["red", "blue", "green", "yellow"]
@@ -76,6 +78,12 @@ class ColorView(arcade.View):
     def on_draw(self):
         """ Draw this view """
         self.clear()
+        # Drawing the background image
+        arcade.draw_texture_rectangle(1000 / 2,
+                                      650 / 2,
+                                      1000,
+                                      650,
+                                      self.background)
         arcade.draw_text("Select Color:", self.window.width / 2, self.window.height - 50, arcade.color.WHITE, font_size=40, anchor_x="center", font_name="Kenney Future")
         arcade.draw_text("Use Keys 1-4 to Choose the Corresponding Color", self.window.width / 2, self.window.height - 80, arcade.color.WHITE, font_size=17, anchor_x="center", font_name="Kenney Future")
         num_colors_selected = len(self.selected_colors)
@@ -112,6 +120,7 @@ class ColorView(arcade.View):
     def on_back(self, event):
         if len(self.selected_colors) == 0:
             self.manager.disable()
+            self.next_sound.play()
             choose = choose_view.ChooseView(self.my_player)
             self.window.show_view(choose)
         else:
@@ -129,6 +138,7 @@ class ColorView(arcade.View):
             self.curr_meeple = current_meeple.current_meeple()
             self.manager.disable()
             feature = feature_placement.feature_placements()
+            self.next_sound.play()
             game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player)
             game.setup()
             self.window.show_view(game)

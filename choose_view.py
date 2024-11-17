@@ -20,6 +20,7 @@ class ChooseView(arcade.View):
         # Initialize Background Image
         self.background = arcade.load_texture("images/sky.jpg")
         self.my_player = my_player
+        self.next_sound = arcade.load_sound("images/next.mp3")
         # Initalize manager for container and butttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -90,6 +91,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(1)
         self.manager.disable()
+        self.next_sound.play()
         name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
@@ -98,6 +100,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(2)
         self.manager.disable()
+        self.next_sound.play()
         name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
@@ -106,6 +109,7 @@ class ChooseView(arcade.View):
         will be set. and change view"""
         self.settings.set_player_count(3)
         self.manager.disable()
+        self.next_sound.play()
         name= name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 
@@ -114,6 +118,7 @@ class ChooseView(arcade.View):
         will be set. and change view """
         self.settings.set_player_count(4)
         self.manager.disable()
+        self.next_sound.play()
         name = name_view.NameView(self.settings, self.my_player)
         self.window.show_view(name)
 

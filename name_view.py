@@ -21,6 +21,7 @@ class NameView(arcade.View):
         # Initialize Background Image
         self.background = arcade.load_texture("images/castle.jpeg")
         self.my_player = my_player
+        self.next_sound = arcade.load_sound("images/next.mp3")
         # create manager to deal with buttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
@@ -153,6 +154,7 @@ class NameView(arcade.View):
         """ If the user presses button change view to go back to the st
             screen. """
         self.manager.disable()
+        self.next_sound.play()
         choose = choose_view.ChooseView(self.my_player)
         self.window.show_view(choose)
 
@@ -168,6 +170,7 @@ class NameView(arcade.View):
                 if i == 0:
                     self.settings.set_current_player(p)
             self.manager.disable()
+            self.next_sound.play()
             game_view = color_view.ColorView(self.settings, self.my_player)
             self.window.show_view(game_view)
 
