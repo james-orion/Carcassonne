@@ -92,6 +92,7 @@ class feature_placements:
     
 
     def check_feature_completed(self, settings):
+        # TODO FIX ISSUE WHERE WRONG MEEPLE COUNTED FOR SCORING
         last_placed = settings.placed_tiles[-1][0][1]
         # check all monastery tiles to see if there are 8 surrounding tiles for any of them
         for row in range(len(self.tiles_on_board)):
