@@ -20,6 +20,7 @@ class ColorView(arcade.View):
         self.num_players = self.settings.get_player_count()
         self.players = self.settings.get_current_players()
         self.my_player = my_player
+        self.next_sound = arcade.load_sound("images/next.mp3")
         self.color_list = [arcade.color.RED, arcade.color.BLUE, arcade.color.GREEN, arcade.color.YELLOW]
         self.color_list_string = ["red", "blue", "green", "yellow"]
         self.available_colors = ["red", "blue", "green", "yellow"]
@@ -112,6 +113,7 @@ class ColorView(arcade.View):
     def on_back(self, event):
         if len(self.selected_colors) == 0:
             self.manager.disable()
+            self.next_sound.play()
             choose = choose_view.ChooseView(self.my_player)
             self.window.show_view(choose)
         else:
@@ -129,6 +131,7 @@ class ColorView(arcade.View):
             self.curr_meeple = current_meeple.current_meeple()
             self.manager.disable()
             feature = feature_placement.feature_placements()
+            self.next_sound.play()
             game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player)
             game.setup()
             self.window.show_view(game)
