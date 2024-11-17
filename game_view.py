@@ -35,7 +35,7 @@ BOARD_Y = 400
 
 class GameView(arcade.View):
 
-    def __init__(self, curr_tile, curr_meeple, settings, feature):
+    def __init__(self, curr_tile, curr_meeple, settings, feature, my_player):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
@@ -51,6 +51,7 @@ class GameView(arcade.View):
         self.help_list = None
         self.sound_list = None
         self.music_list = None
+        self.my_player = my_player
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
@@ -524,6 +525,9 @@ class GameView(arcade.View):
             clicked_sound = arcade.get_sprites_at_point((x, y),
                                                              self.sound_list)
 
+            clicked_music = arcade.get_sprites_at_point((x, y),
+                                                        self.music_list)
+
             # If help clicked
             if clicked_help:
                 # create new list to updat placed sprites
@@ -544,7 +548,7 @@ class GameView(arcade.View):
                 if self.settings.sound_on:
                     self.sound_page = self.page_sound.play()
                 # change view to help screen
-                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
+                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
                 help.setup()
                 self.window.show_view(help)
             # if scoreboard clicked
@@ -567,7 +571,7 @@ class GameView(arcade.View):
                 if self.settings.sound_on:
                     self.sound_page = self.page_sound.play()
                 # change view to scoreboard
-                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat)
+                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
 
@@ -576,6 +580,15 @@ class GameView(arcade.View):
                      self.settings.sound_on = False
                 else:
                     self.settings.sound_on = True
+
+            if clicked_music:
+                if self.settings.music_on:
+                     self.settings.music_on = False
+                     self.my_player.pause()
+
+                else:
+                    self.settings.music_on = True
+                    self.my_player.play()
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
             # If the right mouse button is clicked then unclicked, rotate tile

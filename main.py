@@ -16,8 +16,8 @@ def main():
     """ Main function """
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     civ_music = arcade.load_sound("images/civ_open.mp3", streaming=True)
-    arcade.play_sound(civ_music, .2, -1, True)
-    start_view = open_view.OpenView()
+    my_player= civ_music.play(.2, -1, True)
+    start_view = open_view.OpenView(my_player)
     window.show_view(start_view)
     arcade.run()
 
