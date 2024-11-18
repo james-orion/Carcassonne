@@ -104,6 +104,7 @@ class MeeplePlacementView(arcade.View):
     def on_cancel(self, event):
         # return to GameView as it was previously
         self.curr_tile.set_moved(False)
+        self.settings.done_pressed = False
         # switch to game view
         new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature)
         new_view.setup()
@@ -116,6 +117,7 @@ class MeeplePlacementView(arcade.View):
         results = self.player.use_meeple(self.tile, self.user_choice, self.settings)
         valid_placement = results[0]
         current_meeple = results[1]
+        self.settings.done_pressed = False
         if  valid_placement == True and self.has_choosen == True:
             self.settings.set_meeple_placed_current_round(True)
             # set coordinates for placed Meeple

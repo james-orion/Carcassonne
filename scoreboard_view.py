@@ -81,6 +81,9 @@ class ScoreboardView(arcade.View):
         # sound
         if self.settings.sound_on:
             self.sound_page = self.page_sound.play()
+        # reset done for the meeple button to show up
+        if self.settings.done_count == 1:
+            self.settings.done_pressed = True
         # switch to game view
         game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
         game.setup()
