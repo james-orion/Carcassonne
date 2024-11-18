@@ -417,7 +417,7 @@ class GameView(arcade.View):
                     new_list.append(item)
             self.settings.placed_tiles = new_list
             # change view to help screen
-            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat)
+            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat, self.my_player)
             self.window.show_view(new_view)
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
