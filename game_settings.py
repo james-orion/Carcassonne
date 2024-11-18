@@ -112,3 +112,7 @@ class game_settings:
     
     def set_meeple_placed_current_round(self, is_placed):
         self.meeple_placed_current_round = is_placed
+
+    def add_ai_players(self,name):
+        for i in range(4 - self.player_count-1):
+            self.current_players.append(player.Player(name, ai = True))

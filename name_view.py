@@ -29,7 +29,7 @@ class NameView(arcade.View):
         self.input_field_text = ["Player 1",
                                  "Player 2",
                                  "Player 3",
-                                 "Player4"]
+                                 "Player 4"]
         # set game to True for name validation
         self.game = True
         # set max input to size 11
@@ -169,6 +169,16 @@ class NameView(arcade.View):
                 self.settings.add_current_players(p)
                 if i == 0:
                     self.settings.set_current_player(p)
+                print(p.get_name())
+            print("________________")
+            for j in range(4 - self.settings.get_player_count()):
+                p = player.Player(ai=True)
+                p.set_name(self.input_field_text[self.settings.get_player_count() + j])
+                self.settings.add_current_players(p)
+                print(p.get_name())
+            print("________________")
+            for k in self.settings.current_players:
+                print(k.get_name())
             self.manager.disable()
             self.next_sound.play()
             game_view = color_view.ColorView(self.settings, self.my_player)

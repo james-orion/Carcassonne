@@ -9,6 +9,7 @@ import tile
 import meeple_placement_view
 import random
 import end_view
+import meeple
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
@@ -128,6 +129,8 @@ class GameView(arcade.View):
                 sprite.center_y = y
                 self.grid_sprite_list.append(sprite)
                 self.grid_sprites[row].append(sprite)
+
+        self.rotating_tile = None
 
 
     def setup(self):
@@ -346,9 +349,9 @@ class GameView(arcade.View):
                 self.settings.previous_coor_x = -1
                 self.settings.previous_coor_y = -1
                 # get player count for indexing
-                count = self.settings.get_player_count() - 1
+                #count = self.settings.get_player_count() - 1
                 # if the last player to go, increment current round
-                if self.settings.get_current_player() == self.settings.current_players[count]:
+                if self.settings.get_current_player() == self.settings.current_players[3]:
                     round = self.settings.get_current_round() + 1
                     self.settings.set_current_round(round)
 
@@ -366,6 +369,9 @@ class GameView(arcade.View):
                             current_player = self.settings.current_players[player+1]
                             self.settings.set_current_player(current_player)
                             break
+                #if next player is AI and current player pushes done, runs AI turn
+                if current_player.is_ai():
+                    self.on_ai_turn()
 
                 # update_tiles
                 new_list = []
@@ -621,8 +627,8 @@ class GameView(arcade.View):
                         ]
                         if self.validate_placement(neighbors, validation_tile):
                             can_place = True
-                            print("Possible placement: ", '[',i,j,']',
-                                validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
+                            #print("Possible placement: ", '[',i,j,']',
+                            #    validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
@@ -754,4 +760,28 @@ class GameView(arcade.View):
 
 
         return done_valid
+
+    def on_ai_turn(self):
+        # Randomly chooses an available space on the board to place their tile
+        rand_x = 0
+        rand_y = 0
+        can_place = False
+        while can_place == False:
+            if self.settings.feature_container[rand_x][rand_y] == 0:
+                neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
+                if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
+                    can_place = True
+                    break
+            rand_x = random.randint(0, 6)
+            rand_y = random.randint(0, 10)
+        self.tile_sprite.center_x = self.grid_sprites[rand_x][rand_y].center_x
+        self.tile_sprite.center_y = self.grid_sprites[rand_x][rand_y].center_y
+
+        # If they can place a meeple they will
+        index = random.randint(0,4)
+        can_place_meeple = False
+        while can_place_meeple == False:
+            if meeple.validate_placement(self.settings.placed_tiles[-1][0][1],self.settings,index):
+                meeple.place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings)
+                can_place_meeple = True
 
