@@ -225,13 +225,13 @@ class Meeple:
                 found_connected = True
         for tile in connected_tiles:
                 if tile.check_is_connected() == True:
-                    if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
+                    if str(tile.get_top()) == "Side.CITY" and tile.get_meeple_placed_top() == True:
                         return False
-                    if str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
+                    if str(tile.get_left()) == "Side.CITY" and tile.get_meeple_placed_left() == True:
                         return False
-                    if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
+                    if str(tile.get_right()) == "Side.CITY" and tile.get_meeple_placed_right() == True:
                         return False
-                    if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
+                    if str(tile.get_bottom()) == "Side.CITY" and tile.get_meeple_placed_bottom() == True:
                         return False
         return True
     

@@ -15,7 +15,7 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 
 class MeeplePlacementView(arcade.View):
-    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite, feature):
+    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite, feature, my_player):
         super().__init__()
         self.player = settings.current_player
         self.player_color = self.player.get_color().upper().strip()
@@ -31,6 +31,7 @@ class MeeplePlacementView(arcade.View):
         self.choice_coordinates = None
         self.meeple_coord_mods = None
         self.feature = feature
+        self.my_player = my_player
 
         # create confirm and cancel buttons
         self.manager = arcade.gui.UIManager()
@@ -105,7 +106,7 @@ class MeeplePlacementView(arcade.View):
         # return to GameView as it was previously
         self.curr_tile.set_moved(False)
         # switch to game view
-        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature)
+        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
         new_view.setup()
         self.window.show_view(new_view)
 
@@ -130,7 +131,7 @@ class MeeplePlacementView(arcade.View):
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             # switch to game view
-            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature)
+            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
             new_view.setup()
             self.window.show_view(new_view)
         else:
