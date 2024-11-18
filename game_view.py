@@ -10,6 +10,7 @@ import meeple_placement_view
 import random
 import end_view
 import meeple
+import time
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
@@ -369,9 +370,6 @@ class GameView(arcade.View):
                             current_player = self.settings.current_players[player+1]
                             self.settings.set_current_player(current_player)
                             break
-                #if next player is AI and current player pushes done, runs AI turn
-                if current_player.is_ai():
-                    self.on_ai_turn()
 
                 # update_tiles
                 new_list = []
@@ -401,6 +399,11 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+
+                # if next player is AI and current player pushes done, runs AI turn
+                if current_player.is_ai():
+                    time.sleep(1)
+                    self.on_ai_turn(current_player)
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
@@ -761,28 +764,29 @@ class GameView(arcade.View):
 
         return done_valid
 
-    def on_ai_turn(self):
+    def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
-        rand_x = 0
-        rand_y = 0
+        rand_x = random.randint(0, 6)
+        rand_y = random.randint(0, 10)
         can_place = False
         while can_place == False:
             if self.settings.feature_container[rand_x][rand_y] == 0:
+                print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
                 if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
+                    print('tile can be placed')
                     can_place = True
-                    break
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
-        self.tile_sprite.center_x = self.grid_sprites[rand_x][rand_y].center_x
-        self.tile_sprite.center_y = self.grid_sprites[rand_x][rand_y].center_y
+        self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
+        self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
 
         # If they can place a meeple they will
-        index = random.randint(0,4)
-        can_place_meeple = False
-        while can_place_meeple == False:
-            if meeple.place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
-                can_place_meeple = True
-            else:
-                index = random.randint(0,4)
-
+        #index = random.randint(0,4)
+        #can_place_meeple = False
+        #while can_place_meeple == False:
+        #    if meeple.Meeple(player, player.get_color()).place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
+        #        can_place_meeple = True
+        #    else:
+        #        index = random.randint(0,4)
+        self.on_done()
