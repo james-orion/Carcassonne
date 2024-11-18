@@ -781,7 +781,8 @@ class GameView(arcade.View):
         index = random.randint(0,4)
         can_place_meeple = False
         while can_place_meeple == False:
-            if meeple.validate_placement(self.settings.placed_tiles[-1][0][1],self.settings,index):
-                meeple.place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings)
+            if meeple.place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
                 can_place_meeple = True
+            else:
+                index = random.randint(0,4)
 
