@@ -267,7 +267,6 @@ class Meeple:
                 if tile.get_meeple_placed_bottom() == True and str(tile.get_bottom()) == "Side.ROAD":
                     tile.set_meeple_placed_bottom(False)
         elif self.feature_type == "CITY":
-            print("test")
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
             # TODO also check whether a meeple of the same color is placed on any of these city tiles so their points don't get counted twice
             for tile in connected_tiles:
