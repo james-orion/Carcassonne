@@ -769,7 +769,8 @@ class GameView(arcade.View):
         #rand_x = random.randint(0, 6)
         #rand_y = random.randint(0, 10)
         can_place = False
-        for row in self.settings.feature_container:
+        print('before loop')
+        for row in self.feat.tiles_on_board:
             print(row)
         while can_place == False:
             rand_x = random.randint(0, 6)
@@ -787,7 +788,9 @@ class GameView(arcade.View):
                         self.settings.previous_coor_x = rand_x
                         self.settings.previous_coor_y = rand_y
                         self.settings.ai_valid = True
-                        for row in self.settings.feature_container:
+                        self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
+                        print('in validate placement')
+                        for row in self.feat.tiles_on_board:
                             print(row)
                         self.on_done(0)
                         return
