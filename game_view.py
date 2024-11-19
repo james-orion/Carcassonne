@@ -300,7 +300,7 @@ class GameView(arcade.View):
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
-    def on_done(self, event):
+    def on_done(self, event, ai=False):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
         current player, otherwise it will increment next
@@ -403,14 +403,19 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+                self.settings.ai_valid = False
 
-                # if next player is AI and current player pushes done, runs AI turn
+                if ai:
+                    time.sleep(2)
+                    # increment turns -- update the board
+
+
                 if current_player.is_ai():
-                    time.sleep(1)
                     self.on_ai_turn(current_player)
+
             else:
                 if self.settings.sound_on:
-                    self.sound = self.error_sound.play()
+                   self.sound = self.error_sound.play()
 
 
     def on_place_meeple(self, event):
