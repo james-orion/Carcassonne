@@ -42,6 +42,12 @@ class game_settings:
         else:
             self.total_rotation[tile] = 90
 
+    def reset_rotation(self, tile):
+        """ This sets the rotation of a tile"""
+        # If tile already exists, increment its rotation by 90
+        if tile in self.total_rotation:
+            self.total_rotation[tile] = 0
+
     def set_current_player(self, player):
         """ This sets current player """
         self.current_player = player
