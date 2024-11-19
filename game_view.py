@@ -336,9 +336,13 @@ class GameView(arcade.View):
                 # right
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
-
-            done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
+            print('before done_valid')
+            if self.settings.ai_valid :
+                done_valid = True
+            else:
+                done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
+                print('after done_valid')
                 self.feat.check_feature_completed(self.settings)
                 # create correct sound
                 if self.settings.sound_on:
@@ -399,6 +403,7 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+                self.settings.ai_valid = False
 
                 # if next player is AI and current player pushes done, runs AI turn
                 if current_player.is_ai():
@@ -635,11 +640,8 @@ class GameView(arcade.View):
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
-            print("There is nowhere the tile can be placed")
             # if there are more tiles in tile list
             if len(self.settings.placed_tiles) < len(self.settings.tiles) + 1:
-                print("Number of tiles is less than total number of tiles")
-                print(self.settings.tile_count)
                 self.tile_sprite.kill()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
@@ -655,7 +657,6 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
-                print("All tiles have been used, the game is over")
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
@@ -716,17 +717,16 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-
+            print('_____________')
             if count_valid == len(check_tile_features):
+                print('valid')
                 done_valid = True
                 self.rotating_tile = None
 
-                done_valid = True
-                self.rotating_tile = None
                 self.feat.add_tile(self.settings.previous_coor_x,
                                    self.settings.previous_coor_y,
                                    self.settings.placed_tiles[-1][0][1])
-                print(check_tile_features)
+                #print(check_tile_features)
                 if check_tile_features != []:
                     for tile in check_tile_features:
                         if tile[2] == "left":
@@ -766,20 +766,30 @@ class GameView(arcade.View):
 
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
-        rand_x = random.randint(0, 6)
-        rand_y = random.randint(0, 10)
+        #rand_x = random.randint(0, 6)
+        #rand_y = random.randint(0, 10)
         can_place = False
         while can_place == False:
+            rand_x = random.randint(0, 6)
+            rand_y = random.randint(0, 10)
             if self.settings.feature_container[rand_x][rand_y] == 0:
                 print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
-                if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
-                    print('tile can be placed')
-                    can_place = True
-            rand_x = random.randint(0, 6)
-            rand_y = random.randint(0, 10)
-        self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
-        self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
+                for k in range(4):
+                    if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
+                        print('tile can be placed')
+                        can_place = True
+                        self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
+                        self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
+                        self.settings.ai_valid = True
+                        self.on_done(0)
+                        return
+                    else:
+                        self.settings.placed_tiles[-1][0][1].rotate_tile()
+                        self.tile_list[-1].angle = self.tile_list[-1].angle + 90
+                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][1])
+                self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+
 
         # If they can place a meeple they will
         #index = random.randint(0,4)
@@ -789,4 +799,3 @@ class GameView(arcade.View):
         #        can_place_meeple = True
         #    else:
         #        index = random.randint(0,4)
-        self.on_done()

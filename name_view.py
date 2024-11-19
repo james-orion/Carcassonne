@@ -85,7 +85,6 @@ class NameView(arcade.View):
     def on_click(self, event):
         """ This triggers text to be updated from
                 being clicked"""
-        print("hi")
         self.update_text()
 
     def on_show_view(self):
@@ -169,16 +168,10 @@ class NameView(arcade.View):
                 self.settings.add_current_players(p)
                 if i == 0:
                     self.settings.set_current_player(p)
-                print(p.get_name())
-            print("________________")
             for j in range(4 - self.settings.get_player_count()):
                 p = player.Player(ai=True)
                 p.set_name(self.input_field_text[self.settings.get_player_count() + j])
                 self.settings.add_current_players(p)
-                print(p.get_name())
-            print("________________")
-            for k in self.settings.current_players:
-                print(k.get_name())
             self.manager.disable()
             self.next_sound.play()
             game_view = color_view.ColorView(self.settings, self.my_player)
