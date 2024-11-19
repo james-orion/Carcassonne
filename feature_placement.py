@@ -64,12 +64,9 @@ class feature_placements:
                             self.tiles_on_board[i][j]['r_connected']= True
                         else:
                             self.tiles_on_board[i][j]['l_connected'] = True
+
         for i in range(len(self.tiles_on_board)):
             print(self.tiles_on_board[i])
-            for j in range(len(self.tiles_on_board[i])):
-                if self.tiles_on_board[i][j] !=0:
-                    print(self.tiles_on_board[i][j])
-
 
     def add_tile(self, x_new, y_new, tile_new):
         """This adds a tile to tiles_on_board and sets values to default"""
@@ -90,7 +87,6 @@ class feature_placements:
                             'y_coord': j}
 
                     self.tiles_on_board[i][j] = tile
-
 
     def get_board(self):
             return self.tiles_on_board
