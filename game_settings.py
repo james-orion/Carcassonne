@@ -25,6 +25,7 @@ class game_settings:
         self.music_on = True
 
 
+
     def set_current_round(self, round):
         """ This sets the current round """
         self.current_round = round
@@ -59,7 +60,6 @@ class game_settings:
     def set_button_text(self, text):
         """ This sets the button text"""
         self.button_text = text
-
 
     def increment_tile_count(self):
         """ This increments to next tile"""
@@ -118,3 +118,7 @@ class game_settings:
     
     def set_meeple_placed_current_round(self, is_placed):
         self.meeple_placed_current_round = is_placed
+
+    def add_ai_players(self,name):
+        for i in range(4 - self.player_count-1):
+            self.current_players.append(player.Player(name, ai = True))

@@ -15,9 +15,9 @@ talk with Hack about combining meeple class with player clas
 ''' Player Class '''
 class Player:
     ''' Constructor '''
-    def __init__(self, name: str = None, meeple_count: int = 5):
+    def __init__(self, name: str = None, meeple_count: int = 5, ai = False):
 
-        # Set player name to what is entered 
+        # Set player name to what is entered
         if name is None:
             # If no name is provided, prompt the user for input
             self.name = "Player"
@@ -31,6 +31,8 @@ class Player:
         
         # Initialize a list of Meeple objects for the player
         self.meeples = [Meeple(self, "red") for i in range(meeple_count)]
+
+        self.ai = ai
 
 #-----------------------------------------------------------------------------------
     ''' Setter Methods '''
@@ -71,6 +73,9 @@ class Player:
 
     def set_name(self, name):
         self.name = name
+
+    def set_ai(self):
+        self.ai = True
     
     """ Calculate end-of-game points based on meeples still placed. """
     def end_of_game_scoring(self):
@@ -115,6 +120,9 @@ class Player:
         self.color = color
         for meeple in self.meeples:
             meeple.set_color(color)
+
+    def is_ai(self):
+        return self.ai
 
 #-----------------------------------------------------------------------------------
 '''

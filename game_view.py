@@ -9,6 +9,8 @@ import tile
 import meeple_placement_view
 import random
 import end_view
+import meeple
+import time
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
@@ -128,6 +130,8 @@ class GameView(arcade.View):
                 sprite.center_y = y
                 self.grid_sprite_list.append(sprite)
                 self.grid_sprites[row].append(sprite)
+
+        self.rotating_tile = None
 
 
     def setup(self):
@@ -296,7 +300,7 @@ class GameView(arcade.View):
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
-    def on_done(self, event):
+    def on_done(self, event, ai=False):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
         current player, otherwise it will increment next
@@ -333,8 +337,12 @@ class GameView(arcade.View):
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
 
+            print('before done_valid')
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
+
+
             if done_valid:
+                print('after done_valid')
                 self.feat.check_feature_completed(self.settings)
                 # create correct sound
                 if self.settings.sound_on:
@@ -346,9 +354,9 @@ class GameView(arcade.View):
                 self.settings.previous_coor_x = -1
                 self.settings.previous_coor_y = -1
                 # get player count for indexing
-                count = self.settings.get_player_count() - 1
+                #count = self.settings.get_player_count() - 1
                 # if the last player to go, increment current round
-                if self.settings.get_current_player() == self.settings.current_players[count]:
+                if self.settings.get_current_player() == self.settings.current_players[3]:
                     round = self.settings.get_current_round() + 1
                     self.settings.set_current_round(round)
 
@@ -395,9 +403,19 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+                self.settings.ai_valid = False
+
+                if ai:
+                    time.sleep(2)
+                    # increment turns -- update the board
+
+
+                if current_player.is_ai():
+                    self.on_ai_turn(current_player)
+
             else:
                 if self.settings.sound_on:
-                    self.sound = self.error_sound.play()
+                   self.sound = self.error_sound.play()
 
 
     def on_place_meeple(self, event):
@@ -619,18 +637,15 @@ class GameView(arcade.View):
                             #right
                             (i, j+1)
                         ]
-                        if self.validate_placement(neighbors, validation_tile):
+                        if self.validate_placement(neighbors, validation_tile, False):
                             can_place = True
-                            print("Possible placement: ", '[',i,j,']',
-                                validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
+                            #print("Possible placement: ", '[',i,j,']',
+                            #    validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
-            print("There is nowhere the tile can be placed")
             # if there are more tiles in tile list
             if len(self.settings.placed_tiles) < len(self.settings.tiles) + 1:
-                print("Number of tiles is less than total number of tiles")
-                print(self.settings.tile_count)
                 self.tile_sprite.kill()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(100)
@@ -646,12 +661,11 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
-                print("All tiles have been used, the game is over")
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
 
-    def validate_placement(self, neighbors, curr_tile):
+    def validate_placement(self, neighbors, curr_tile, is_placing=True):
         # boolean if you can place tile
         done_valid = False
         # get neighbor coordinates
@@ -707,51 +721,88 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-
+            print('_____________')
             if count_valid == len(check_tile_features):
+                print('valid')
                 done_valid = True
                 self.rotating_tile = None
+                if is_placing:
+                    self.feat.add_tile(self.settings.previous_coor_x,
+                                       self.settings.previous_coor_y,
+                                       self.settings.placed_tiles[-1][0][1])
 
-                done_valid = True
-                self.rotating_tile = None
-                self.feat.add_tile(self.settings.previous_coor_x,
-                                   self.settings.previous_coor_y,
-                                   self.settings.placed_tiles[-1][0][1])
-                print(check_tile_features)
-                if check_tile_features != []:
-                    for tile in check_tile_features:
-                        if tile[2] == "left":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "right",
-                                                   "left")
+                    if check_tile_features != []:
+                        for tile in check_tile_features:
+                            if tile[2] == "left":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "right",
+                                                       "left")
 
-                        if tile[2] == "right":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "left",
-                                                   "right")
+                            if tile[2] == "right":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "left",
+                                                       "right")
 
-                        if tile[2] == "top":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "bottom",
-                                                   "top")
+                            if tile[2] == "top":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "bottom",
+                                                       "top")
 
-                        if tile[2] == "bottom":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "top",
-                                                   "bottom")
+                            if tile[2] == "bottom":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "top",
+                                                       "bottom")
 
 
         return done_valid
 
+    def on_ai_turn(self, player):
+        # Randomly chooses an available space on the board to place their tile
+        can_place = False
+        print('before loop')
+        for row in self.feat.tiles_on_board:
+            print(row)
+        while can_place == False:
+            rand_x = random.randint(0, 6)
+            rand_y = random.randint(0, 10)
+            if self.settings.feature_container[rand_x][rand_y] == 0:
+                print("no tile in random space")
+                neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
+                for k in range(4):
+                    if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
+                        print('tile can be placed')
+                        can_place = True
+                        self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
+                        self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
+                        self.settings.feature_container[rand_x][rand_y] = self.settings.placed_tiles[-1][0][1]
+                        self.settings.previous_coor_x = rand_x
+                        self.settings.previous_coor_y = rand_y
+                        self.on_done(0)
+                        return
+                    else:
+                        self.settings.placed_tiles[-1][0][1].rotate_tile()
+                        self.tile_list[-1].angle = self.tile_list[-1].angle + 90
+                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][1])
+                self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+
+
+        # If they can place a meeple they will
+        #index = random.randint(0,4)
+        #can_place_meeple = False
+        #while can_place_meeple == False:
+        #    if meeple.Meeple(player, player.get_color()).place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
+        #        can_place_meeple = True
+        #    else:
+        #        index = random.randint(0,4)
