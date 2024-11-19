@@ -300,7 +300,7 @@ class GameView(arcade.View):
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
-    def on_done(self, event):
+    def on_done(self, event, ai=False):
         """ If the user presses the button, the logic will
         be checked, the round will increment if player 4 is
         current player, otherwise it will increment next
@@ -405,13 +405,17 @@ class GameView(arcade.View):
                 self.on_new_tile()
                 self.settings.ai_valid = False
 
-                # if next player is AI and current player pushes done, runs AI turn
+                if ai:
+                    time.sleep(2)
+                    # increment turns -- update the board
+
+
                 if current_player.is_ai():
-                    time.sleep(1)
                     self.on_ai_turn(current_player)
+
             else:
                 if self.settings.sound_on:
-                    self.sound = self.error_sound.play()
+                   self.sound = self.error_sound.play()
 
 
     def on_place_meeple(self, event):
@@ -766,12 +770,8 @@ class GameView(arcade.View):
 
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
-        #rand_x = random.randint(0, 6)
-        #rand_y = random.randint(0, 10)
+
         can_place = False
-        print('before loop')
-        for row in self.feat.tiles_on_board:
-            print(row)
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
@@ -792,7 +792,7 @@ class GameView(arcade.View):
                         print('in validate placement')
                         for row in self.feat.tiles_on_board:
                             print(row)
-                        self.on_done(0)
+                        self.on_done(0, True)
                         return
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
