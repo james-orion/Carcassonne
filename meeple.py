@@ -5,8 +5,6 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-# TODO validate placement for roads
-# TODO implement in game scoring for roads and cities
 # TODO implement end of game scoring for all features
 
 import feature_placement
@@ -84,7 +82,6 @@ class Meeple:
             if self.find_connected_road_tiles(road, settings, user_choice) == False:
                 return False
         # if placing as knight, make sure only meeple in city
-        # TODO fix issues with unconnected city tiles
         elif self.feature_type == "CITY":
             city = [tile]
             if self.find_connected_city_tiles(city, settings, user_choice) == False:
@@ -247,15 +244,13 @@ class Meeple:
 
 
     # determines how many points a Meeple scores once a feature is completed
-    def meeple_score(self, tile, settings, connected_tiles):
+    def meeple_score(self, tile, settings, connected_tiles, meeples_on_feature):
         points = 0
         num_meeples = 0
 
         # calculate points won by meeple in feature
         if self.feature_type == "ROAD":
             # points = number of tiles in the complete road
-            # TODO also check whether a meeple of the same color is placed on any of these road tiles so their points don't get counted twice
-            # TODO don't unplace meeples that are on village tiles but on different roads
             for tile in connected_tiles:
                 points += 1
                 if tile.get_meeple_placed_top() == True and str(tile.get_top()) == "Side.ROAD":
@@ -266,9 +261,14 @@ class Meeple:
                     tile.set_meeple_placed_right(False)
                 if tile.get_meeple_placed_bottom() == True and str(tile.get_bottom()) == "Side.ROAD":
                     tile.set_meeple_placed_bottom(False)
+            # check list meeples_on_feature and see if any of them have the same color
+            # if there are any of the same color divide the number of points by the number of meeples
+            for meeple in meeples_on_feature:
+                if meeple.get_color() == self.color:
+                    num_meeples = num_meeples + 1
+            points / num_meeples
         elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
-            # TODO also check whether a meeple of the same color is placed on any of these city tiles so their points don't get counted twice
             for tile in connected_tiles:
                 if tile.has_shield():
                     points += 4
@@ -282,6 +282,12 @@ class Meeple:
                     tile.set_meeple_placed_right(False)
                 if tile.get_meeple_placed_bottom() == True and str(tile.get_bottom()) == "Side.CITY":
                     tile.set_meeple_placed_bottom(False)
+            # check list meeples_on_feature and see if any of them have the same color
+            # if there are any of the same color divide the number of points by the number of meeples
+            for meeple in meeples_on_feature:
+                if meeple.get_color() == self.color:
+                    num_meeples = num_meeples + 1
+            points / num_meeples
         elif self.feature_type == "MONASTERY":
             # 9 points for a monastery
             tile.set_meeple_placed_center(False)

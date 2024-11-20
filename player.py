@@ -68,8 +68,8 @@ class Player:
         # print(f"{self.name}: No meeples to return.")
         return False
     
-    def get_meeple_score(self, scored_meeple, tile, settings, connected_tiles):
-        self.set_score(scored_meeple.meeple_score(tile, settings, connected_tiles))
+    def get_meeple_score(self, scored_meeple, tile, settings, connected_tiles, meeples_on_feature):
+        self.set_score(scored_meeple.meeple_score(tile, settings, connected_tiles, meeples_on_feature))
 
     def set_name(self, name):
         self.name = name

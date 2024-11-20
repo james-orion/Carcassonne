@@ -96,7 +96,6 @@ class feature_placements:
     
 
     def check_feature_completed(self, settings):
-        # TODO FIX ISSUE WHERE WRONG MEEPLE COUNTED FOR SCORING
         last_placed = settings.placed_tiles[-1][0][1]
         # check all monastery tiles to see if there are 8 surrounding tiles for any of them
         for row in range(len(self.tiles_on_board)):
@@ -107,7 +106,7 @@ class feature_placements:
                     if feature_complete:
                         for meeple in settings.get_meeples():
                             if self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'] == meeple.get_tile_placed_on():
-                                meeple.get_player().get_meeple_score(meeple, self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'], settings, None)
+                                meeple.get_player().get_meeple_score(meeple, self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'], settings, None, None)
                             
         # if placing a tile with a city as a side find all connected tiles and see if city is complete
         if last_placed.check_is_connected() == True and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
@@ -237,12 +236,25 @@ class feature_placements:
                 found_connected = True
         if feature_complete:
             print("CITY COMPLETE")
-            # same issue as roads with villages but with unconnected city tiles?
             for meeple in settings.get_meeples():
-                if meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "CITY":
+                if meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "CITY" and meeple.get_tile_placed_on().check_is_connected() == True:
                     meeples_on_city.append(meeple)
+                elif meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "CITY" and meeple.get_tile_placed_on().check_is_connected() == False:
+                    tile_coords = self.get_coords(meeple.get_tile_placed_on())
+                    if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
+                        if tile_coords[0] == len(self.tiles_on_board) - 1 or (self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] in connected_tiles):
+                            meeples_on_city.append(meeple)
+                    if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
+                        if tile_coords[1] == 0 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1]  - 1]['tile'] in connected_tiles):
+                            meeples_on_city.append(meeple)
+                    if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
+                        if tile_coords[1] == len(self.tiles_on_board[0]) - 1 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] in connected_tiles):
+                            meeples_on_city.append(meeple)
+                    if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
+                        if tile_coords[0] == 0 or (self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] in connected_tiles):
+                            meeples_on_city.append(meeple)
             for meeple in meeples_on_city:
-                meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
+                meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles, meeples_on_city)
         else:
             print("CITY INCOMPLETE")
 
@@ -295,9 +307,6 @@ class feature_placements:
                 found_connected = True
         if feature_complete:
             print("ROAD COMPLETE")
-            # iterate through list of tiles, check if meeple is placed on any of the roads
-            # if a meeple is on one of the roads, check if a tile branching off of it is in list of connected tiles
-            # if yes add to list of meeples, if not don't
             for meeple in settings.get_meeples():
                 if meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "ROAD" and str(meeple.get_tile_placed_on().get_building()) != "Building.VILLAGE":
                     meeples_on_road.append(meeple)
@@ -317,30 +326,6 @@ class feature_placements:
                         if tile_coords[0] == 0 or (self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] in connected_tiles):
                             meeples_on_road.append(meeple)
             for meeple in meeples_on_road:
-                meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
-            print("ROAD COMPLETE")
-            # iterate through list of tiles, check if meeple is placed on any of the roads
-            # if a meeple is on one of the roads, check if a tile branching off of it is in list of connected tiles
-            # if yes add to list of meeples, if not don't
-            for meeple in settings.get_meeples():
-                if meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "ROAD" and str(meeple.get_tile_placed_on().get_building()) != "Building.VILLAGE":
-                    meeples_on_road.append(meeple)
-                elif meeple.get_tile_placed_on() in connected_tiles and meeple.get_feature_type() == "ROAD" and str(meeple.get_tile_placed_on().get_building()) == "Building.VILLAGE":
-                    # check where meeple is placed on tile, then check if roads with meeple are placed are in
-                    tile_coords = self.get_coords(meeple.get_tile_placed_on())
-                    if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
-                        if tile_coords[0] == len(self.tiles_on_board) - 1 or (self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] in connected_tiles):
-                            meeples_on_road.append(meeple)
-                    if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
-                        if tile_coords[1] == 0 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1]  - 1]['tile'] in connected_tiles):
-                            meeples_on_road.append(meeple)
-                    if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
-                        if tile_coords[1] == len(self.tiles_on_board[0]) - 1 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] in connected_tiles):
-                            meeples_on_road.append(meeple)
-                    if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
-                        if tile_coords[0] == 0 or (self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] in connected_tiles):
-                            meeples_on_road.append(meeple)
-            for meeple in meeples_on_road:
-                meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles)
+                meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles, meeples_on_road)
         else:
             print("ROAD INCOMPLETE")
