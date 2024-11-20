@@ -25,6 +25,8 @@ class game_settings:
         self.music_on = True
         self.done_pressed = False
         self.meeple_screen = False
+        self.ai = False
+
 
 
     def set_current_round(self, round):

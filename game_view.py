@@ -298,6 +298,9 @@ class GameView(arcade.View):
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
+        if self.settings.ai:
+            # time.sleep(5)
+            self.settings.ai = False
 
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
@@ -400,22 +403,21 @@ class GameView(arcade.View):
                     self.tile_sprite.center_x = self.curr_tile.get_x()
                     self.tile_sprite.center_y = self.curr_tile.get_y()
                     self.tile_list.append(self.tile_sprite)
+
                     # add placed tile to placed_tile list in settings
                     self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
                                                   self.tile_sprite.center_x, self.tile_sprite.center_y)
                     self.settings.increment_tile_count()
                     self.on_new_tile()
-                    self.settings.ai_valid = False
 
-                    if ai:
-                        time.sleep(2)
-                        # increment turns -- update the board
-
+                    # increment turns -- update the board
                     if current_player.is_ai():
+                        self.settings.ai = True
                         self.on_ai_turn(current_player)
 
                 else:
                     if  self.settings.current_player.ai:
+                        print("PLayer - AI", self.settings.current_player)
                         self.feat.check_feature_completed(self.settings)
                         # create correct sound
                         if self.settings.sound_on:
@@ -475,13 +477,13 @@ class GameView(arcade.View):
                                                       self.tile_sprite.center_x, self.tile_sprite.center_y)
                         self.settings.increment_tile_count()
                         self.on_new_tile()
-                        self.settings.ai_valid = False
 
                         if ai:
                             time.sleep(2)
                             # increment turns -- update the board
 
                         if current_player.is_ai():
+                            self.settings.ai = True
                             self.on_ai_turn(current_player)
 
 
@@ -493,7 +495,7 @@ class GameView(arcade.View):
             else:
                 if self.settings.sound_on:
                    self.sound = self.error_sound.play()
-
+            print("PLayerrrrr", self.settings.current_player)
     def delete_place_meeple_button(self):
         """Remove the Place Meeple button from the layout."""
         if self.place_meeple_button_active:
@@ -861,9 +863,6 @@ class GameView(arcade.View):
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
         can_place = False
-        print('before loop')
-        for row in self.feat.tiles_on_board:
-            print(row)
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
@@ -884,15 +883,6 @@ class GameView(arcade.View):
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
-                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][1])
-                self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
-
-
-        # If they can place a meeple they will
-        #index = random.randint(0,4)
-        #can_place_meeple = False
-        #while can_place_meeple == False:
-        #    if meeple.Meeple(player, player.get_color()).place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
-        #        can_place_meeple = True
-        #    else:
-        #        index = random.randint(0,4)
+                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
+                        print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
+            self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
