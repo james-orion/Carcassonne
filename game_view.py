@@ -341,8 +341,11 @@ class GameView(arcade.View):
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
                 if self.place_meeple_button_active and self.settings.done_pressed:
-                    self.delete_place_meeple_button()
+                    if not self.settings.meeple_screen:
+                        self.delete_place_meeple_button()
+                    self.place_meeple_button_active = False
                     self.settings.done_pressed = False
+                    self.settings.meeple_screen = False
                     self.feat.check_feature_completed(self.settings)
                     # create correct sound
                     if self.settings.sound_on:

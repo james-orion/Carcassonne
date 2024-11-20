@@ -134,6 +134,7 @@ class MeeplePlacementView(arcade.View):
             # switch to game view
             new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
             new_view.place_meeple_button_active = True
+            self.settings.meeple_screen = True
             new_view.setup()
             self.window.show_view(new_view)
         else:
