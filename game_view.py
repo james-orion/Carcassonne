@@ -336,13 +336,11 @@ class GameView(arcade.View):
                 # right
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
-            print('before done_valid')
             if self.settings.ai_valid :
                 done_valid = True
             else:
                 done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
-                print('after done_valid')
                 self.feat.check_feature_completed(self.settings)
                 # create correct sound
                 if self.settings.sound_on:
@@ -721,9 +719,7 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-            print('_____________')
             if count_valid == len(check_tile_features):
-                print('valid')
                 done_valid = True
                 self.rotating_tile = None
 
@@ -772,15 +768,14 @@ class GameView(arcade.View):
         # Randomly chooses an available space on the board to place their tile
 
         can_place = False
+        index = random.randint(0, 4)
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
             if self.settings.feature_container[rand_x][rand_y] == 0:
-                print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
                 for k in range(4):
                     if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
-                        print('tile can be placed')
                         can_place = True
                         self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
                         self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
@@ -789,9 +784,9 @@ class GameView(arcade.View):
                         self.settings.previous_coor_y = rand_y
                         self.settings.ai_valid = True
                         self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
-                        print('in validate placement')
-                        for row in self.feat.tiles_on_board:
-                            print(row)
+                        #TODO: have meeple show up on board, make sure working for scoring
+                        player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
+                        print(player.get_meeple_count())
                         self.on_done(0, True)
                         return
                     else:

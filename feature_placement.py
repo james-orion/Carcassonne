@@ -64,11 +64,11 @@ class feature_placements:
                             self.tiles_on_board[i][j]['r_connected']= True
                         else:
                             self.tiles_on_board[i][j]['l_connected'] = True
-        for i in range(len(self.tiles_on_board)):
-            print(self.tiles_on_board[i])
-            for j in range(len(self.tiles_on_board[i])):
-                if self.tiles_on_board[i][j] !=0:
-                    print(self.tiles_on_board[i][j])
+        #for i in range(len(self.tiles_on_board)):
+        #    print(self.tiles_on_board[i])
+        #    for j in range(len(self.tiles_on_board[i])):
+        #        if self.tiles_on_board[i][j] !=0:
+        #            print(self.tiles_on_board[i][j])
 
 
     def add_tile(self, x_new, y_new, tile_new):
