@@ -165,6 +165,7 @@ class NameView(arcade.View):
             for i in range(self.settings.get_player_count()):
                 p = player.Player()
                 p.set_name(self.input_field[i].text)
+                p.default_ai()
                 self.settings.add_current_players(p)
                 if i == 0:
                     self.settings.set_current_player(p)
