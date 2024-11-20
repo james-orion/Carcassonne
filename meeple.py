@@ -233,6 +233,34 @@ class Meeple:
         return True
     
 
+    def end_of_game_road_scoring(self, settings):
+        game_tiles = settings.feature_container
+        game_board_height = len(game_tiles) - 1
+        game_board_width = len(game_tiles[0]) - 1
+        # find tiles connected to tile meeple is placed on
+        # 1 point for each tile
+
+
+    def end_of_game_city_scoring(self, settings):
+        game_tiles = settings.feature_container
+        game_board_height = len(game_tiles) - 1
+        game_board_width = len(game_tiles[0]) - 1
+        # find tiles connected to tile meeple is placed on
+        # 1 point for each tile, 2 if there's a shield
+
+
+    def end_of_game_monastery_scoring(self, settings):
+        game_tiles = settings.feature_container
+        game_board_height = len(game_tiles) - 1
+        game_board_width = len(game_tiles[0]) - 1
+        # check the 8 adjacent tiles around tile where meeple is placed
+        # 1 point for each tile
+        # check if tile is on the board boundaries too
+        tile_coords = self.get_coords(self.tile_placed_on)
+        
+
+
+
     def get_coords(self, tile, game_tiles):
         tile_coords = [-1, -1]
         for i in range(len(game_tiles)):
@@ -309,19 +337,21 @@ class Meeple:
 
     # determines how many points a Meeple scores for an incomplete feature 
     # at the end of the game
-    def end_of_game_scoring(self):
+    def end_of_game_scoring(self, settings):
         # TODO NEED TO SET FALSE FOR MEEPLE_PLACED_X IN TILE CLASS
         points = 0
         # determine of feature is partially complete
         if self.feature_type == "ROAD":
             # points = number of tiles in the partial road
-            pass
+            self.end_of_game_road_scoring(settings)
         elif self.feature_type == "CITY":
             # points = 1 per each tile in partial city, extra 1 if tile with coat of arms
-            pass
-        else:
+            self.end_of_game_city_scoring(settings)
+        elif self.feature_type == "MONASTERY":
             # points = number of tiles surrounding monestary + 1 for monestary itself
-            pass
+            self.end_of_game_monastery_scoring(settings)
+        else:
+            points = 0
 
         # unplace and reset meeple
         self.is_placed = False
