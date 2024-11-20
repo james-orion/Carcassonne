@@ -635,7 +635,7 @@ class GameView(arcade.View):
                             #right
                             (i, j+1)
                         ]
-                        if self.validate_placement(neighbors, validation_tile):
+                        if self.validate_placement(neighbors, validation_tile, False):
                             can_place = True
                             #print("Possible placement: ", '[',i,j,']',
                             #    validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
@@ -663,7 +663,7 @@ class GameView(arcade.View):
                 self.window.show_view(endview)
 
 
-    def validate_placement(self, neighbors, curr_tile):
+    def validate_placement(self, neighbors, curr_tile, is_placing=True):
         # boolean if you can place tile
         done_valid = False
         # get neighbor coordinates
@@ -722,51 +722,50 @@ class GameView(arcade.View):
             if count_valid == len(check_tile_features):
                 done_valid = True
                 self.rotating_tile = None
+                if is_placing:
+                    self.feat.add_tile(self.settings.previous_coor_x,
+                                       self.settings.previous_coor_y,
+                                       self.settings.placed_tiles[-1][0][1])
 
-                self.feat.add_tile(self.settings.previous_coor_x,
-                                   self.settings.previous_coor_y,
-                                   self.settings.placed_tiles[-1][0][1])
-                #print(check_tile_features)
-                if check_tile_features != []:
-                    for tile in check_tile_features:
-                        if tile[2] == "left":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "right",
-                                                   "left")
+                    if check_tile_features != []:
+                        for tile in check_tile_features:
+                            if tile[2] == "left":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "right",
+                                                       "left")
 
-                        if tile[2] == "right":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "left",
-                                                   "right")
+                            if tile[2] == "right":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "left",
+                                                       "right")
 
-                        if tile[2] == "top":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "bottom",
-                                                   "top")
+                            if tile[2] == "top":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "bottom",
+                                                       "top")
 
-                        if tile[2] == "bottom":
-                            self.feat.add_location(tile[0],
-                                                   tile[1],
-                                                   self.settings.previous_coor_x,
-                                                   self.settings.previous_coor_y,
-                                                   "top",
-                                                   "bottom")
+                            if tile[2] == "bottom":
+                                self.feat.add_location(tile[0],
+                                                       tile[1],
+                                                       self.settings.previous_coor_x,
+                                                       self.settings.previous_coor_y,
+                                                       "top",
+                                                       "bottom")
 
 
         return done_valid
 
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
-
         can_place = False
         index = random.randint(0, 4)
         while can_place == False:
@@ -788,6 +787,7 @@ class GameView(arcade.View):
                         player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
                         print(player.get_meeple_count())
                         self.on_done(0, True)
+                        self.on_done(0)
                         return
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()

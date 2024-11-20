@@ -91,7 +91,6 @@ class feature_placements:
 
                     self.tiles_on_board[i][j] = tile
 
-
     def get_board(self):
             return self.tiles_on_board
     
