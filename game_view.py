@@ -341,6 +341,7 @@ class GameView(arcade.View):
                 # right
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
+
             done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
                 if self.place_meeple_button_active and self.settings.done_pressed:
@@ -389,6 +390,7 @@ class GameView(arcade.View):
                     for item in self.settings.placed_tiles:
                         if item == self.settings.placed_tiles[-1]:
                             new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
+
                         else:
                             new_list.append(item)
                     self.settings.placed_tiles = new_list
@@ -753,6 +755,7 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
+                # TODO start end of game scoring here
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
@@ -813,9 +816,7 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-            print('_____________')
             if count_valid == len(check_tile_features):
-                print('valid')
                 done_valid = True
                 self.rotating_tile = None
                 if is_placing:
@@ -863,21 +864,28 @@ class GameView(arcade.View):
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
         can_place = False
+
+        index = random.randint(0, 4)
+
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
             if self.settings.feature_container[rand_x][rand_y] == 0:
-                print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
                 for k in range(4):
                     if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
-                        print('tile can be placed')
                         can_place = True
                         self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
                         self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
                         self.settings.feature_container[rand_x][rand_y] = self.settings.placed_tiles[-1][0][1]
                         self.settings.previous_coor_x = rand_x
                         self.settings.previous_coor_y = rand_y
+                        self.settings.ai_valid = True
+                        self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
+                        #TODO: have meeple show up on board, make sure working for scoring
+                        player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
+                        print(player.get_meeple_count())
+                        self.on_done(0, True)
                         self.on_done(0)
                         return
                     else:
