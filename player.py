@@ -76,6 +76,8 @@ class Player:
 
     def set_ai(self):
         self.ai = True
+    def default_ai(self):
+        self.ai = False
     
     """ Calculate end-of-game points based on meeples still placed. """
     def end_of_game_scoring(self):
@@ -93,7 +95,7 @@ class Player:
     ''' Getter Methods '''
     ''' String function to return player status: name, score, and remaining meeples in player's hand '''
     def __str__(self):
-        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.get_meeple_count()}"
+        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.get_meeple_count()}, AI : {self.ai}"
     
     ''' Function to get count of meeples in hand'''
     def get_meeple_count(self):
