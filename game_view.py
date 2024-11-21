@@ -791,7 +791,6 @@ class GameView(arcade.View):
                         # TODO: I think the reason for our issues is that the board for some reason doesn't update until after the AI turns are over,
                         #   like the tiles are placed and stuff but the board isn't updating
                         # TODO : meeple stuff needs to happen after the tile has finished being placed, and stuff in on_done has happened
-                        self.on_done(0, True)
                         results = player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
                         valid_placement = results[0]
                         current_meeple = results[1]
@@ -817,6 +816,7 @@ class GameView(arcade.View):
                             current_meeple.set_y_coord(new_meeple_coord_y)
                             # update sprite
                             self.settings.add_meeple(current_meeple)
+                        self.on_done(0, True)
                         return
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
