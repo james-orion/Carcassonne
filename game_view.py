@@ -753,6 +753,10 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
+                # end of game scoring for meeples
+                meeple_list = self.settings.get_meeples()
+                for meeple in self.settings.get_meeples():
+                    meeple.end_of_game_scoring(self.settings, meeple_list)
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
