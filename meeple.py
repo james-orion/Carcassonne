@@ -253,12 +253,101 @@ class Meeple:
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
-        # check the 8 adjacent tiles around tile where meeple is placed
-        # 1 point for each tile
-        # check if tile is on the board boundaries too
         tile_coords = self.get_coords(self.tile_placed_on)
-        
-
+        self.tile_placed_on.set_meeple_placed_center(False)
+        points = 1
+        # if monastery tile is in any of the corners check the 3 tiles adjacent to it
+        if tile_coords[0] == 0 and tile_coords[1] == 0:
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+        elif tile_coords[0] == 0 and tile_coords[1] == game_board_width:
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        elif tile_coords[0] == game_board_height and tile_coords[1] == 0:
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+        elif tile_coords[0] == game_board_height and tile_coords[1] == game_board_width:
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        # if monastery tile is on any border check the 5 tiles adjacent to it
+        elif tile_coords[0] == 0:
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        elif tile_coords[0] == game_board_height:
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        elif tile_coords[1] == 0:
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+        elif tile_coords[1] == game_board_width:
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        else:
+            if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] + 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] + 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+            if game_tiles[tile_coords[0] - 1][tile_coords[1] - 1] != 0:
+                points = points + 1
+        return points
 
 
     def get_coords(self, tile, game_tiles):
@@ -349,7 +438,7 @@ class Meeple:
             self.end_of_game_city_scoring(settings)
         elif self.feature_type == "MONASTERY":
             # points = number of tiles surrounding monestary + 1 for monestary itself
-            self.end_of_game_monastery_scoring(settings)
+            points = self.end_of_game_monastery_scoring(settings)
         else:
             points = 0
 
@@ -360,7 +449,7 @@ class Meeple:
         self.x_coord = None
         self.y_coord = None
         self.tile_placed_on = None
-        return points
+        self.player.set_score(points)
     
 
     # getter methods
