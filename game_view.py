@@ -769,7 +769,6 @@ class GameView(arcade.View):
 
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
-        print(player.get_color())
         can_place = False
         index = random.randint(0, 4)
         meeple_coord_mods = [0,0]
