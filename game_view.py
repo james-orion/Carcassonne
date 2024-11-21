@@ -795,15 +795,9 @@ class GameView(arcade.View):
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
-                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][1])
-                self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+
+                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
+                        print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
+            self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
 
 
-        # If they can place a meeple they will
-        #index = random.randint(0,4)
-        #can_place_meeple = False
-        #while can_place_meeple == False:
-        #    if meeple.Meeple(player, player.get_color()).place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
-        #        can_place_meeple = True
-        #    else:
-        #        index = random.randint(0,4)
