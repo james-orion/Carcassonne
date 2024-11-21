@@ -886,3 +886,5 @@ class GameView(arcade.View):
                         self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                         print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
             self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+
+
