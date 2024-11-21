@@ -34,13 +34,14 @@ class OpenView(arcade.View):
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT,
                                       self.background)
+        font=arcade.load_font("Carolingia-dKdE.ttf")
         arcade.draw_text("Carcassonne",
                          self.window.width / 2,
                          self.window.height / 2,
                          arcade.color.BLACK,
-                         font_size=80,
+                         font_size=125,
                          anchor_x="center",
-                         font_name="Kenney Future")
+                         font_name="Carolingia")
 
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the button, start the game.

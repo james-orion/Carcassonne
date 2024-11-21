@@ -55,11 +55,18 @@ class GameView(arcade.View):
         self.music_list = None
         self.my_player = my_player
         self.buttons = []
+        # your tile text
+        self.tile_text = ["", "Your Tile"]
+        self.text_for_tile = self.tile_text[0]
+        # new player text
+        self.new_player = ""
+        self.new_player_turn = False
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
         self.tile_list = tile.tiles
         self.feat = feature
+        self.count = 0
         # Initalize current meeple and current tile position
         self.curr_tile = curr_tile
         self.curr_meeple = curr_meeple
@@ -70,12 +77,11 @@ class GameView(arcade.View):
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.done_button = (arcade.gui.
-                           UIFlatButton(text=self.settings.button_text, width=100))
+                           UIFlatButton(text=self.settings.button_text, width=100,style={"font_name":"Carolingia"}))
         self.place_meeple_button = ((arcade.gui.
-                           UIFlatButton(text="PLACE MEEPLE", width=150)))
+                           UIFlatButton(text="PLACE MEEPLE", width=150,style={"font_name":"Carolingia"})))
         # add box to manager
-        #self.h_box.add(self.place_meeple_button.with_space_around( top=500, right= 50))
-        self.h_box.add(self.done_button.with_space_around( top=500))
+        self.h_box.add(self.done_button.with_space_around( top=550, left=50))
         # create event for done
         self.done_button.on_click = self.on_done
         self.place_meeple_button.on_click = self.on_place_meeple
@@ -233,6 +239,10 @@ class GameView(arcade.View):
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT,
                                       self.background)
+        # banner draw
+        color = arcade.make_transparent_color([240, 255, 255], 150)
+        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 50, SCREEN_WIDTH,
+                                     125, color)
 
         # Drawing Sprite Lists
         self.grid_sprite_list.draw()
@@ -242,6 +252,7 @@ class GameView(arcade.View):
         self.player_list.draw()
         self.sound_list.draw()
         self.music_list.draw()
+
         # Drawing Button
         self.manager.draw()
         # Drawing Text, from settings round #
@@ -253,7 +264,7 @@ class GameView(arcade.View):
                          start_y,
                          arcade.color.WHITE,
                          30,
-                         font_name="Kenney Future")
+                         font_name="Carolingia")
         # Drawing Text, Need From Player Class
         start_x = 700
         start_y = 50
@@ -261,31 +272,35 @@ class GameView(arcade.View):
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
-                         arcade.color.WHITE,
-                         15,
+                         arcade.color.BLACK,
+                         20,
                          font_name="Kenney Future")
 
-
-        # Drawing Text, For Meeples.
-        start_meeple_x = 10
-        start_meeple_y = 50
-        arcade.draw_text(str(self.settings.current_player.get_meeple_count())+ " Meeples",
-                         start_meeple_x,
-                         start_meeple_y,
-                         arcade.color.WHITE,
-                         12,
+        arcade.draw_text("Meeples: "+str(self.settings.current_player.get_meeple_count()),
+                         start_x,
+                         start_y - 20,
+                         arcade.color.BLACK,
+                         22,
                          font_name="Kenney Future")
 
         # Drawing Text, For Tile.
         start_tile_x = 200
-        start_tile_y = 50
-        arcade.draw_text("Your Tile",
+        arcade.draw_text(self.text_for_tile,
                          start_tile_x,
-                         start_tile_y,
-                         arcade.color.WHITE,
-                         12,
-                         font_name="Kenney Future")
+                         start_y-20,
+                         arcade.color.BLACK,
+                         22,
+                         font_name="Carolingia")
+        if self.new_player_turn:
+            arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, SCREEN_WIDTH,
+                                     125, arcade.make_transparent_color([240, 255, 255], 150))
 
+        arcade.draw_text(self.new_player,
+                         50,
+                         SCREEN_HEIGHT/2,
+                         arcade.color.BLACK,
+                         40,
+                         font_name="Kenney Future")
 
     def on_update(self, delta_time):
         """ All the logic to move"""
@@ -298,12 +313,26 @@ class GameView(arcade.View):
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
-        if self.settings.ai:
-            # time.sleep(5)
-            self.settings.ai = False
+        # change you tile text
+        if self.settings.button_text != "START":
+            if self.tile_sprite.center_x  == 250 and self.tile_sprite.center_y == 75:
+                self.text_for_tile = self.tile_text[1]
+            else:
+                self.text_for_tile = self.tile_text[0]
+
+        if self.new_player_turn or self.settings.ai:
+            self.new_player = self.settings.current_player.name +" It's Your Turn"
+            self.count += 1
+        else:
+            self.new_player = ""
 
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
+
+        if self.count != 0 and self.count % 50 == 0:
+            self.new_player_turn = False
+            self.count = 0
+            self.settings.ai = False
 
     def on_done(self, event, ai=False):
         """ If the user presses the button, the logic will
@@ -315,7 +344,7 @@ class GameView(arcade.View):
         if self.settings.button_text == "START":
             # change tile to next tile in list,
             self.curr_tile.set_moved(False)
-            self.curr_tile.set_y(100)
+            self.curr_tile.set_y(75)
             self.curr_tile.set_x(250)
             tile = self.settings.tiles[self.settings.tile_count][1].image
             self.tile_sprite = arcade.Sprite(tile,
@@ -329,6 +358,7 @@ class GameView(arcade.View):
             self.settings.increment_tile_count()
             self.settings.set_button_text("DONE")
             self.setup()
+            self.new_player_turn = True
 
         else:
             neighbors = [
@@ -374,10 +404,12 @@ class GameView(arcade.View):
                             if current_player == self.settings.current_players[-1]:
                                 current_player = self.settings.current_players[0]
                                 self.settings.set_current_player(current_player)
+                                self.new_player_turn = True
                             else:
                                 # increment to next player in list
                                 current_player = self.settings.current_players[player + 1]
                                 self.settings.set_current_player(current_player)
+                                self.new_player_turn = True
                                 break
 
                     # update_tiles
@@ -395,7 +427,7 @@ class GameView(arcade.View):
 
                     # change tile to next tile in list,
                     self.curr_tile.set_moved(False)
-                    self.curr_tile.set_y(100)
+                    self.curr_tile.set_y(75)
                     self.curr_tile.set_x(250)
                     tile = self.settings.tiles[self.settings.tile_count][1].image
                     self.tile_sprite = arcade.Sprite(tile,
@@ -443,10 +475,12 @@ class GameView(arcade.View):
                                 if current_player == self.settings.current_players[-1]:
                                     current_player = self.settings.current_players[0]
                                     self.settings.set_current_player(current_player)
+                                    self.new_player_turn = True
                                 else:
                                     # increment to next player in list
                                     current_player = self.settings.current_players[player + 1]
                                     self.settings.set_current_player(current_player)
+                                    self.new_player_turn = True
                                     break
 
                         # update_tiles
@@ -464,7 +498,7 @@ class GameView(arcade.View):
 
                         # change tile to next tile in list,
                         self.curr_tile.set_moved(False)
-                        self.curr_tile.set_y(100)
+                        self.curr_tile.set_y(75)
                         self.curr_tile.set_x(250)
                         tile = self.settings.tiles[self.settings.tile_count][1].image
                         self.tile_sprite = arcade.Sprite(tile,
@@ -478,8 +512,7 @@ class GameView(arcade.View):
                         self.settings.increment_tile_count()
                         self.on_new_tile()
 
-                        if ai:
-                            time.sleep(2)
+
                             # increment turns -- update the board
 
                         if current_player.is_ai():
@@ -506,7 +539,7 @@ class GameView(arcade.View):
         """Add the Place Meeple button back to the layout."""
         if not self.place_meeple_button_active:
             # Re-add the button to the layout
-            self.h_box.add(self.place_meeple_button.with_space_around(top=500, left=50))
+            self.h_box.add(self.place_meeple_button.with_space_around(top=550, left=10))
             self.place_meeple_button_active = True
 
 
@@ -584,7 +617,7 @@ class GameView(arcade.View):
                 # if new sprite is on tile already placed then move to start
                 if self.dragging_sprite.collides_with_list(self.tile_list):
                     self.dragging_sprite.center_x = 250
-                    self.dragging_sprite.center_y = 100
+                    self.dragging_sprite.center_y = 75
                     if self.settings.sound_on:
                         self.wrong_place = self.error_sound.play()
 
@@ -740,7 +773,7 @@ class GameView(arcade.View):
             if len(self.settings.placed_tiles) < len(self.settings.tiles) + 1:
                 self.tile_sprite.kill()
                 self.curr_tile.set_moved(False)
-                self.curr_tile.set_y(100)
+                self.curr_tile.set_y(75)
                 self.curr_tile.set_x(200)
                 tile = self.settings.tiles[self.settings.tile_count][1].image
                 self.tile_sprite = arcade.Sprite(tile,
