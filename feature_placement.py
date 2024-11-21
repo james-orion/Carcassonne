@@ -244,15 +244,19 @@ class feature_placements:
                     if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
                         if tile_coords[0] == len(self.tiles_on_board) - 1 or (self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] in connected_tiles):
                             meeples_on_city.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_top(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
                         if tile_coords[1] == 0 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1]  - 1]['tile'] in connected_tiles):
                             meeples_on_city.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_left(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
                         if tile_coords[1] == len(self.tiles_on_board[0]) - 1 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] in connected_tiles):
                             meeples_on_city.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_right(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
                         if tile_coords[0] == 0 or (self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] in connected_tiles):
                             meeples_on_city.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_bottom(False)
             for meeple in meeples_on_city:
                 meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles, meeples_on_city)
         else:
@@ -316,15 +320,19 @@ class feature_placements:
                     if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
                         if tile_coords[0] == len(self.tiles_on_board) - 1 or (self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'] in connected_tiles):
                             meeples_on_road.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_top(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
                         if tile_coords[1] == 0 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1]  - 1]['tile'] in connected_tiles):
                             meeples_on_road.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_left(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
                         if tile_coords[1] == len(self.tiles_on_board[0]) - 1 or (self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'] in connected_tiles):
                             meeples_on_road.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_right(False)
                     if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
                         if tile_coords[0] == 0 or (self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'] in connected_tiles):
                             meeples_on_road.append(meeple)
+                            self.tiles_on_board[tile_coords[0]][tile_coords[1]]['tile'].set_meeple_placed_bottom(False)
             for meeple in meeples_on_road:
                 meeple.get_player().get_meeple_score(meeple, None, settings, connected_tiles, meeples_on_road)
         else:
