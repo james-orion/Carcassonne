@@ -231,8 +231,9 @@ class Meeple:
         return True
     
 
-    def end_of_game_road_scoring(self, settings, meeples_on_feature):
+    def end_of_game_road_scoring(self, settings, meeple_list):
         points = 0
+        num_meeples = 0
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
@@ -299,14 +300,33 @@ class Meeple:
                         if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in road:
                             tile.set_meeple_placed_right(False)
                     if tile.get_meeple_placed_bottom() == True:
-                        if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]]  in road:
+                        if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in road:
                                 tile.set_meeple_placed_bottom(False)
-            # TODO check if other meeples of same color on feature so points aren't double counted
+            for meeple in meeple_list:
+                if meeple.get_tile_placed_on() in road and meeple.get_color() == self.color:
+                    if str(meeple.get_tile_placed_on().get_building()) == "Building.VILLAGE":
+                        tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
+                        if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
+                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in road:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
+                            if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in road:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
+                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in road:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
+                            if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in road:
+                                num_meeples = num_meeples + 1 
+                    else:
+                        num_meeples = num_meeples + 1
+            points = points / num_meeples
             return points
 
 
-    def end_of_game_city_scoring(self, settings, meeples_on_feature):
+    def end_of_game_city_scoring(self, settings, meeple_list):
         points = 0
+        num_meeples = 0
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
@@ -378,7 +398,25 @@ class Meeple:
                     if tile.get_meeple_placed_bottom() == True:
                         if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]]  in city:
                                 tile.set_meeple_placed_bottom(False)
-            # TODO check if other meeples of same color on feature so points aren't double counted
+            for meeple in meeple_list:
+                if meeple.get_tile_placed_on() in city and meeple.get_color() == self.color:
+                    if meeple.get_tile_placed_on().check_connected() == False:
+                        tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
+                        if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
+                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in city:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
+                            if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in city:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
+                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in city:
+                                num_meeples = num_meeples + 1
+                        if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
+                            if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in city:
+                                num_meeples = num_meeples + 1 
+                    else:
+                        num_meeples = num_meeples + 1
+            points = points / num_meeples
             return points
 
 
