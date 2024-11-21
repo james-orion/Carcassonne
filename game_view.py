@@ -769,8 +769,10 @@ class GameView(arcade.View):
 
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
+        print(player.get_color())
         can_place = False
         index = random.randint(0, 4)
+        meeple_coord_mods = [0,0]
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
@@ -786,24 +788,40 @@ class GameView(arcade.View):
                         self.settings.previous_coor_y = rand_y
                         self.settings.ai_valid = True
                         self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
-                        #TODO: have meeple show up on board, make sure working for scoring
-                        player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
-                        print(player.get_meeple_count())
+                        self.curr_tile.set_moved(False)
+                        # TODO: I think the reason for our issues is that the board for some reason doesn't update until after the AI turns are over,
+                        #   like the tiles are placed and stuff but the board isn't updating
+                        # TODO : meeple stuff needs to happen after the tile has finished being placed, and stuff in on_done has happened
                         self.on_done(0, True)
-                        self.on_done(0)
+                        results = player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
+                        valid_placement = results[0]
+                        current_meeple = results[1]
+                        if index == 0:
+                            meeple_coord_mods = [0, 15]
+                        elif index == 1:
+                            meeple_coord_mods = [-15, 0]
+                        elif index == 2:
+                            meeple_coord_mods = [15, 0]
+                        elif index == 3:
+                            meeple_coord_mods = [0, 0]
+                        elif index == 4:
+                            meeple_coord_mods = [0, -15]
+
+                        if valid_placement == True:
+                            self.settings.set_meeple_placed_current_round(True)
+                            # set coordinates for placed Meeple
+                            tile_x_coord = self.curr_tile.get_x()
+                            tile_y_coord = self.curr_tile.get_y()
+                            new_meeple_coord_x = tile_x_coord + meeple_coord_mods[0]
+                            new_meeple_coord_y = tile_y_coord + meeple_coord_mods[1]
+                            current_meeple.set_x_coord(new_meeple_coord_x)
+                            current_meeple.set_y_coord(new_meeple_coord_y)
+                            # update sprite
+                            self.settings.add_meeple(current_meeple)
                         return
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
-                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][1])
-                self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
-
-
-        # If they can place a meeple they will
-        #index = random.randint(0,4)
-        #can_place_meeple = False
-        #while can_place_meeple == False:
-        #    if meeple.Meeple(player, player.get_color()).place_meeple(self.settings.placed_tiles[-1][0][1],index,self.settings):
-        #        can_place_meeple = True
-        #    else:
-        #        index = random.randint(0,4)
+                        self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
+                        self.curr_tile.set_moved(False)
+                    self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
