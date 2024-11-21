@@ -231,7 +231,7 @@ class Meeple:
         return True
     
 
-    def end_of_game_road_scoring(self, settings):
+    def end_of_game_road_scoring(self, settings, meeples_on_feature):
         points = 0
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
@@ -305,7 +305,7 @@ class Meeple:
             return points
 
 
-    def end_of_game_city_scoring(self, settings):
+    def end_of_game_city_scoring(self, settings, meeples_on_feature):
         points = 0
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
