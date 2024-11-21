@@ -142,8 +142,10 @@ class ColorView(arcade.View):
             game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player)
             game.setup()
             self.window.show_view(game)
-        for j in range(4 - self.num_players - 1):
+        print(self.players)
+        for j in range(4 - self.num_players):
             for k in self.available_colors:
-                if k not in self.selected_colors:
-                    self.selected_colors.append(k)
-                    self.players[self.settings.get_player_count() - 1 + j].set_color(self.selected_colors[self.settings.get_player_count() - 1 + j])
+                print(k)
+                self.players[self.settings.get_player_count() + j].set_color(k)
+                self.selected_colors.append(k)
+                self.available_colors.remove(k)

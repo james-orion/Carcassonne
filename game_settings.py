@@ -27,6 +27,7 @@ class game_settings:
         self.meeple_screen = False
         self.ai = False
 
+        self.ai_valid = False
 
 
     def set_current_round(self, round):
