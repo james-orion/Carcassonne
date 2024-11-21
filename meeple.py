@@ -5,8 +5,6 @@
 # meeple earns once a feature is completed, and how many
 # points are won at the end of the game.
 
-# TODO implement end of game scoring for all features
-
 import feature_placement
 
 class Meeple:
@@ -94,7 +92,6 @@ class Meeple:
 
 
     def find_connected_road_tiles(self, connected_tiles, settings, user_choice):
-        # TODO fix problem when village tiles placed next to another village tile
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
@@ -105,19 +102,31 @@ class Meeple:
             if user_choice == "TOP":
                 print(game_tiles[tile_coords[0] + 1][tile_coords[1]])
                 if tile_coords[0] + 1 < game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                    connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
+                    if str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0] + 1][tile_coords[1]].get_meeple_placed_bottom() == True:
+                        return False
+                    else:
+                        connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
             elif user_choice == "LEFT":
                 print(game_tiles[tile_coords[0]][tile_coords[1] - 1])
                 if tile_coords[1] - 1 > 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
+                    if str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0]][tile_coords[1] - 1].get_meeple_placed_right() == True:
+                        return False
+                    else:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
             elif user_choice == "RIGHT":
                 print(game_tiles[tile_coords[0]][tile_coords[1] + 1])
                 if tile_coords[1] + 1 < game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                    connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
+                    if str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0]][tile_coords[1] + 1].get_meeple_placed_left() == True:
+                        return False
+                    else:
+                        connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
             else :
                 print(game_tiles[tile_coords[0] - 1][tile_coords[1]])
                 if tile_coords[0] - 1 > 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                    connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                    if str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0] - 1][tile_coords[1]].get_meeple_placed_top() == True:
+                        return False
+                    else:
+                        connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
         while found_connected == False:
             num_connected = len(connected_tiles)
             for tile in connected_tiles:
@@ -164,7 +173,6 @@ class Meeple:
 
 
     def find_connected_city_tiles(self, connected_tiles, settings, user_choice):
-        # TODO FIX PROBLEM WITH UNCONNECTED TILES
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
@@ -413,7 +421,6 @@ class Meeple:
         else:
             return 0
 
-        # TODO fix issue where the wrong meeple is taken off of the board
         # unplace and reset meeple
         settings.get_meeples().remove(self)
         self.is_placed = False
@@ -533,12 +540,6 @@ class Meeple:
 
 # test cases
 # test constructor and getter methods
-def test():
-    test = Meeple("Jack", "red")
-    result = test.end_of_game_monastery_scoring(None)
-    print(result)
-
-test()
 '''def test_one():
     test_meeple = Meeple("Jack", "m1", "red")
     if test_meeple.get_player() != "Jack":
