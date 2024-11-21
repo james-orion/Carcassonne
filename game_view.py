@@ -54,7 +54,6 @@ class GameView(arcade.View):
         self.sound_list = None
         self.music_list = None
         self.my_player = my_player
-        self.buttons = []
         # Initalize settings
         self.settings = settings
         self.start_tile = tile.start
@@ -74,7 +73,7 @@ class GameView(arcade.View):
         self.place_meeple_button = ((arcade.gui.
                            UIFlatButton(text="PLACE MEEPLE", width=150)))
         # add box to manager
-        #self.h_box.add(self.place_meeple_button.with_space_around( top=500, right= 50))
+        self.h_box.add(self.place_meeple_button.with_space_around( top=500, right= 50))
         self.h_box.add(self.done_button.with_space_around( top=500))
         # create event for done
         self.done_button.on_click = self.on_done
@@ -92,7 +91,7 @@ class GameView(arcade.View):
                 child=self.h_box,
                 style=None)
         )
-        self.place_meeple_button_active = False
+
         # load the tiles into settings for first round
         if settings.tile_count == 0:
             # count keeps track of tile ID
@@ -298,10 +297,6 @@ class GameView(arcade.View):
             self.tile_sprite.center_x = self.curr_tile.get_x()
             self.tile_sprite.center_y = self.curr_tile.get_y()
 
-        if self.settings.ai:
-            # time.sleep(5)
-            self.settings.ai = False
-
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
@@ -341,175 +336,84 @@ class GameView(arcade.View):
                 # right
                 (self.settings.previous_coor_x, self.settings.previous_coor_y + 1)
             ]
-
-            done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
+            if self.settings.ai_valid :
+                done_valid = True
+            else:
+                done_valid = self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1])
             if done_valid:
-                if self.place_meeple_button_active and self.settings.done_pressed:
-                    if not self.settings.meeple_screen:
-                        self.delete_place_meeple_button()
-                    self.place_meeple_button_active = False
-                    self.settings.done_pressed = False
-                    self.settings.meeple_screen = False
-                    self.feat.check_feature_completed(self.settings)
-                    # create correct sound
-                    if self.settings.sound_on:
-                        arcade.play_sound(self.correct_sound, 1, 1, False, .5)
-                    # reset meeple placement variables
-                    self.settings.set_meeple_placed_current_round(False)
-                    # set coordinates back to -1 for next tile
-                    self.settings.previous_coor_x = -1
-                    self.settings.previous_coor_y = -1
-                    # get player count for indexing
-                    # count = self.settings.get_player_count() - 1
-                    # if the last player to go, increment current round
-                    if self.settings.get_current_player() == self.settings.current_players[3]:
-                        round = self.settings.get_current_round() + 1
-                        self.settings.set_current_round(round)
+                self.feat.check_feature_completed(self.settings)
+                # create correct sound
+                if self.settings.sound_on:
+                    arcade.play_sound(self.correct_sound, 1, 1, False, .5)
 
-                    # get current player
-                    current_player = self.settings.get_current_player()
-                    # increment player to next player in the list
-                    for player in range(len(self.settings.current_players)):
-                        if current_player == self.settings.current_players[player]:
-                            # if current player is last in list, current player is first
-                            if current_player == self.settings.current_players[-1]:
-                                current_player = self.settings.current_players[0]
-                                self.settings.set_current_player(current_player)
-                            else:
-                                # increment to next player in list
-                                current_player = self.settings.current_players[player + 1]
-                                self.settings.set_current_player(current_player)
-                                break
+                # reset meeple placement variables
+                self.settings.set_meeple_placed_current_round(False)
+                # set coordinates back to -1 for next tile
+                self.settings.previous_coor_x = -1
+                self.settings.previous_coor_y = -1
+                # get player count for indexing
+                #count = self.settings.get_player_count() - 1
+                # if the last player to go, increment current round
+                if self.settings.get_current_player() == self.settings.current_players[3]:
+                    round = self.settings.get_current_round() + 1
+                    self.settings.set_current_round(round)
 
-                    # update_tiles
-                    new_list = []
-                    # save sprite locations
-                    self.curr_tile.set_x(self.tile_sprite.center_x)
-                    self.curr_tile.set_y(self.tile_sprite.center_y)
-                    # update the placed tiles, with new coordinates
-                    for item in self.settings.placed_tiles:
-                        if item == self.settings.placed_tiles[-1]:
-                            new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
-
+                # get current player
+                current_player = self.settings.get_current_player()
+                # increment player to next player in the list
+                for player in range(len(self.settings.current_players)):
+                    if current_player == self.settings.current_players[player]:
+                        # if current player is last in list, current player is first
+                        if current_player == self.settings.current_players[-1]:
+                            current_player = self.settings.current_players[0]
+                            self.settings.set_current_player(current_player)
                         else:
-                            new_list.append(item)
-                    self.settings.placed_tiles = new_list
+                            # increment to next player in list
+                            current_player = self.settings.current_players[player+1]
+                            self.settings.set_current_player(current_player)
+                            break
 
-                    # change tile to next tile in list,
-                    self.curr_tile.set_moved(False)
-                    self.curr_tile.set_y(100)
-                    self.curr_tile.set_x(250)
-                    tile = self.settings.tiles[self.settings.tile_count][1].image
-                    self.tile_sprite = arcade.Sprite(tile,
-                                                     SPRITE_SCALING_TILE)
-                    self.tile_sprite.center_x = self.curr_tile.get_x()
-                    self.tile_sprite.center_y = self.curr_tile.get_y()
-                    self.tile_list.append(self.tile_sprite)
-
-                    # add placed tile to placed_tile list in settings
-                    self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
-                                                  self.tile_sprite.center_x, self.tile_sprite.center_y)
-                    self.settings.increment_tile_count()
-                    self.on_new_tile()
-
-                    # increment turns -- update the board
-                    if current_player.is_ai():
-                        self.settings.ai = True
-                        self.on_ai_turn(current_player)
-
-                else:
-                    if  self.settings.current_player.ai:
-                        print("PLayer - AI", self.settings.current_player)
-                        self.feat.check_feature_completed(self.settings)
-                        # create correct sound
-                        if self.settings.sound_on:
-                            arcade.play_sound(self.correct_sound, 1, 1, False, .5)
-                        # reset meeple placement variables
-                        self.settings.set_meeple_placed_current_round(False)
-                        # set coordinates back to -1 for next tile
-                        self.settings.previous_coor_x = -1
-                        self.settings.previous_coor_y = -1
-                        # get player count for indexing
-                        # count = self.settings.get_player_count() - 1
-                        # if the last player to go, increment current round
-                        if self.settings.get_current_player() == self.settings.current_players[3]:
-                            round = self.settings.get_current_round() + 1
-                            self.settings.set_current_round(round)
-
-                        # get current player
-                        current_player = self.settings.get_current_player()
-                        # increment player to next player in the list
-                        for player in range(len(self.settings.current_players)):
-                            if current_player == self.settings.current_players[player]:
-                                # if current player is last in list, current player is first
-                                if current_player == self.settings.current_players[-1]:
-                                    current_player = self.settings.current_players[0]
-                                    self.settings.set_current_player(current_player)
-                                else:
-                                    # increment to next player in list
-                                    current_player = self.settings.current_players[player + 1]
-                                    self.settings.set_current_player(current_player)
-                                    break
-
-                        # update_tiles
-                        new_list = []
-                        # save sprite locations
-                        self.curr_tile.set_x(self.tile_sprite.center_x)
-                        self.curr_tile.set_y(self.tile_sprite.center_y)
-                        # update the placed tiles, with new coordinates
-                        for item in self.settings.placed_tiles:
-                            if item == self.settings.placed_tiles[-1]:
-                                new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
-                            else:
-                                new_list.append(item)
-                        self.settings.placed_tiles = new_list
-
-                        # change tile to next tile in list,
-                        self.curr_tile.set_moved(False)
-                        self.curr_tile.set_y(100)
-                        self.curr_tile.set_x(250)
-                        tile = self.settings.tiles[self.settings.tile_count][1].image
-                        self.tile_sprite = arcade.Sprite(tile,
-                                                         SPRITE_SCALING_TILE)
-                        self.tile_sprite.center_x = self.curr_tile.get_x()
-                        self.tile_sprite.center_y = self.curr_tile.get_y()
-                        self.tile_list.append(self.tile_sprite)
-                        # add placed tile to placed_tile list in settings
-                        self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
-                                                      self.tile_sprite.center_x, self.tile_sprite.center_y)
-                        self.settings.increment_tile_count()
-                        self.on_new_tile()
-
-                        if ai:
-                            time.sleep(2)
-                            # increment turns -- update the board
-
-                        if current_player.is_ai():
-                            self.settings.ai = True
-                            self.on_ai_turn(current_player)
-
-
+                # update_tiles
+                new_list = []
+                # save sprite locations
+                self.curr_tile.set_x(self.tile_sprite.center_x)
+                self.curr_tile.set_y(self.tile_sprite.center_y)
+                # update the placed tiles, with new coordinates
+                for item in self.settings.placed_tiles:
+                    if item == self.settings.placed_tiles[-1]:
+                        new_list.append((item[0], self.curr_tile.get_x(), self.curr_tile.get_y()))
                     else:
-                        self.settings.done_pressed = True
-                        self.add_place_meeple_button()
+                        new_list.append(item)
+                self.settings.placed_tiles = new_list
 
+                # change tile to next tile in list,
+                self.curr_tile.set_moved(False)
+                self.curr_tile.set_y(100)
+                self.curr_tile.set_x(250)
+                tile = self.settings.tiles[self.settings.tile_count][1].image
+                self.tile_sprite = arcade.Sprite(tile,
+                                              SPRITE_SCALING_TILE)
+                self.tile_sprite.center_x = self.curr_tile.get_x()
+                self.tile_sprite.center_y = self.curr_tile.get_y()
+                self.tile_list.append(self.tile_sprite)
+                # add placed tile to placed_tile list in settings
+                self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
+                                              self.tile_sprite.center_x, self.tile_sprite.center_y)
+                self.settings.increment_tile_count()
+                self.on_new_tile()
+                self.settings.ai_valid = False
+
+                if ai:
+                    time.sleep(2)
+                    # increment turns -- update the board
+
+
+                if current_player.is_ai():
+                    self.on_ai_turn(current_player)
 
             else:
                 if self.settings.sound_on:
                    self.sound = self.error_sound.play()
-            print("PLayerrrrr", self.settings.current_player)
-    def delete_place_meeple_button(self):
-        """Remove the Place Meeple button from the layout."""
-        if self.place_meeple_button_active:
-            self.h_box.remove(self.h_box.children[-1])
-            self.place_meeple_button_active = False
-
-    def add_place_meeple_button(self):
-        """Add the Place Meeple button back to the layout."""
-        if not self.place_meeple_button_active:
-            # Re-add the button to the layout
-            self.h_box.add(self.place_meeple_button.with_space_around(top=500, left=50))
-            self.place_meeple_button_active = True
 
 
     def on_place_meeple(self, event):
@@ -755,7 +659,9 @@ class GameView(arcade.View):
                 self.settings.increment_tile_count()
                 self.on_new_tile()
             else:
-                # TODO start end of game scoring here
+                # end of game scoring for meeples still on board
+                for meeple in self.settings.get_meeples():
+                    meeple.end_of_game_scoring(self.settings)
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
@@ -864,9 +770,7 @@ class GameView(arcade.View):
     def on_ai_turn(self, player):
         # Randomly chooses an available space on the board to place their tile
         can_place = False
-
         index = random.randint(0, 4)
-
         while can_place == False:
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
@@ -891,6 +795,7 @@ class GameView(arcade.View):
                     else:
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
+
                         self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
                         print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
             self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
