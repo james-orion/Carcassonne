@@ -330,6 +330,7 @@ class Meeple:
                 points = points + 1
             if game_tiles[tile_coords[0] - 1][tile_coords[1] - 1] != 0:
                 points = points + 1
+        # if monastery tile in middle of board check the 8 tiles adjacent to it
         else:
             if game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
                 points = points + 1
@@ -383,7 +384,7 @@ class Meeple:
             for meeple in meeples_on_feature:
                 if meeple.get_color() == self.color:
                     num_meeples = num_meeples + 1
-            points / num_meeples
+            points = points / num_meeples
         elif self.feature_type == "CITY":
             # points = 2 per each tile in city, extra 2 if tile with coat of arms
             for tile in connected_tiles:
@@ -404,7 +405,7 @@ class Meeple:
             for meeple in meeples_on_feature:
                 if meeple.get_color() == self.color:
                     num_meeples = num_meeples + 1
-            points / num_meeples
+            points = points / num_meeples
         elif self.feature_type == "MONASTERY":
             # 9 points for a monastery
             tile.set_meeple_placed_center(False)
@@ -532,7 +533,13 @@ class Meeple:
 
 # test cases
 # test constructor and getter methods
-def test_one():
+def test():
+    test = Meeple("Jack", "red")
+    result = test.end_of_game_monastery_scoring(None)
+    print(result)
+
+test()
+'''def test_one():
     test_meeple = Meeple("Jack", "m1", "red")
     if test_meeple.get_player() != "Jack":
         return "FAILED get_player"
@@ -614,4 +621,4 @@ if __name__ == "__main__":
     print("test one: ", test_one())
     print("test two: ", test_two())
     print("test three: ", test_three())
-    print("test four: ", test_four())
+    print("test four: ", test_four())'''
