@@ -108,16 +108,16 @@ class feature_placements:
         if last_placed.check_is_connected() == False and (str(last_placed.get_top()) == "Side.CITY" or str(last_placed.get_left()) == "Side.CITY" or str(last_placed.get_right()) == "Side.CITY" or str(last_placed.get_bottom()) == "Side.CITY"):
             tile_coords = self.get_coords(last_placed)
             cities = [[last_placed], [last_placed], [last_placed], [last_placed]]
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.CITY" and tile_coords[0] < len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.CITY" and tile_coords[0] <= len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
                 cities[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
                 self.check_city(cities[0], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.CITY" and tile_coords[1] > 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.CITY" and tile_coords[1] >= 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
                 cities[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
                 self.check_city(cities[1], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.CITY" and tile_coords[1] < len(self.tiles_on_board[0]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.CITY" and tile_coords[1] <= len(self.tiles_on_board[0]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
                 cities[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
                 self.check_city(cities[2], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.CITY" and tile_coords[0] > 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.CITY" and tile_coords[0] >= 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
                 cities[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
                 self.check_city(cities[3], settings)
         # if placing a tile with a road and without a village, check if that tile completes a feature
@@ -128,16 +128,16 @@ class feature_placements:
         if str(last_placed.get_building()) == "Building.VILLAGE":
             tile_coords = self.get_coords(last_placed)
             roads = [[last_placed], [last_placed], [last_placed], [last_placed]]
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and tile_coords[0] < len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and tile_coords[0] <= len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
                 roads[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
                 self.check_road(roads[0], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and tile_coords[1] > 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and tile_coords[1] >= 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
                 roads[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
                 self.check_road(roads[1], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and tile_coords[1] < len(self.tiles_on_board[1]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and tile_coords[1] <= len(self.tiles_on_board[0]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
                 roads[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
                 self.check_road(roads[2], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and tile_coords[0] > 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and tile_coords[0] >= 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
                 roads[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
                 self.check_road(roads[3], settings)
             
