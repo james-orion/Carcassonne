@@ -1,9 +1,10 @@
-# Meeple Class
-# Stores information about meeples, such as what player
-# they belong to, what color they are, whether or not they
-# have been placed, etc. It will also count the points a
-# meeple earns once a feature is completed, and how many
-# points are won at the end of the game.
+''' Meeple Class
+Stores information about meeples, such as what player
+they belong to, what color they are, whether or not they
+have been placed, etc. It will also count the points a
+meeple earns once a feature is completed, and how many
+points are won at the end of the game.
+'''
 
 import feature_placement
 
