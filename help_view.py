@@ -123,8 +123,7 @@ class HelpView(arcade.View):
     def on_show_view(self):
         """ This is run once when we switch to this view. """
         self.background = arcade.load_texture("images/nature_background_2.png")
-        #arcade.set_viewport(0, self.window.width, 0, self.window.height)
-        self.setup()  # Set up buttons only once when view is shown
+        self.setup()
         self.ui_manager.enable()
 
     def on_draw(self):

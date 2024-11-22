@@ -408,7 +408,7 @@ class GameView(arcade.View):
                             width=popup_width - 20,
                             align="center")
 
-            # Add "Continue" button if tutorial is active, POSITION IS GOOD
+            # Add "Continue" button if tutorial is active
             if self.tutorial_active:
                 continue_button_x = popup_x - 80
                 continue_button_y = popup_y - 100
@@ -450,16 +450,16 @@ class GameView(arcade.View):
                     # Highlight pick tile area, done
                     arcade.draw_rectangle_outline(270, 60, 180, 90, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 5:
-                    # Highlight board area
+                    # Highlight board area, done
                     arcade.draw_rectangle_outline(440, 365, 800, 520, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 6:
                     # Highlight done area, done
                     arcade.draw_rectangle_outline(525, 50, 140, 80, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 7:
-                    # Highlight meeple area
+                    # Highlight meeple area, done
                     arcade.draw_rectangle_outline(525, 50, 140, 80, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 8:
-                    # Highlight place meeple area
+                    # Highlight place meeple area, done
                     arcade.draw_rectangle_outline(585, 50, 140, 80, arcade.color.YELLOW, 3)
             pass
 
@@ -701,7 +701,9 @@ class GameView(arcade.View):
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
+                # set error message
                 message = self.helpful_tips.get_message()
+                # show error message
                 self.show_popup(message)
                     
                     
@@ -709,6 +711,7 @@ class GameView(arcade.View):
         '''
         Show a popup error message, dismiss popup by clicking anywhere.
         '''
+        # Check if flag is active
         if not self.show_popup_flag:
             # Set the message to be displayed
             self.popup_message = message
@@ -719,6 +722,7 @@ class GameView(arcade.View):
         '''
         Display a tutorial popup for new players. Click "Continue" to proceed to the next step.
         '''
+        # Check if flad is active
         if self.tutorial_active:
             # Fetch the tutorial message based on the current step
             self.tutorial_message = self.tutorial.get_message(self.tutorial_step)
@@ -771,8 +775,6 @@ class GameView(arcade.View):
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Called when the user presses a mouse button. """
-        
-        
          # Check if the tutorial is active
         if self.show_tutorial_flag and self.tutorial_active and not self.tutorial_seen:
             # Coordinates for the "Continue" button
