@@ -14,7 +14,7 @@ class Meeple:
         self.color = color
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.tile_placed_on = None
         self.x_coord = None
         self.y_coord = None
@@ -594,7 +594,7 @@ class Meeple:
         settings.get_meeples().remove(self)
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.x_coord = None
         self.y_coord = None
         self.tile_placed_on = None
@@ -621,7 +621,7 @@ class Meeple:
         # unplace and reset meeple
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.x_coord = None
         self.y_coord = None
         self.tile_placed_on = None
