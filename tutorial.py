@@ -1,7 +1,8 @@
-# tutorial.py
+''' This file is used to store content for the tutorial popup in game_view, and keep track of the number of steps in the tutorial.'''
 
 class Tutorial:
     def __init__(self):
+        # Define content
         self.messages = [
             "Welcome to Carcassonne!\n\nClick 'CONTINUE' to go through a quick tutorial.\n\nIf you would like to skip the tutorial, click anywhere outside of this popup window.",
             "This is the help guide.\n\nYou can click here to learn more about the rules of the game, and get helpful tips!",
