@@ -77,7 +77,6 @@ class ChooseView(arcade.View):
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
-        # TODO: pick a color scheme maybe add images
         arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
         arcade.set_viewport(0,
                             self.window.width,
