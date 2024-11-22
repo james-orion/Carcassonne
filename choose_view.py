@@ -35,7 +35,8 @@ class ChooseView(arcade.View):
 
             # used if button is pressed
             "bg_color_pressed": arcade.color.WHITE,
-            "border_color_pressed": arcade.color.WHITE,  # also used when hovered
+            # also used when hovered
+            "border_color_pressed": arcade.color.WHITE,
             "font_color_pressed": arcade.color.RED,
         }
         # creating horizontal boxes to allow
