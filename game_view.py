@@ -78,6 +78,7 @@ class GameView(arcade.View):
         self.help_list = None
         self.sound_list = None
         self.music_list = None
+        self.ai_list = None
         self.my_player = my_player
         self.game_manager = game_manager
         # Initalize settings
@@ -184,6 +185,7 @@ class GameView(arcade.View):
         self.help_list = arcade.SpriteList()
         self.sound_list = arcade.SpriteList()
         self.music_list = arcade.SpriteList()
+        self.ai_list = arcade.SpriteList()
         # Meeple sprite
         for meeple in self.settings.get_meeples():
             img = meeple.get_meeple_sprite()
@@ -321,6 +323,25 @@ class GameView(arcade.View):
         start_tile_y = 50
         arcade.draw_text("Your Tile",
                          start_tile_x,
+                         start_y-20,
+                         arcade.color.BLACK,
+                         22,
+                         font_name="Carolingia")
+        if self.settings.ai:
+            for i in range(4-self.settings.player_count):
+                i += 1
+                arcade.draw_rectangle_outline(self.ai_list[-i].center_x, self.ai_list[-i].center_y, 50, 50,
+                                          arcade.color.DEEP_MAGENTA, 3)
+        if self.new_player_turn:
+            arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, SCREEN_WIDTH,
+                                     125, arcade.make_transparent_color([240, 255, 255], 150))
+
+        arcade.draw_text(self.new_player,
+                         50,
+                         SCREEN_HEIGHT/2,
+                         arcade.color.BLACK,
+                         40,
+                         font_name="Kenney Future")
                          start_tile_y,
                          arcade.color.WHITE,
                          12,
@@ -456,6 +477,9 @@ class GameView(arcade.View):
             else:
                 self.text_for_tile = self.tile_text[0]
 
+        if self.settings.ai:
+            self.count += 1
+
         if self.new_player_turn or self.settings.ai:
             self.new_player = self.settings.current_player.name +" It's Your Turn"
             self.count += 1
@@ -465,10 +489,15 @@ class GameView(arcade.View):
         if self.settings.sound_on:
             self.sound_sprite.image = ":resources:onscreen_controls/shaded_dark/sound_off.png"
 
-        if self.count != 0 and self.count % 50 == 0:
+
+        if self.count != 0 and self.count % 50 == 0 and not self.settings.ai:
             self.new_player_turn = False
             self.count = 0
+
+        if self.count != 0 and self.count == 100  and self.settings.ai:
+            self.count = 0
             self.settings.ai = False
+
 
     def on_done(self, event, ai=False):
         """ If the user presses the button, the logic will
@@ -653,11 +682,8 @@ class GameView(arcade.View):
                         self.settings.increment_tile_count()
                         self.on_new_tile()
 
-
-                            # increment turns -- update the board
-
+                         # increment turns -- update the board
                         if current_player.is_ai():
-                            self.settings.ai = True
                             self.on_ai_turn(current_player)
                             self.setup()
 
@@ -665,8 +691,6 @@ class GameView(arcade.View):
                     else:
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
-
-
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
@@ -707,7 +731,6 @@ class GameView(arcade.View):
 
 
     def on_place_meeple(self, event):
-        # TODO make sure tile has been placed in current round as well
         if len(self.settings.get_placed_tiles()) > 1 and self.settings.get_meeple_placed_current_round() == False:
             # create new list to update placed sprites
             new_list = []
@@ -1047,7 +1070,9 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
+            print('_____________')
             if count_valid == len(check_tile_features):
+                print('valid')
                 done_valid = True
                 self.rotating_tile = None
                 if is_placing:
@@ -1099,16 +1124,20 @@ class GameView(arcade.View):
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
             if self.settings.feature_container[rand_x][rand_y] == 0:
+                print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
                 for k in range(4):
                     if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
+                        print('tile can be placed')
                         can_place = True
                         self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
                         self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
                         self.settings.feature_container[rand_x][rand_y] = self.settings.placed_tiles[-1][0][1]
                         self.settings.previous_coor_x = rand_x
                         self.settings.previous_coor_y = rand_y
-                        self.settings.ai_valid = True
+                        self.settings.ai = True
+                        self.ai_list.append(self.tile_list[-1])
+                        print(self.ai_list)
                         self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
                         self.curr_tile.set_moved(False)
                         self.on_done(0)
