@@ -400,7 +400,7 @@ class Meeple:
                                 tile.set_meeple_placed_bottom(False)
             for meeple in meeple_list:
                 if meeple.get_tile_placed_on() in city and meeple.get_color() == self.color:
-                    if meeple.get_tile_placed_on().check_connected() == False:
+                    if meeple.get_tile_placed_on().check_is_connected() == False:
                         tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
                         if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
                             if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in city:
@@ -424,7 +424,7 @@ class Meeple:
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
-        tile_coords = self.get_coords(self.tile_placed_on)
+        tile_coords = self.get_coords(self.tile_placed_on, game_tiles)
         self.tile_placed_on.set_meeple_placed_center(False)
         points = 1
         # if monastery tile is in any of the corners check the 3 tiles adjacent to it
@@ -522,6 +522,9 @@ class Meeple:
         return points
 
 
+    # get board coordinates of a tile
+    # parameters are the target tile and the game board
+    # returns a list of 2 ints - 1 for x coord and 1 for y coord 
     def get_coords(self, tile, game_tiles):
         tile_coords = [-1, -1]
         for i in range(len(game_tiles)):
