@@ -1,6 +1,5 @@
-# view to allow users to place a Meeple on a tile after
-# it was placed. Placement is validated and stored on the
-# game board
+''' This file is use to allow users to place a Meeple on a tile after
+it was placed. Placement is validated and stored on the game board. '''
 
 import arcade
 import arcade.gui
