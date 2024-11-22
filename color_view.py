@@ -99,7 +99,6 @@ class ColorView(arcade.View):
         for i, color in enumerate(self.color_list):
             # draw a square for each color
             arcade.draw_text(f"{self.color_list_string[i]}".upper(), 245 + i * 175, SCREEN_HEIGHT // 2 + 70, arcade.color.BLACK, 25, anchor_x="center", font_name="Carolingia")
-            #arcade.draw_rectangle_filled(245 + i * 175, SCREEN_HEIGHT // 2, 100, 100, color)
 
             # if a player has selected a color, show which color they chose
             for j in range(len(self.selected_colors)):
