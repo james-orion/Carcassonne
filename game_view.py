@@ -1134,11 +1134,9 @@ class GameView(arcade.View):
             rand_x = random.randint(0, 6)
             rand_y = random.randint(0, 10)
             if self.settings.feature_container[rand_x][rand_y] == 0:
-                print("no tile in random space")
                 neighbors = [(rand_x + 1, rand_y), (rand_x - 1, rand_y), (rand_x, rand_y - 1), (rand_x, rand_y + 1)]
                 for k in range(4):
                     if self.validate_placement(neighbors, self.settings.placed_tiles[-1][0][1]):
-                        print('tile can be placed')
                         can_place = True
                         self.tile_list[-1].center_x = self.grid_sprites[rand_x][rand_y].center_x
                         self.tile_list[-1].center_y = self.grid_sprites[rand_x][rand_y].center_y
