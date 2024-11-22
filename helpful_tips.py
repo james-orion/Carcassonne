@@ -2,7 +2,7 @@
 
 class HelpfulTips:
     def __init__(self):
-        # Define message
+        # Initialize message content
         self.message = "You cannot play there.\n\n\n\nIf you are trying to play a tile, it must be placed so that roads connect to roads, cities connect to cities, and fields connect to fields.\n\n\n\nClick anywhere to continue..."
         
     def get_message(self):

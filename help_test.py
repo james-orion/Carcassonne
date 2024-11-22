@@ -1,3 +1,4 @@
+''' This file is used to help create tabs '''
 import arcade
 
 class Tab:
