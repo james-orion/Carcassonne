@@ -7,7 +7,6 @@
 
 import feature_placement
 
-
 class Meeple:
     def __init__(self, player, color):
         self.player = player
@@ -19,6 +18,7 @@ class Meeple:
         self.x_coord = None
         self.y_coord = None
 
+    
     # place Meeple on game board and store information about where it was placed
     def place_meeple(self, tile, user_choice, settings):
         # record feature type Meeple was placed on
@@ -69,6 +69,7 @@ class Meeple:
             self.feature_type = None
             return False
 
+    
     # validates that user's placement of Meeple is allowed
     # if returns True, store placement of Meeple on tile
     # if return False, prompt user to choose again
@@ -82,12 +83,13 @@ class Meeple:
         elif self.feature_type == "CITY":
             city = [tile]
             if self.find_connected_city_tiles(city, settings, user_choice) == False:
-                return False
-                # if placing as monk/nun, make sure only meeple in monestary
+                return False   
+        # if placing as monk/nun, make sure only meeple in monestary
         elif self.feature_type == "MONASTERY":
             if tile.get_meeple_placed_center() == True:
                 return False
         return True
+
 
     def find_connected_road_tiles(self, connected_tiles, settings, user_choice):
         game_tiles = settings.feature_container
@@ -99,29 +101,25 @@ class Meeple:
             tile_coords = self.get_coords(connected_tiles[0], game_tiles)
             if user_choice == "TOP":
                 if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                    if str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and \
-                            game_tiles[tile_coords[0] + 1][tile_coords[1]].get_meeple_placed_bottom() == True:
+                    if str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0] + 1][tile_coords[1]].get_meeple_placed_bottom() == True:
                         return False
                     else:
                         connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
             elif user_choice == "LEFT":
                 if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                    if str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_building()) == "Building.VILLAGE" and \
-                            game_tiles[tile_coords[0]][tile_coords[1] - 1].get_meeple_placed_right() == True:
+                    if str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0]][tile_coords[1] - 1].get_meeple_placed_right() == True:
                         return False
                     else:
                         connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
             elif user_choice == "RIGHT":
                 if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                    if str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_building()) == "Building.VILLAGE" and \
-                            game_tiles[tile_coords[0]][tile_coords[1] + 1].get_meeple_placed_left() == True:
+                    if str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0]][tile_coords[1] + 1].get_meeple_placed_left() == True:
                         return False
                     else:
                         connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
-            else:
+            else :
                 if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                    if str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and \
-                            game_tiles[tile_coords[0] - 1][tile_coords[1]].get_meeple_placed_top() == True:
+                    if str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_building()) == "Building.VILLAGE" and game_tiles[tile_coords[0] - 1][tile_coords[1]].get_meeple_placed_top() == True:
                         return False
                     else:
                         connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
@@ -131,33 +129,25 @@ class Meeple:
                 tile_coords = self.get_coords(tile, game_tiles)
                 if str(tile.get_building()) != "Building.VILLAGE":
                     if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                        if (str(tile.get_bottom()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
+                        if (str(tile.get_bottom()) == "Side.ROAD") and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.ROAD") and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
                             print("ADDED TILE BELOW")
                         if game_tiles[tile_coords[0] - 1][tile_coords[1]].get_meeple_placed_top() == True:
                             return False
                     if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                        if (str(tile.get_right()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
+                        if (str(tile.get_right()) == "Side.ROAD") and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.ROAD") and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
                             print("ADDED TILE RIGHT")
                         if game_tiles[tile_coords[0]][tile_coords[1] + 1].get_meeple_placed_left() == True:
                             return False
                     if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                        if (str(tile.get_left()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
+                        if (str(tile.get_left()) == "Side.ROAD") and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.ROAD") and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
                             print("ADDED TILE LEFT")
                         if game_tiles[tile_coords[0]][tile_coords[1] - 1].get_meeple_placed_right() == True:
                             return False
                     if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                        if (str(tile.get_top()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
+                        if (str(tile.get_top()) == "Side.ROAD") and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.ROAD") and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
                             print("ADDED TILE ABOVE")
                         if game_tiles[tile_coords[0] + 1][tile_coords[1]].get_meeple_placed_bottom() == True:
@@ -165,16 +155,17 @@ class Meeple:
             if num_connected == len(connected_tiles):
                 found_connected = True
         for tile in connected_tiles:
-            if str(tile.get_building()) != "Building.VILLAGE":
-                if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
-                    return False
-                if str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
-                    return False
-                if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
-                    return False
-                if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
-                    return False
+                if str(tile.get_building()) != "Building.VILLAGE":
+                    if str(tile.get_top()) == "Side.ROAD" and tile.get_meeple_placed_top() == True:
+                        return False
+                    if str(tile.get_left()) == "Side.ROAD" and tile.get_meeple_placed_left() == True:
+                        return False
+                    if str(tile.get_right()) == "Side.ROAD" and tile.get_meeple_placed_right() == True:
+                        return False
+                    if str(tile.get_bottom()) == "Side.ROAD" and tile.get_meeple_placed_bottom() == True:
+                        return False   
         return True
+
 
     def find_connected_city_tiles(self, connected_tiles, settings, user_choice):
         game_tiles = settings.feature_container
@@ -193,7 +184,7 @@ class Meeple:
             elif user_choice == "RIGHT":
                 if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
                     connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
-            else:
+            else :
                 if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
                     connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
         while found_connected == False:
@@ -202,33 +193,25 @@ class Meeple:
                 tile_coords = self.get_coords(tile, game_tiles)
                 if tile.check_is_connected() == True:
                     if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                        if (str(tile.get_bottom()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
+                        if (str(tile.get_bottom()) == "Side.CITY") and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.CITY") and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
                             print("ADDED TILE BELOW")
                         if game_tiles[tile_coords[0] - 1][tile_coords[1]].get_meeple_placed_top() == True:
                             return False
                     if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                        if (str(tile.get_right()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
+                        if (str(tile.get_right()) == "Side.CITY") and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.CITY") and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
                             print("ADDED TILE RIGHT")
                         if game_tiles[tile_coords[0]][tile_coords[1] + 1].get_meeple_placed_left() == True:
                             return False
                     if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                        if (str(tile.get_left()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
+                        if (str(tile.get_left()) == "Side.CITY") and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.CITY") and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
                             print("ADDED TILE LEFT")
                         if game_tiles[tile_coords[0]][tile_coords[1] - 1].get_meeple_placed_right() == True:
                             return False
                     if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                        if (str(tile.get_top()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
+                        if (str(tile.get_top()) == "Side.CITY") and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.CITY") and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in connected_tiles:
                             connected_tiles.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
                             print("ADDED TILE ABOVE")
                         if game_tiles[tile_coords[0] + 1][tile_coords[1]].get_meeple_placed_bottom() == True:
@@ -236,16 +219,17 @@ class Meeple:
             if num_connected == len(connected_tiles):
                 found_connected = True
         for tile in connected_tiles:
-            if tile.check_is_connected() == True:
-                if str(tile.get_top()) == "Side.CITY" and tile.get_meeple_placed_top() == True:
-                    return False
-                if str(tile.get_left()) == "Side.CITY" and tile.get_meeple_placed_left() == True:
-                    return False
-                if str(tile.get_right()) == "Side.CITY" and tile.get_meeple_placed_right() == True:
-                    return False
-                if str(tile.get_bottom()) == "Side.CITY" and tile.get_meeple_placed_bottom() == True:
-                    return False
+                if tile.check_is_connected() == True:
+                    if str(tile.get_top()) == "Side.CITY" and tile.get_meeple_placed_top() == True:
+                        return False
+                    if str(tile.get_left()) == "Side.CITY" and tile.get_meeple_placed_left() == True:
+                        return False
+                    if str(tile.get_right()) == "Side.CITY" and tile.get_meeple_placed_right() == True:
+                        return False
+                    if str(tile.get_bottom()) == "Side.CITY" and tile.get_meeple_placed_bottom() == True:
+                        return False
         return True
+    
 
     def end_of_game_road_scoring(self, settings, meeple_list):
         points = 0
@@ -272,32 +256,24 @@ class Meeple:
                     start_tile.set_meeple_placed_right(False)
             if start_tile.get_meeple_placed_bottom() == True:
                 if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                    road.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
-                    start_tile.set_meeple_placed_bottom(False)
+                        road.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                        start_tile.set_meeple_placed_bottom(False)
         while found_connected == False:
             num_connected = len(road)
             for tile in road:
                 tile_coords = self.get_coords(tile, game_tiles)
                 if str(start_tile.get_building()) != "Building.VILLAGE":
                     if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                        if (str(tile.get_bottom()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0] - 1][tile_coords[1]] not in road:
+                        if (str(tile.get_bottom()) == "Side.ROAD") and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.ROAD") and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in road:
                             road.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
                     if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                        if (str(tile.get_right()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] + 1] not in road:
+                        if (str(tile.get_right()) == "Side.ROAD") and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.ROAD") and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in road:
                             road.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
                     if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                        if (str(tile.get_left()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] - 1] not in road:
+                        if (str(tile.get_left()) == "Side.ROAD") and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.ROAD") and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in road:
                             road.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
                     if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                        if (str(tile.get_top()) == "Side.ROAD") and (
-                                str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.ROAD") and \
-                                game_tiles[tile_coords[0] + 1][tile_coords[1]] not in road:
+                        if (str(tile.get_top()) == "Side.ROAD") and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.ROAD") and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in road:
                             road.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
             if num_connected == len(road):
                 found_connected = True
@@ -315,41 +291,38 @@ class Meeple:
                 else:
                     tile_coords = self.get_coords(tile, game_tiles)
                     if tile.get_meeple_placed_top() == True:
-                        if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][
-                            tile_coords[1]] in road:
+                        if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in road:
                             tile.set_meeple_placed_top(False)
                     if tile.get_meeple_placed_left() == True:
                         if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in road:
                             tile.set_meeple_placed_left(False)
                     if tile.get_meeple_placed_right() == True:
-                        if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][
-                            tile_coords[1] + 1] in road:
+                        if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in road:
                             tile.set_meeple_placed_right(False)
                     if tile.get_meeple_placed_bottom() == True:
                         if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in road:
-                            tile.set_meeple_placed_bottom(False)
+                                tile.set_meeple_placed_bottom(False)
             for meeple in meeple_list:
                 if meeple.get_tile_placed_on() in road and meeple.get_color() == self.color:
                     if str(meeple.get_tile_placed_on().get_building()) == "Building.VILLAGE":
                         tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
                         if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
-                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][
-                                tile_coords[1]] in road:
+                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in road:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
                             if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in road:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
-                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][
-                                tile_coords[1] + 1] in road:
+                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in road:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
                             if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in road:
-                                num_meeples = num_meeples + 1
+                                num_meeples = num_meeples + 1 
                     else:
                         num_meeples = num_meeples + 1
             points = points / num_meeples
             return points
+
 
     def end_of_game_city_scoring(self, settings, meeple_list):
         points = 0
@@ -376,32 +349,24 @@ class Meeple:
                     start_tile.set_meeple_placed_right(False)
             if start_tile.get_meeple_placed_bottom() == True:
                 if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                    city.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
-                    start_tile.set_meeple_placed_bottom(False)
+                        city.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
+                        start_tile.set_meeple_placed_bottom(False)
         while found_connected == False:
             num_connected = len(city)
             for tile in city:
                 tile_coords = self.get_coords(tile, game_tiles)
                 if start_tile.check_is_connected() == True:
                     if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] != 0:
-                        if (str(tile.get_bottom()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0] - 1][tile_coords[1]] not in city:
+                        if (str(tile.get_bottom()) == "Side.CITY") and (str(game_tiles[tile_coords[0] - 1][tile_coords[1]].get_top()) == "Side.CITY") and game_tiles[tile_coords[0] - 1][tile_coords[1]] not in city:
                             city.append(game_tiles[tile_coords[0] - 1][tile_coords[1]])
                     if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] != 0:
-                        if (str(tile.get_right()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] + 1] not in city:
+                        if (str(tile.get_right()) == "Side.CITY") and (str(game_tiles[tile_coords[0]][tile_coords[1] + 1].get_left()) == "Side.CITY") and game_tiles[tile_coords[0]][tile_coords[1] + 1] not in city:
                             city.append(game_tiles[tile_coords[0]][tile_coords[1] + 1])
                     if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] != 0:
-                        if (str(tile.get_left()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0]][tile_coords[1] - 1] not in city:
+                        if (str(tile.get_left()) == "Side.CITY") and (str(game_tiles[tile_coords[0]][tile_coords[1] - 1].get_right()) == "Side.CITY") and game_tiles[tile_coords[0]][tile_coords[1] - 1] not in city:
                             city.append(game_tiles[tile_coords[0]][tile_coords[1] - 1])
                     if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] != 0:
-                        if (str(tile.get_top()) == "Side.CITY") and (
-                                str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.CITY") and \
-                                game_tiles[tile_coords[0] + 1][tile_coords[1]] not in city:
+                        if (str(tile.get_top()) == "Side.CITY") and (str(game_tiles[tile_coords[0] + 1][tile_coords[1]].get_bottom()) == "Side.CITY") and game_tiles[tile_coords[0] + 1][tile_coords[1]] not in city:
                             city.append(game_tiles[tile_coords[0] + 1][tile_coords[1]])
             if num_connected == len(city):
                 found_connected = True
@@ -422,47 +387,44 @@ class Meeple:
                 else:
                     tile_coords = self.get_coords(tile, game_tiles)
                     if tile.get_meeple_placed_top() == True:
-                        if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][
-                            tile_coords[1]] in city:
+                        if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in city:
                             tile.set_meeple_placed_top(False)
                     if tile.get_meeple_placed_left() == True:
                         if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in city:
                             tile.set_meeple_placed_left(False)
                     if tile.get_meeple_placed_right() == True:
-                        if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][
-                            tile_coords[1] + 1] in city:
+                        if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in city:
                             tile.set_meeple_placed_right(False)
                     if tile.get_meeple_placed_bottom() == True:
-                        if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in city:
-                            tile.set_meeple_placed_bottom(False)
+                        if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]]  in city:
+                                tile.set_meeple_placed_bottom(False)
             for meeple in meeple_list:
                 if meeple.get_tile_placed_on() in city and meeple.get_color() == self.color:
-                    if meeple.get_tile_placed_on().check_connected() == False:
+                    if meeple.get_tile_placed_on().check_is_connected() == False:
                         tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
                         if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
-                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][
-                                tile_coords[1]] in city:
+                            if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in city:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_left() == True:
                             if tile_coords[1] - 1 >= 0 and game_tiles[tile_coords[0]][tile_coords[1] - 1] in city:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_right() == True:
-                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][
-                                tile_coords[1] + 1] in city:
+                            if tile_coords[1] + 1 <= game_board_width and game_tiles[tile_coords[0]][tile_coords[1] + 1] in city:
                                 num_meeples = num_meeples + 1
                         if meeple.get_tile_placed_on().get_meeple_placed_bottom() == True:
                             if tile_coords[0] - 1 >= 0 and game_tiles[tile_coords[0] - 1][tile_coords[1]] in city:
-                                num_meeples = num_meeples + 1
+                                num_meeples = num_meeples + 1 
                     else:
                         num_meeples = num_meeples + 1
             points = points / num_meeples
             return points
 
+
     def end_of_game_monastery_scoring(self, settings):
         game_tiles = settings.feature_container
         game_board_height = len(game_tiles) - 1
         game_board_width = len(game_tiles[0]) - 1
-        tile_coords = self.get_coords(self.tile_placed_on)
+        tile_coords = self.get_coords(self.tile_placed_on, game_tiles)
         self.tile_placed_on.set_meeple_placed_center(False)
         points = 1
         # if monastery tile is in any of the corners check the 3 tiles adjacent to it
@@ -559,14 +521,19 @@ class Meeple:
                 points = points + 1
         return points
 
+
+    # get board coordinates of a tile
+    # parameters are the target tile and the game board
+    # returns a list of 2 ints - 1 for x coord and 1 for y coord 
     def get_coords(self, tile, game_tiles):
         tile_coords = [-1, -1]
         for i in range(len(game_tiles)):
-            for j in range(len(game_tiles[i])):
-                if tile == game_tiles[i][j]:
-                    tile_coords[0] = i
-                    tile_coords[1] = j
+                    for j in range(len(game_tiles[i])):
+                        if tile == game_tiles[i][j]:
+                            tile_coords[0] = i
+                            tile_coords[1] = j
         return tile_coords
+
 
     # determines how many points a Meeple scores once a feature is completed
     def meeple_score(self, tile, settings, connected_tiles, meeples_on_feature):
@@ -631,8 +598,9 @@ class Meeple:
         self.y_coord = None
         self.tile_placed_on = None
         return points
+    
 
-    # determines how many points a Meeple scores for an incomplete feature
+    # determines how many points a Meeple scores for an incomplete feature 
     # at the end of the game
     def end_of_game_scoring(self, settings, meeple_list):
         points = 0
@@ -657,65 +625,81 @@ class Meeple:
         self.y_coord = None
         self.tile_placed_on = None
         self.player.set_score(points)
+    
 
     # getter methods
 
     # returns Meeple's player
     def get_player(self):
         return self.player
+    
 
     # returns color of Meeple
     def get_color(self):
         return self.color
+    
 
     # returns whether or not Meeple is placed
     def get_is_placed(self):
         return self.is_placed
+    
 
     # returns feature Meeple is placed on
     def get_feature_type(self):
         return self.feature_type
+    
 
     # returns Meeple's sprite
     def get_meeple_sprite(self):
         return self.meeple_sprite
+    
 
     def get_x_coord(self):
         return self.x_coord
+    
 
     def get_y_coord(self):
         return self.y_coord
+    
 
     def get_tile_placed_on(self):
         return self.tile_placed_on
+    
 
     # setter methods
 
     # sets Meeple's player
     def set_player(self, player):
         self.player = player
+    
 
     # sets color of Meeple
     def set_color(self, color):
         self.color = color
+    
 
     # sets whether or not Meeple is placed
     def set_is_placed(self, is_placed):
         self.is_placed = is_placed
+    
 
     # sets feature Meeple is placed on
     def set_feature_type(self, feature_type):
         self.feature_type = feature_type
+    
 
     # set Meeple's sprite
     def set_meeple_sprite(self, meeple_sprite):
         self.meeple_sprite = meeple_sprite
+    
 
     def set_x_coord(self, x_coord):
         self.x_coord = x_coord
 
+
     def set_y_coord(self, y_coord):
         self.y_coord = y_coord
+
 
     def set_tile_placed_on(self, tile):
         self.tile_placed_on = tile
@@ -752,7 +736,7 @@ def test_two():
         return "FAILED doesn't update placement boolean"
     if test_meeple_1.get_orientation() != "horizontal":
         return "FAILED doesn't update horizontal orientation"
-
+    
     test_meeple_2 = Meeple("Jack", "m2", "red")
     test_meeple_2.set_feature_type("road")
     test_meeple_2.place_meeple(test_tile, user_selection)
@@ -792,7 +776,7 @@ def test_four():
     test_meeple_1.place_meeple(test_tile, user_selection)
     if test_meeple_1.get_meeple_sprite() != "\"/meeple_sprites/red_sprite.png\"":
         return "FAILED incorrect file path for vertical sprite"
-
+    
     test_meeple_2 = Meeple("Jack", "m2", "red")
     test_meeple_2.set_feature_type("field")
     test_meeple_2.place_meeple(test_tile, user_selection)
