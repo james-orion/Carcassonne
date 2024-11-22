@@ -1,3 +1,5 @@
+""" This file is used to display the rules and instructions for the game, know as the Help Guide."""
+
 import arcade
 import arcade.color
 import arcade.color
@@ -6,21 +8,9 @@ import game_view
 from arcade.gui import UIFlatButton, UIBoxLayout
 from PIL import Image
 
-#import matplotlib.pyplot as plt
-#import cv2
-
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
-
-#TODO: add correct images for each tab content --> for examples, maybe just play the game a few times and take screenshots to use in content
-
-#TODO: change background to grass, or something more carcassonne-y --> realistic looking background
-
-#TODO: make keywords in content for each tab as a link that has a pop-up for 
-#      visual examples of tiles? If too challenging, just have static examples 
-#      at bottom of window
-
 
 class HelpView(arcade.View):
     """ View to show help content """
