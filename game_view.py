@@ -11,6 +11,9 @@ import tile
 import meeple_placement_view
 import random
 import end_view
+import meeple
+import time
+
 from helpful_tips import HelpfulTips
 from tutorial import Tutorial
 
@@ -61,9 +64,11 @@ class GameView(arcade.View):
         self.tutorial_seen = False
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
+        self.buttons = []
         # your tile text
         self.tile_text = ["", "Your Tile"]
         self.text_for_tile = self.tile_text[0]
+        # new player text
         self.new_player = ""
         self.new_player_turn = False
         # inialize sounds
@@ -274,6 +279,12 @@ class GameView(arcade.View):
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT,
                                       self.background)
+        
+        # banner draw
+        color = arcade.make_transparent_color([240, 255, 255], 150)
+        arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 50, SCREEN_WIDTH,
+
+                                     125, color)
 
         # Drawing Sprite Lists
         self.grid_sprite_list.draw()
@@ -295,7 +306,7 @@ class GameView(arcade.View):
                          start_y,
                          arcade.color.WHITE,
                          30,
-                         font_name="Kenney Future")
+                         font_name="Carolingia")
         # Drawing Text, Need From Player Class
         start_x = 700
         start_y = 50
@@ -303,8 +314,8 @@ class GameView(arcade.View):
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
-                         arcade.color.WHITE,
-                         15,
+                         arcade.color.BLACK,
+                         20,
                          font_name="Kenney Future")
 
 
