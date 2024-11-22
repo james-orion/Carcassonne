@@ -83,6 +83,7 @@ class GameView(arcade.View):
         self.music_list = None
         self.ai_list = None
         self.my_player = my_player
+        self.game_manager = game_manager
         self.buttons = []
         # your tile text
         self.tile_text = ["", "Your Tile"]
