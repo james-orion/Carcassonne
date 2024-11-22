@@ -19,10 +19,14 @@ def main():
     # Create an instance of GameManager
     game_manager = GameManager()
     
+    # Create windo
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    # Initialize music
     civ_music = arcade.load_sound("images/civ_open.mp3", streaming=True)
     my_player= civ_music.play(.2, -1, True)
+    # Initialize start screen
     start_view = open_view.OpenView(my_player, game_manager)
+    # Begin game
     window.show_view(start_view)
     arcade.run()
 
