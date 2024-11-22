@@ -294,9 +294,9 @@ class GameView(arcade.View):
                          22,
                          font_name="Carolingia")
         if self.settings.ai:
-            for i in range(4-self.settings.player_count):
+            for i in range(5-self.settings.player_count):
                 i += 1
-                arcade.draw_rectangle_outline(self.ai_list[-i].center_x, self.ai_list[-i].center_y, 50, 50,
+                arcade.draw_rectangle_outline(self.tile_list[-i].center_x, self.tile_list[-i].center_y, 50, 50,
                                           arcade.color.DEEP_MAGENTA, 3)
         if self.new_player_turn:
             arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, SCREEN_WIDTH,
@@ -933,8 +933,8 @@ class GameView(arcade.View):
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
                         self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
-                        self.curr_tile.set_moved(False)
-                    self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+                        print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
+            self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
 
     def ai_place_meeple(self, index, player, tile_x, tile_y):
         results = player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
