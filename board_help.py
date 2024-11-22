@@ -1,15 +1,10 @@
 """
-
 This file is part of Carcassonne board view
-
-
 """
 import arcade
 import arcade.gui
 from arcade import get_sprites_at_point
 from pyglet import sprite
-# Import Help Instructions class
-from help_instructions import HelpInstructions
 
 #import meeple
 #import player
