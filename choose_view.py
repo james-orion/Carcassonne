@@ -35,7 +35,8 @@ class ChooseView(arcade.View):
 
             # used if button is pressed
             "bg_color_pressed": arcade.color.WHITE,
-            "border_color_pressed": arcade.color.WHITE,  # also used when hovered
+            # also used when hovered
+            "border_color_pressed": arcade.color.WHITE,
             "font_color_pressed": arcade.color.RED,
         }
         # creating horizontal boxes to allow
@@ -77,7 +78,6 @@ class ChooseView(arcade.View):
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
-        # TODO: pick a color scheme maybe add images
         arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
         arcade.set_viewport(0,
                             self.window.width,

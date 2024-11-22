@@ -1,16 +1,9 @@
 ''' 
-    Player Class: player name, score, and meeples in hand
-    Grace Kinney
-    10/7/2024
+    Player Class
 '''
 import arcade
 # Import Meeple Class
 from meeple import Meeple
-
-'''
-NOTE: might do a list of meeples instead of a count, 
-talk with Hack about combining meeple class with player clas
-'''
 
 ''' Player Class '''
 class Player:

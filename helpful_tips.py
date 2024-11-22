@@ -1,4 +1,4 @@
-# helpful_tips.py
+""" This file is used to display content for the error message if a player makes an invalid move."""
 
 class HelpfulTips:
     def __init__(self):
