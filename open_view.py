@@ -9,16 +9,16 @@ SCREEN_HEIGHT = 650
 
 class OpenView(arcade.View):
     """ View to Open Game"""
-    def __init__(self, my_player):
+    def __init__(self, my_player, game_manager):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/screen_savor.jpg")
         self.my_player = my_player
+        self.game_manager = game_manager
 
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
-        # TODO: pick a good background, maybe include image
         arcade.set_background_color(arcade.csscolor.STEEL_BLUE)
         arcade.set_viewport(0,
                             self.window.width,
@@ -46,5 +46,5 @@ class OpenView(arcade.View):
     def on_mouse_press(self, _x, _y, _button, _modifiers):
         """ If the user presses the button, start the game.
             and change view"""
-        choose = choose_view.ChooseView(self.my_player)
+        choose = choose_view.ChooseView(self.my_player, self.game_manager)
         self.window.show_view(choose)

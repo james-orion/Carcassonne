@@ -8,19 +8,21 @@ import current_meeple
 import choose_view
 import game_view
 import feature_placement
+
 # Global Var: Screen Size
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 
 class ColorView(arcade.View):
-    def __init__(self, settings, my_player):
+    def __init__(self, settings, my_player, game_manager):
         super().__init__()
         self.settings = settings
         self.num_players = self.settings.get_player_count()
         self.players = self.settings.get_current_players()
         self.background = arcade.load_texture("images/wood.jpg")
         self.my_player = my_player
+        self.game_manager = game_manager  
         self.next_sound = arcade.load_sound("images/next.mp3")
         self.color_list = [arcade.color.RED, arcade.color.BLUE, arcade.color.GREEN, arcade.color.YELLOW]
         self.color_list_string = ["red", "blue", "green", "yellow"]
@@ -97,7 +99,6 @@ class ColorView(arcade.View):
         for i, color in enumerate(self.color_list):
             # draw a square for each color
             arcade.draw_text(f"{self.color_list_string[i]}".upper(), 245 + i * 175, SCREEN_HEIGHT // 2 + 70, arcade.color.BLACK, 25, anchor_x="center", font_name="Carolingia")
-            #arcade.draw_rectangle_filled(245 + i * 175, SCREEN_HEIGHT // 2, 100, 100, color)
 
             # if a player has selected a color, show which color they chose
             for j in range(len(self.selected_colors)):
@@ -123,7 +124,7 @@ class ColorView(arcade.View):
         if len(self.selected_colors) == 0:
             self.manager.disable()
             self.next_sound.play()
-            choose = choose_view.ChooseView(self.my_player)
+            choose = choose_view.ChooseView(self.my_player, self.game_manager)
             self.window.show_view(choose)
         else:
             last_color_choice = self.selected_colors[-1]
@@ -131,8 +132,6 @@ class ColorView(arcade.View):
             self.available_colors.append(last_color_choice)
 
     def on_click_next(self, event):
-        # TODO randomly assign remaining colors to computer players
-        # TODO assign colors to players once list is implemented
         if len(self.selected_colors) == self.num_players:
             for i in range(self.num_players):
                 self.players[i].set_color(self.selected_colors[i])
@@ -141,7 +140,7 @@ class ColorView(arcade.View):
             self.manager.disable()
             feature = feature_placement.feature_placements()
             self.next_sound.play()
-            game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player)
+            game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player, self.game_manager)
             game.setup()
             self.window.show_view(game)
         print(self.players)

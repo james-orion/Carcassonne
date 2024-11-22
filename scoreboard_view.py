@@ -4,6 +4,7 @@
 import arcade
 import arcade.gui
 import game_view
+from game_manager import GameManager
 
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
@@ -12,7 +13,7 @@ SCREEN_HEIGHT = 650
 class ScoreboardView(arcade.View):
     """ View to show Scoreboard """
 
-    def __init__(self, curr_tile, curr_meeple, settings, feat, my_player):
+    def __init__(self, curr_tile, curr_meeple, settings, feat, my_player, game_manager):
         super().__init__()
         # Initialize Player From Player Class?
         self.player_list = None
@@ -21,6 +22,7 @@ class ScoreboardView(arcade.View):
         self.settings = settings
         self.feat = feat
         self.my_player = my_player
+        self.game_manager = game_manager
         self.page_sound = arcade.load_sound("images/page.mp3")
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -82,7 +84,7 @@ class ScoreboardView(arcade.View):
         if self.settings.sound_on:
             self.sound_page = self.page_sound.play()
         # switch to game view
-        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
+        game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player, self.game_manager)
         game.setup()
         self.window.show_view(game)
 

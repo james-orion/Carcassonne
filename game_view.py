@@ -12,6 +12,9 @@ import end_view
 import meeple
 import time
 
+from helpful_tips import HelpfulTips
+from tutorial import Tutorial
+
 # Global Var: Screen Size
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
@@ -37,10 +40,35 @@ BOARD_Y = 400
 
 class GameView(arcade.View):
 
-    def __init__(self, curr_tile, curr_meeple, settings, feature, my_player):
+    def __init__(self, curr_tile, curr_meeple, settings, feature, my_player, game_manager):
         super().__init__()
+        # initialize helpful tips
+        self.helpful_tips = HelpfulTips()
+        # Initialize the flag to track if a popup is active
+        self.show_popup_flag = False
+        # Variable to hold the popup message
+        self.popup_message = ""
+        # Initialize the flag to track if a tutorial is active
+        self.show_tutorial_flag = False
+        # Variable to hold the popup message
+        self.tutorial_message = ""
+        # Initialize the tutorial
+        self.tutorial = Tutorial()
+        # Initialize tutorial steps tracker
+        self.tutorial_step = 0
+        # Check if the user is in tutorial mode
+        self.tutorial_active = True
+        # Check if tutorial has already been shown
+        self.tutorial_seen = False
         # Initialize Background Image
         self.background = arcade.load_texture("images/wood.jpg")
+        self.buttons = []
+        # your tile text
+        self.tile_text = ["", "Your Tile"]
+        self.text_for_tile = self.tile_text[0]
+        # new player text
+        self.new_player = ""
+        self.new_player_turn = False
         # inialize sounds
         self.error_sound = arcade.load_sound("images/wrong.mp3")
         self.correct_sound = arcade.load_sound("images/correct.mp3")
@@ -74,6 +102,8 @@ class GameView(arcade.View):
         # create done button
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
+        # Placeholder for message box
+        self.message_box = None
         # creating horizontal box
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
@@ -144,6 +174,18 @@ class GameView(arcade.View):
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
+
+        # Only show tutorial if it hasn't been seen
+        if not self.game_manager.tutorial_seen:
+            self.show_tutorial_flag = True
+            self.tutorial_active = True
+            self.tutorial_step = 0
+            self.tutorial_message = self.tutorial.get_message(self.tutorial_step)
+
+        if self.game_manager.tutorial_seen:
+            # Skip tutorial if already seen
+            self.show_tutorial_flag = False
+            self.tutorial_active = False
 
         # Create sprite lists
         self.player_list = arcade.SpriteList()
@@ -241,9 +283,11 @@ class GameView(arcade.View):
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT,
                                       self.background)
+
         # banner draw
         color = arcade.make_transparent_color([240, 255, 255], 150)
         arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, 50, SCREEN_WIDTH,
+
                                      125, color)
 
         # Drawing Sprite Lists
@@ -308,6 +352,118 @@ class GameView(arcade.View):
                          arcade.color.BLACK,
                          40,
                          font_name="Kenney Future")
+
+
+
+        # Display the popup if show_popup_flag is True
+        if self.show_popup_flag:
+            # Dimensions for the popup
+            popup_width = 600
+            popup_height = 350
+            popup_x = SCREEN_WIDTH / 2
+            popup_y = SCREEN_HEIGHT / 2
+
+            # Draw red background
+            arcade.draw_rectangle_filled(popup_x, popup_y, popup_width, popup_height, arcade.color.KU_CRIMSON)
+
+            # Draw a white border around the background
+            arcade.draw_rectangle_outline(popup_x, popup_y, popup_width, popup_height, arcade.color.WHITE, 3)
+
+            # Draw the message text in white
+            arcade.draw_text(self.popup_message,
+                            # Adjust text position, x-axis
+                            popup_x - (popup_width / 2) + 10,
+                            # Adjust text position, y-axis
+                            popup_y + 120,
+                            arcade.color.WHITE,
+                            18,
+                            # Add padding
+                            width=popup_width - 20,
+                            align="center")
+
+        # Display the tutorial message if show_tutorial_flag is True
+        if self.show_tutorial_flag and not self.tutorial_seen:
+            # Dimensions for the popup
+            popup_width = 600
+            popup_height = 350
+            popup_x = SCREEN_WIDTH / 2
+            popup_y = SCREEN_HEIGHT / 2
+
+            # Draw purple background for tutorial
+            arcade.draw_rectangle_filled(popup_x, popup_y, popup_width, popup_height, arcade.color.PURPLE)
+
+            # Draw a white border around the background
+            arcade.draw_rectangle_outline(popup_x, popup_y, popup_width, popup_height, arcade.color.WHITE, 3)
+
+            # Draw the message text in white
+            arcade.draw_text(self.tutorial_message,
+                            # Adjust text position, x-axis
+                            popup_x - (popup_width / 2) + 10,
+                            # Adjust text position, y-axis
+                            popup_y + 120,
+                            arcade.color.WHITE,
+                            18,
+                            # Add padding
+                            width=popup_width - 20,
+                            align="center")
+
+            # Add "Continue" button if tutorial is active
+            if self.tutorial_active:
+                continue_button_x = popup_x - 80
+                continue_button_y = popup_y - 100
+                button_width = 160
+                button_height = 40
+
+                arcade.draw_text("Continue",
+                                continue_button_x,
+                                continue_button_y,
+                                arcade.color.WHITE,
+                                20,
+                                font_name="Kenney Future")
+
+                '''# Draw "Skip" button 
+                skip_button_x = popup_x - 175  
+                skip_button_y = continue_button_y
+                arcade.draw_text("Skip", 
+                                 skip_button_x, 
+                                 skip_button_y, 
+                                 arcade.color.WHITE, 
+                                 20, 
+                                 font_name="Kenney Future")'''
+
+
+            # Highlight specific tutorial areas based on tutorial step
+            if self.tutorial_active:
+                if self.tutorial_step == 0:
+                    pass
+                elif self.tutorial_step == 1:
+                    # Highlight help guide area, done
+                    arcade.draw_rectangle_outline(950, 600, 80, 80, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 2:
+                    # Highlight scoreboard area, done
+                    arcade.draw_rectangle_outline(950, 515, 80, 80, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 3:
+                    # Highlight sound and music area, done
+                    arcade.draw_rectangle_outline(950, 370, 80, 175, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 4:
+                    # Highlight pick tile area, done
+                    arcade.draw_rectangle_outline(270, 60, 180, 90, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 5:
+                    # Highlight board area, done
+                    arcade.draw_rectangle_outline(440, 365, 800, 520, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 6:
+                    # Highlight done area, done
+                    arcade.draw_rectangle_outline(525, 50, 140, 80, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 7:
+                    # Highlight meeple area, done
+                    arcade.draw_rectangle_outline(525, 50, 140, 80, arcade.color.YELLOW, 3)
+                elif self.tutorial_step == 8:
+                    # Highlight place meeple area, done
+                    arcade.draw_rectangle_outline(585, 50, 140, 80, arcade.color.YELLOW, 3)
+            pass
+
+
+
 
     def on_update(self, delta_time):
         """ All the logic to move"""
@@ -459,10 +615,9 @@ class GameView(arcade.View):
 
                     # increment turns -- update the board
                     if current_player.is_ai():
-                        self.settings.ai = True
                         self.on_ai_turn(current_player)
 
-                else:
+                elif self.settings.tile_count < len(self.settings.tiles):
                     if self.settings.current_player.ai:
                         print("PLayer - AI", self.settings.current_player)
                         self.feat.check_feature_completed(self.settings)
@@ -541,9 +696,36 @@ class GameView(arcade.View):
                     else:
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
+                else:
+                    self.on_new_tile()
             else:
                 if self.settings.sound_on:
-                   self.sound = self.error_sound.play()
+                    self.sound = self.error_sound.play()
+                # set error message
+                message = self.helpful_tips.get_message()
+                # show error message
+                self.show_popup(message)
+
+
+    def show_popup(self, message):
+        '''
+        Show a popup error message, dismiss popup by clicking anywhere.
+        '''
+        # Check if flag is active
+        if not self.show_popup_flag:
+            # Set the message to be displayed
+            self.popup_message = message
+            # Mark popup as active
+            self.show_popup_flag = True
+
+    def show_tutorial_window(self):
+        '''
+        Display a tutorial popup for new players. Click "Continue" to proceed to the next step.
+        '''
+        # Check if flad is active
+        if self.tutorial_active:
+            # Fetch the tutorial message based on the current step
+            self.tutorial_message = self.tutorial.get_message(self.tutorial_step)
 
     def delete_place_meeple_button(self):
         """Remove the Place Meeple button from the layout."""
@@ -575,7 +757,7 @@ class GameView(arcade.View):
                     new_list.append(item)
             self.settings.placed_tiles = new_list
             # change view to help screen
-            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat, self.my_player)
+            new_view = meeple_placement_view.MeeplePlacementView(self.curr_tile, self.curr_meeple, self.settings, self.tile_sprite, self.feat, self.my_player, self.game_manager)
             self.window.show_view(new_view)
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
@@ -593,11 +775,45 @@ class GameView(arcade.View):
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Called when the user presses a mouse button. """
+         # Check if the tutorial is active
+        if self.show_tutorial_flag and self.tutorial_active and not self.tutorial_seen:
+            # Coordinates for the "Continue" button
+            popup_x = SCREEN_WIDTH / 2
+            popup_y = SCREEN_HEIGHT / 2
+            continue_button_x = popup_x - 80
+            continue_button_y = popup_y - 120
+            button_width = 160
+            button_height = 80
+
+            # Check if the user clicked within the "Continue" button area
+            if (continue_button_x <= x <= continue_button_x + button_width and continue_button_y <= y <= continue_button_y + button_height):
+                # Proceed to the next tutorial step
+                self.tutorial_step += 1
+                if self.tutorial_step >= self.tutorial.get_total_steps():
+                    # End the tutorial
+                    self.show_tutorial_flag = False
+                    self.tutorial_active = False
+                    # Mark tutorial as seen
+                    self.game_manager.tutorial_seen = True
+                else:
+                    # Show next tutorial step
+                    self.show_tutorial_window()
+                return
+        # If clicked outside the "Continue" button, skip the tutorial
+        else:
+            # End the tutorial and mark it as seen
+            self.show_tutorial_flag = False
+            self.tutorial_active = False
+            self.game_manager.tutorial_seen = True
+
+
         # If Left Button on Mouse Clicked on Tile
         if button == arcade.MOUSE_BUTTON_LEFT:
             clicked_tile = arcade.get_sprites_at_point((x, y),
                                                           self.tile_list)
 
+            new_meeple = arcade.get_sprites_at_point((x, y),
+                                                     self.player_list)
 
             # Allow dragging to be possible
             if clicked_tile:
@@ -605,15 +821,22 @@ class GameView(arcade.View):
                 if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0] and not self.settings.meeple_placed_current_round:
                     self.dragging_sprite = clicked_tile[0]
 
+            # Check if the popup is visible, if so dismiss it
+            if self.show_popup_flag:
+                # Dismiss the popup
+                self.show_popup_flag = False
+
+            # Check if the tutorial popup is visible, if so dismiss it
+            if self.show_tutorial_flag:
+                # Dismiss the popup
+                self.show_tutorial_flag = False
+
         if button == arcade.MOUSE_BUTTON_RIGHT:
-            clicked_tile = arcade.get_sprites_at_point((x, y)
-                                                       ,self.tile_list)
+            clicked_tile = arcade.get_sprites_at_point((x, y), self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
                 if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
                     self.rotating_tile = clicked_tile[0]
-
-
 
     def on_mouse_release(self, x, y, button, key_modifiers):
         """ Called when a user releases a mouse button.  """
@@ -665,7 +888,6 @@ class GameView(arcade.View):
                                 self.settings.previous_coor_x = i
                                 self.settings.previous_coor_y = j
 
-
             # If scoreboard was clicked then released
             clicked_scoreboard = arcade.get_sprites_at_point((x, y),
                                                              self.scoreboard_list)
@@ -699,7 +921,7 @@ class GameView(arcade.View):
                 if self.settings.sound_on:
                     self.sound_page = self.page_sound.play()
                 # change view to help screen
-                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
+                help = help_view.HelpView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player, self.game_manager)
                 help.setup()
                 self.window.show_view(help)
             # if scoreboard clicked
@@ -722,7 +944,7 @@ class GameView(arcade.View):
                 if self.settings.sound_on:
                     self.sound_page = self.page_sound.play()
                 # change view to scoreboard
-                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player)
+                scoreboard = scoreboard_view.ScoreboardView(self.curr_tile, self.curr_meeple, self.settings, self.feat, self.my_player, self.game_manager)
                 scoreboard.setup()
                 self.window.show_view(scoreboard)
 
@@ -771,13 +993,11 @@ class GameView(arcade.View):
                         ]
                         if self.validate_placement(neighbors, validation_tile, False):
                             can_place = True
-                            #print("Possible placement: ", '[',i,j,']',
-                            #    validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
             # if there are more tiles in tile list
-            if len(self.settings.placed_tiles) < len(self.settings.tiles):
+            if len(self.settings.placed_tiles) <= len(self.settings.tiles):
                 self.tile_sprite.kill()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(75)
@@ -857,9 +1077,7 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-            print('_____________')
             if count_valid == len(check_tile_features):
-                print('valid')
                 done_valid = True
                 self.rotating_tile = None
                 if is_placing:
@@ -933,8 +1151,7 @@ class GameView(arcade.View):
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
                         self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
-                        print("tile rotated", self.settings.get_rotation_click(self.settings.placed_tiles[-1][0][0]))
-            self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
+                    self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
 
     def ai_place_meeple(self, index, player, tile_x, tile_y):
         results = player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)

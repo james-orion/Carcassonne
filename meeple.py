@@ -1,9 +1,10 @@
-# Meeple Class
-# Stores information about meeples, such as what player
-# they belong to, what color they are, whether or not they
-# have been placed, etc. It will also count the points a
-# meeple earns once a feature is completed, and how many
-# points are won at the end of the game.
+''' Meeple Class
+Stores information about meeples, such as what player
+they belong to, what color they are, whether or not they
+have been placed, etc. It will also count the points a
+meeple earns once a feature is completed, and how many
+points are won at the end of the game.
+'''
 
 import feature_placement
 
@@ -13,7 +14,7 @@ class Meeple:
         self.color = color
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.tile_placed_on = None
         self.x_coord = None
         self.y_coord = None
@@ -593,7 +594,7 @@ class Meeple:
         settings.get_meeples().remove(self)
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.x_coord = None
         self.y_coord = None
         self.tile_placed_on = None
@@ -620,7 +621,7 @@ class Meeple:
         # unplace and reset meeple
         self.is_placed = False
         self.feature_type = None
-        self.meeple_sprite = None
+        self.meeple_sprite = ""
         self.x_coord = None
         self.y_coord = None
         self.tile_placed_on = None

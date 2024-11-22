@@ -1,10 +1,5 @@
-# view to allow users to place a Meeple on a tile after
-# it was placed. Placement is validated and stored on the
-# game board
-
-# TODO fix bug that allows tile to be dragged after Meeple placed
-# TODO change scaling and color differences
-# TODO remove curr_meeple?
+''' This file is use to allow users to place a Meeple on a tile after
+it was placed. Placement is validated and stored on the game board. '''
 
 import arcade
 import arcade.gui
@@ -15,7 +10,7 @@ SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 
 class MeeplePlacementView(arcade.View):
-    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite, feature, my_player):
+    def __init__(self, curr_tile, curr_meeple, settings, tile_sprite, feature, my_player, game_manager):
         super().__init__()
         self.player = settings.current_player
         self.player_color = self.player.get_color().upper().strip()
@@ -32,6 +27,7 @@ class MeeplePlacementView(arcade.View):
         self.meeple_coord_mods = None
         self.feature = feature
         self.my_player = my_player
+        self.game_manager = game_manager
 
         # create confirm and cancel buttons
         self.manager = arcade.gui.UIManager()
@@ -107,7 +103,7 @@ class MeeplePlacementView(arcade.View):
         # return to GameView as it was previously
         self.curr_tile.set_moved(False)
         # switch to game view
-        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
+        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player, self.game_manager)
         new_view.add_place_meeple_button()
         new_view.setup()
         self.window.show_view(new_view)
@@ -133,7 +129,7 @@ class MeeplePlacementView(arcade.View):
             # return to GameView as it was previously
             self.curr_tile.set_moved(False)
             # switch to game view
-            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
+            new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player, self.game_manager)
             new_view.place_meeple_button_active = True
             self.settings.meeple_screen = True
             new_view.setup()
