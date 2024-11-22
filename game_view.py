@@ -768,9 +768,9 @@ class GameView(arcade.View):
             popup_x = SCREEN_WIDTH / 2
             popup_y = SCREEN_HEIGHT / 2
             continue_button_x = popup_x - 80
-            continue_button_y = popup_y - 100
+            continue_button_y = popup_y - 120
             button_width = 160
-            button_height = 40
+            button_height = 80
 
             # Check if the user clicked within the "Continue" button area
             if (continue_button_x <= x <= continue_button_x + button_width and continue_button_y <= y <= continue_button_y + button_height):
