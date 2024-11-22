@@ -15,12 +15,13 @@ SCREEN_HEIGHT = 650
 class NameView(arcade.View):
     """ View to Open Game"""
 
-    def __init__(self, settings, my_player):
+    def __init__(self, settings, my_player, game_manager):
         super().__init__()
         self.settings = settings
         # Initialize Background Image
         self.background = arcade.load_texture("images/castle.jpeg")
         self.my_player = my_player
+        self.game_manager = game_manager
         self.next_sound = arcade.load_sound("images/next.mp3")
         # create manager to deal with buttons
         self.manager = arcade.gui.UIManager()
@@ -154,7 +155,7 @@ class NameView(arcade.View):
             screen. """
         self.manager.disable()
         self.next_sound.play()
-        choose = choose_view.ChooseView(self.my_player)
+        choose = choose_view.ChooseView(self.my_player, self.game_manager)
         self.window.show_view(choose)
 
     def on_click_next(self, event):
@@ -175,7 +176,7 @@ class NameView(arcade.View):
                 self.settings.add_current_players(p)
             self.manager.disable()
             self.next_sound.play()
-            game_view = color_view.ColorView(self.settings, self.my_player)
+            game_view = color_view.ColorView(self.settings, self.my_player, self.game_manager)
             self.window.show_view(game_view)
 
 
