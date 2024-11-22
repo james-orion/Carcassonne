@@ -1,5 +1,3 @@
-#Tutorial window popup successful, but issue when changing view the tutorial will show again. Should only show the tutorial once at the beginning of the game.
-
 """ This file is the game view that is iteractive to allow user to move tiles
     and meeples on a board for the game carcassonne."""
 
@@ -993,8 +991,6 @@ class GameView(arcade.View):
                         ]
                         if self.validate_placement(neighbors, validation_tile, False):
                             can_place = True
-                            #print("Possible placement: ", '[',i,j,']',
-                            #    validation_tile.top, validation_tile.bottom, validation_tile.left, validation_tile.right)
                         #rotates the tile and repeats validation
                         validation_tile.rotate_tile()
         if can_place == False:
