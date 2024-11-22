@@ -2,10 +2,6 @@
 # it was placed. Placement is validated and stored on the
 # game board
 
-# TODO fix bug that allows tile to be dragged after Meeple placed
-# TODO change scaling and color differences
-# TODO remove curr_meeple?
-
 import arcade
 import arcade.gui
 import game_settings
