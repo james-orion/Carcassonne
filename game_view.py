@@ -342,10 +342,6 @@ class GameView(arcade.View):
                          arcade.color.BLACK,
                          40,
                          font_name="Kenney Future")
-                         start_tile_y,
-                         arcade.color.WHITE,
-                         12,
-                         font_name="Kenney Future")
         
         
         
@@ -441,7 +437,7 @@ class GameView(arcade.View):
                     arcade.draw_rectangle_outline(950, 370, 80, 175, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 4:
                     # Highlight pick tile area, done
-                    arcade.draw_rectangle_outline(250, 70, 140, 80, arcade.color.YELLOW, 3)
+                    arcade.draw_rectangle_outline(270, 60, 180, 90, arcade.color.YELLOW, 3)
                 elif self.tutorial_step == 5:
                     # Highlight board area
                     arcade.draw_rectangle_outline(440, 365, 800, 520, arcade.color.YELLOW, 3)
