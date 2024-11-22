@@ -400,7 +400,7 @@ class Meeple:
                                 tile.set_meeple_placed_bottom(False)
             for meeple in meeple_list:
                 if meeple.get_tile_placed_on() in city and meeple.get_color() == self.color:
-                    if meeple.get_tile_placed_on().check_connected() == False:
+                    if meeple.get_tile_placed_on().check_is_connected() == False:
                         tile_coords = self.get_coords(meeple.get_tile_placed_on(), game_tiles)
                         if meeple.get_tile_placed_on().get_meeple_placed_top() == True:
                             if tile_coords[0] + 1 <= game_board_height and game_tiles[tile_coords[0] + 1][tile_coords[1]] in city:
