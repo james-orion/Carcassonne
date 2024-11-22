@@ -574,13 +574,7 @@ class GameView(arcade.View):
         except AttributeError:
             pass
 
-        # Allow Sprite to Move With Mouse
-        try:
-            if self.dragging_meeple:
-                self.dragging_meeple.center_x += delta_x
-                self.dragging_meeple.center_y += delta_y
-        except AttributeError:
-            pass
+
 
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Called when the user presses a mouse button. """
@@ -589,13 +583,11 @@ class GameView(arcade.View):
             clicked_tile = arcade.get_sprites_at_point((x, y),
                                                           self.tile_list)
 
-            new_meeple = arcade.get_sprites_at_point((x, y),
-                                                     self.player_list)
 
             # Allow dragging to be possible
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
+                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0] and not self.settings.meeple_placed_current_round:
                     self.dragging_sprite = clicked_tile[0]
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
