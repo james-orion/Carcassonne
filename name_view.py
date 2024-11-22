@@ -30,7 +30,7 @@ class NameView(arcade.View):
         self.input_field_text = ["Player 1",
                                  "Player 2",
                                  "Player 3",
-                                 "Player4"]
+                                 "Player 4"]
         # set game to True for name validation
         self.game = True
         # set max input to size 11
@@ -40,13 +40,13 @@ class NameView(arcade.View):
                       UIBoxLayout(vertical=False))
         self.v_box = (arcade.gui.
                       UIBoxLayout())
-
+        font = arcade.load_font("Carolingia-dKdE.ttf")
         back_button = (arcade.gui.
-                       UIFlatButton(text="BACK", width=100))
+                       UIFlatButton(text="BACK", width=100,style={"font_name":"Carolingia"}))
         self.h_box.add(back_button.with_space_around(right=200))
         back_button.on_click = self.on_back
         next_button = (arcade.gui.
-                       UIFlatButton(text="NEXT", width=100))
+                       UIFlatButton(text="NEXT", width=100,style={"font_name":"Carolingia"}))
         self.h_box.add(next_button.with_space_around(left=200))
         next_button.on_click = self.on_click_next
         # Create an text input field per player count
@@ -56,7 +56,7 @@ class NameView(arcade.View):
                 font_size=24,
                 width=200,
                 text=self.input_field_text[i],
-                style=None))
+                style={"font_name":"Carolingia"}))
             self.v_box.add(self.input_field[i].
                            with_space_around(bottom=20))
 
@@ -86,7 +86,6 @@ class NameView(arcade.View):
     def on_click(self, event):
         """ This triggers text to be updated from
                 being clicked"""
-        print("hi")
         self.update_text()
 
     def on_show_view(self):
@@ -117,9 +116,9 @@ class NameView(arcade.View):
                          self.window.width / 2,
                          self.window.height - 100,
                          arcade.color.BLACK,
-                         font_size=40,
+                         font_size=50,
                          anchor_x="center",
-                         font_name="Kenney Future")
+                         font_name="Carolingia")
         color = arcade.make_transparent_color([240, 255, 255], 150)
         arcade.draw_rectangle_filled(self.v_box.center_x, self.v_box.center_y, self.v_box.width+50,
                                                self.v_box.height+50, color)
@@ -133,8 +132,8 @@ class NameView(arcade.View):
             if len(self.input_field[i].text) < 1:
                 arcade.draw_text(f"Player {i + 1}, Enter Name",
                                  self.window.width / 2, self.window.height - text_height,
-                                 arcade.color.BLACK, font_size=20, anchor_x="center",
-                                 font_name="Kenney Future")
+                                 arcade.color.BLACK, font_size=25, anchor_x="center",
+                                 font_name="Carolingia")
                 self.game = False
                 text_height += 50
                 break
@@ -144,8 +143,8 @@ class NameView(arcade.View):
                 if self.input_field[i].text == self.input_field[j].text:
                     arcade.draw_text("Name's Must Be Different",
                                      self.window.width / 2, self.window.height - text_height,
-                                     arcade.color.BLACK, font_size=20, anchor_x="center",
-                                     font_name="Kenney Future")
+                                     arcade.color.BLACK, font_size=25, anchor_x="center",
+                                     font_name="Carolingia")
                     self.game = False
                     text_height += 50
                     break
@@ -167,9 +166,14 @@ class NameView(arcade.View):
             for i in range(self.settings.get_player_count()):
                 p = player.Player()
                 p.set_name(self.input_field[i].text)
+                p.default_ai()
                 self.settings.add_current_players(p)
                 if i == 0:
                     self.settings.set_current_player(p)
+            for j in range(4 - self.settings.get_player_count()):
+                p = player.Player(ai=True)
+                p.set_name(self.input_field_text[self.settings.get_player_count() + j])
+                self.settings.add_current_players(p)
             self.manager.disable()
             self.next_sound.play()
             game_view = color_view.ColorView(self.settings, self.my_player, self.game_manager)

@@ -25,27 +25,40 @@ class ChooseView(arcade.View):
         # Initalize manager for container and butttons
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
+        red_style = {
+            "font_name": "Carolingia",
+            "font_size": 25,
+            "font_color": arcade.color.WHITE,
+            "border_width": 2,
+            "border_color": None,
+            "bg_color": arcade.color.REDWOOD,
+
+            # used if button is pressed
+            "bg_color_pressed": arcade.color.WHITE,
+            "border_color_pressed": arcade.color.WHITE,  # also used when hovered
+            "font_color_pressed": arcade.color.RED,
+        }
         # creating horizontal boxes to allow
         # user to pick number of players
         self.h_box = (arcade.gui.
                       UIBoxLayout(vertical=False))
         self.one_button = (arcade.gui.
-                           UIFlatButton(text="1", width=100))
+                           UIFlatButton(text="1", width=100,style=red_style))
         self.h_box.add(self.one_button.with_space_around(left=10))
         self.one_button.on_click = self.on_choose_one
 
         two_button = (arcade.gui.
-                      UIFlatButton(text="2", width=100))
+                      UIFlatButton(text="2", width=100,style=red_style))
         self.h_box.add(two_button.with_space_around(left=10))
         two_button.on_click = self.on_choose_two
 
         three_button = (arcade.gui.
-                        UIFlatButton(text="3", width=100))
+                        UIFlatButton(text="3", width=100,style=red_style))
         self.h_box.add(three_button.with_space_around(left=10))
         three_button.on_click = self.on_choose_three
 
         four_button = (arcade.gui.
-                       UIFlatButton(text="4", width=100))
+                       UIFlatButton(text="4", width=100 ,style=red_style))
         self.h_box.add(four_button.with_space_around(left=10))
         four_button.on_click = self.on_choose_four
 
@@ -55,10 +68,12 @@ class ChooseView(arcade.View):
                 anchor_x="center",
                 anchor_y="center",
                 child=self.h_box,
-                style=arcade.color.WHITE)
+                )
         )
         # creating instance of settings
         self.settings = game_settings.game_settings()
+
+
 
     def on_show_view(self):
         """ This is run once when we switch to this view """
@@ -81,9 +96,9 @@ class ChooseView(arcade.View):
                          self.window.width / 2,
                          self.window.height - 200,
                          arcade.color.BLACK,
-                         font_size=40,
+                         font_size=50,
                          anchor_x="center",
-                         font_name="Kenney Future")
+                         font_name="Carolingia")
 
         self.manager.draw()
 
@@ -122,5 +137,6 @@ class ChooseView(arcade.View):
         self.next_sound.play()
         name = name_view.NameView(self.settings, self.my_player, self.game_manager)
         self.window.show_view(name)
+
 
 

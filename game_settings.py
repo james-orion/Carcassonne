@@ -23,6 +23,10 @@ class game_settings:
         self.meeple_placed_current_round = False
         self.sound_on = True
         self.music_on = True
+        self.done_pressed = False
+        self.meeple_screen = False
+        self.ai = False
+        self.ai_valid = False
 
 
     def set_current_round(self, round):
@@ -42,6 +46,12 @@ class game_settings:
         else:
             self.total_rotation[tile] = 90
 
+    def reset_rotation(self, tile):
+        """ This sets the rotation of a tile"""
+        # If tile already exists, increment its rotation by 90
+        if tile in self.total_rotation:
+            self.total_rotation[tile] = 0
+
     def set_current_player(self, player):
         """ This sets current player """
         self.current_player = player
@@ -53,7 +63,6 @@ class game_settings:
     def set_button_text(self, text):
         """ This sets the button text"""
         self.button_text = text
-
 
     def increment_tile_count(self):
         """ This increments to next tile"""
@@ -112,3 +121,7 @@ class game_settings:
     
     def set_meeple_placed_current_round(self, is_placed):
         self.meeple_placed_current_round = is_placed
+
+    def add_ai_players(self,name):
+        for i in range(4 - self.player_count-1):
+            self.current_players.append(player.Player(name, ai = True))

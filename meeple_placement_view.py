@@ -38,32 +38,33 @@ class MeeplePlacementView(arcade.View):
         self.manager = arcade.gui.UIManager()
         self.manager.enable()
         self.h_box = (arcade.gui.UIBoxLayout(vertical=False))
-        cancel_button = (arcade.gui.UIFlatButton(text="CANCEL", width=100))
+        cancel_button = (arcade.gui.UIFlatButton(text="CANCEL", width=100,style={"font_name":"Carolingia"}))
         self.h_box.add(cancel_button.with_space_around(right=100))
         cancel_button.on_click = self.on_cancel
-        confirm_button = (arcade.gui.UIFlatButton(text="CONFIRM", width=110))
+        confirm_button = (arcade.gui.UIFlatButton(text="CONFIRM", width=110,style={"font_name":"Carolingia"}))
         self.h_box.add(confirm_button.with_space_around(left=100))
         confirm_button.on_click = self.on_confirm
         self.manager.add(arcade.gui.UIAnchorWidget(anchor_x="center", anchor_y="center",align_y=-180, child=self.h_box, style=None))
 
     def on_draw(self):
         self.clear()
+        color = arcade.make_transparent_color([240, 255, 255], 150)
         arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         box_width = int((SCREEN_WIDTH) * 0.75)
         box_height = int((SCREEN_HEIGHT) * 0.75)
-        arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, box_width, box_height, arcade.color.STEEL_BLUE)
+        arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, box_width, box_height, color)
         arcade.draw_rectangle_filled(SCREEN_WIDTH // 2 - 125, SCREEN_HEIGHT // 2, 275, 275, arcade.color.WHITE)
         self.tile_image.scale = 2.5
         self.tile_image.center_x = SCREEN_WIDTH // 2 - 125
         self.tile_image.center_y = SCREEN_HEIGHT // 2
         self.tile_image.draw()
-        arcade.draw_text("Meeple Location:", self.window.width / 2 + 150, self.window.height - 150, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("Use Keys 1 - 5 to Choose", self.window.width / 2 + 150, self.window.height - 175, arcade.color.WHITE, font_size=10, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("1. TOP", self.window.width / 2 + 150, self.window.height - 225, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("2. LEFT SIDE", self.window.width / 2 + 150, self.window.height - 275, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("3. RIGHT SIDE", self.window.width / 2 + 150, self.window.height - 325, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("4. CENTER", self.window.width / 2 + 150, self.window.height - 375, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("5. BOTTOM", self.window.width / 2 + 150, self.window.height - 425, arcade.color.WHITE, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("Meeple Location:", self.window.width / 2 + 150, self.window.height - 150, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("Use Keys 1 - 5 to Choose", self.window.width / 2 + 150, self.window.height - 175, arcade.color.BLACK, font_size=10, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("1. TOP", self.window.width / 2 + 150, self.window.height - 225, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("2. LEFT SIDE", self.window.width / 2 + 150, self.window.height - 275, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("3. RIGHT SIDE", self.window.width / 2 + 150, self.window.height - 325, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("4. CENTER", self.window.width / 2 + 150, self.window.height - 375, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
+        arcade.draw_text("5. BOTTOM", self.window.width / 2 + 150, self.window.height - 425, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
         if self.has_choosen:
             if self.player_color == "RED":
                 color = arcade.color.RED
@@ -107,7 +108,8 @@ class MeeplePlacementView(arcade.View):
         # return to GameView as it was previously
         self.curr_tile.set_moved(False)
         # switch to game view
-        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player)
+        new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player, self.game_manager)
+        new_view.add_place_meeple_button()
         new_view.setup()
         self.window.show_view(new_view)
 
@@ -133,6 +135,8 @@ class MeeplePlacementView(arcade.View):
             self.curr_tile.set_moved(False)
             # switch to game view
             new_view = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, self.feature, self.my_player, self.game_manager)
+            new_view.place_meeple_button_active = True
+            self.settings.meeple_screen = True
             new_view.setup()
             self.window.show_view(new_view)
         else:

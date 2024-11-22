@@ -7,7 +7,7 @@ class current_tile:
 
     def __init__(self):
         self.tile_x = 250
-        self.tile_y = 100
+        self.tile_y = 75
         self.moved = False
         self.tile_image = ""
 

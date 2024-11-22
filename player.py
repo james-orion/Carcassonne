@@ -15,9 +15,9 @@ talk with Hack about combining meeple class with player clas
 ''' Player Class '''
 class Player:
     ''' Constructor '''
-    def __init__(self, name: str = None, meeple_count: int = 5):
+    def __init__(self, name: str = None, meeple_count: int = 5, ai = False):
 
-        # Set player name to what is entered 
+        # Set player name to what is entered
         if name is None:
             # If no name is provided, prompt the user for input
             self.name = "Player"
@@ -31,6 +31,8 @@ class Player:
         
         # Initialize a list of Meeple objects for the player
         self.meeples = [Meeple(self, "red") for i in range(meeple_count)]
+
+        self.ai = ai
 
 #-----------------------------------------------------------------------------------
     ''' Setter Methods '''
@@ -66,11 +68,16 @@ class Player:
         # print(f"{self.name}: No meeples to return.")
         return False
     
-    def get_meeple_score(self, scored_meeple, tile, settings, connected_tiles):
-        self.set_score(scored_meeple.meeple_score(tile, settings, connected_tiles))
+    def get_meeple_score(self, scored_meeple, tile, settings, connected_tiles, meeples_on_feature):
+        self.set_score(scored_meeple.meeple_score(tile, settings, connected_tiles, meeples_on_feature))
 
     def set_name(self, name):
         self.name = name
+
+    def set_ai(self):
+        self.ai = True
+    def default_ai(self):
+        self.ai = False
     
     """ Calculate end-of-game points based on meeples still placed. """
     def end_of_game_scoring(self):
@@ -88,7 +95,7 @@ class Player:
     ''' Getter Methods '''
     ''' String function to return player status: name, score, and remaining meeples in player's hand '''
     def __str__(self):
-        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.get_meeple_count()}"
+        return f"Player: {self.name}, Score: {self.score}, Meeples in hand: {self.get_meeple_count()}, AI : {self.ai}"
     
     ''' Function to get count of meeples in hand'''
     def get_meeple_count(self):
@@ -115,6 +122,9 @@ class Player:
         self.color = color
         for meeple in self.meeples:
             meeple.set_color(color)
+
+    def is_ai(self):
+        return self.ai
 
 #-----------------------------------------------------------------------------------
 '''
