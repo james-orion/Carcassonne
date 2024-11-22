@@ -1,8 +1,5 @@
 """
-
 This file is part of Carcassonne board view
-
-
 """
 import arcade
 import arcade.gui
@@ -11,9 +8,6 @@ from pyglet import sprite
 import sys
 
 from help_test import Tab
-
-#import meeple
-#import player
 
 
 # Global Var: Screen Size
@@ -116,7 +110,6 @@ class GameView(arcade.View):
         # Drawing Text, Need From Player Class?
         start_x = 500
         start_y = 75
-        # player.Player.get_name()
         arcade.draw_text("Player 1",
                          start_x,
                          start_y,
@@ -302,7 +295,7 @@ class ScoreboardView(arcade.View):
 
     def __init__(self):
         super().__init__()
-        # Initialize Player From Player Class?
+        # Initialize Player From Player Class
         self.player_list = None
 
     def setup(self):
@@ -333,21 +326,6 @@ class ScoreboardView(arcade.View):
                          font_size=50,
                          anchor_x="center",
                          font_name="Kenney Future")
-        # Player and Numbers maybe in for loop
-        # players_in_game = {}
-        # for i in player.player_count
-            # arcade.draw_text(player.get_name(), 150,
-            #                  self.window.height - 150,
-            #                  arcade.color.BLACK,
-            #                  font_size=20,
-            #                  anchor_x="left",
-            #                  font_name="Kenney Future")
-            # arcade.draw_text(player.get_score(), 400,
-            #                  self.window.height - 150,
-            #                  arcade.color.BLACK,
-            #                  font_size=20,
-            #                  anchor_x="left",
-            #                  font_name="Kenney Future")
         arcade.draw_text("Player 1", 150,
                          self.window.height - 150,
                          arcade.color.BLACK,
