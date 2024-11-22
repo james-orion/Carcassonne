@@ -15,11 +15,12 @@ SCREEN_HEIGHT = 650
 class ChooseView(arcade.View):
     """ View to Open Game"""
 
-    def __init__(self, my_player):
+    def __init__(self, my_player, game_manager):
         super().__init__()
         # Initialize Background Image
         self.background = arcade.load_texture("images/sky.jpg")
         self.my_player = my_player
+        self.game_manager = game_manager
         self.next_sound = arcade.load_sound("images/next.mp3")
         # Initalize manager for container and butttons
         self.manager = arcade.gui.UIManager()
@@ -92,7 +93,7 @@ class ChooseView(arcade.View):
         self.settings.set_player_count(1)
         self.manager.disable()
         self.next_sound.play()
-        name = name_view.NameView(self.settings, self.my_player)
+        name = name_view.NameView(self.settings, self.my_player, self.game_manager)
         self.window.show_view(name)
 
     def on_choose_two(self, event):
@@ -101,7 +102,7 @@ class ChooseView(arcade.View):
         self.settings.set_player_count(2)
         self.manager.disable()
         self.next_sound.play()
-        name = name_view.NameView(self.settings, self.my_player)
+        name = name_view.NameView(self.settings, self.my_player, self.game_manager)
         self.window.show_view(name)
 
     def on_choose_three(self, event):
@@ -110,7 +111,7 @@ class ChooseView(arcade.View):
         self.settings.set_player_count(3)
         self.manager.disable()
         self.next_sound.play()
-        name= name_view.NameView(self.settings, self.my_player)
+        name= name_view.NameView(self.settings, self.my_player, self.game_manager)
         self.window.show_view(name)
 
     def on_choose_four(self, event):
@@ -119,7 +120,7 @@ class ChooseView(arcade.View):
         self.settings.set_player_count(4)
         self.manager.disable()
         self.next_sound.play()
-        name = name_view.NameView(self.settings, self.my_player)
+        name = name_view.NameView(self.settings, self.my_player, self.game_manager)
         self.window.show_view(name)
 
 
