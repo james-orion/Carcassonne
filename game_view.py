@@ -698,7 +698,12 @@ class GameView(arcade.View):
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
                 else:
-                    self.on_new_tile()
+                    # end of game scoring for meeples
+                    meeple_list = self.settings.get_meeples()
+                    for meeple in self.settings.get_meeples():
+                        meeple.end_of_game_scoring(self.settings, meeple_list)
+                    endview = end_view.EndView(self.settings)
+                    self.window.show_view(endview)
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
@@ -1013,6 +1018,9 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
+                #if AI player, needs to generate new tile and replay turn
+                if self.settings.current_player.ai:
+                    self.on_done(0)
             else:
                 # end of game scoring for meeples
                 meeple_list = self.settings.get_meeples()
