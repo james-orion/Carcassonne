@@ -131,8 +131,6 @@ class ColorView(arcade.View):
             self.available_colors.append(last_color_choice)
 
     def on_click_next(self, event):
-        # TODO randomly assign remaining colors to computer players
-        # TODO assign colors to players once list is implemented
         if len(self.selected_colors) == self.num_players:
             for i in range(self.num_players):
                 self.players[i].set_color(self.selected_colors[i])

@@ -550,7 +550,6 @@ class GameView(arcade.View):
 
 
     def on_place_meeple(self, event):
-        # TODO make sure tile has been placed in current round as well
         if len(self.settings.get_placed_tiles()) > 1 and self.settings.get_meeple_placed_current_round() == False:
             # create new list to update placed sprites
             new_list = []
