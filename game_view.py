@@ -330,7 +330,9 @@ class GameView(arcade.View):
         if self.settings.ai:
             for i in range(4-self.settings.player_count):
                 i += 1
-                arcade.draw_rectangle_outline(self.ai_list[-i].center_x, self.ai_list[-i].center_y, 50, 50,
+                if len(self.ai_list) >= i:
+                    print('ai_list')
+                    arcade.draw_rectangle_outline(self.ai_list[-i].center_x, self.ai_list[-i].center_y, 50, 50,
                                           arcade.color.DEEP_MAGENTA, 3)
         if self.new_player_turn:
             arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, SCREEN_WIDTH,
@@ -605,10 +607,9 @@ class GameView(arcade.View):
 
                     # increment turns -- update the board
                     if current_player.is_ai():
-                        self.settings.ai = True
                         self.on_ai_turn(current_player)
 
-                else:
+                elif self.settings.tile_count < len(self.settings.tiles):
                     if self.settings.current_player.ai:
                         print("PLayer - AI", self.settings.current_player)
                         self.feat.check_feature_completed(self.settings)
@@ -687,6 +688,8 @@ class GameView(arcade.View):
                     else:
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
+                else:
+                    self.on_new_tile()
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
@@ -986,7 +989,7 @@ class GameView(arcade.View):
                         validation_tile.rotate_tile()
         if can_place == False:
             # if there are more tiles in tile list
-            if len(self.settings.placed_tiles) < len(self.settings.tiles):
+            if len(self.settings.placed_tiles) <= len(self.settings.tiles):
                 self.tile_sprite.kill()
                 self.curr_tile.set_moved(False)
                 self.curr_tile.set_y(75)
@@ -1066,9 +1069,7 @@ class GameView(arcade.View):
                     if (self.settings.feature_container[tile[0]][tile[1]].top ==
                             curr_tile.bottom):
                         count_valid += 1
-            print('_____________')
             if count_valid == len(check_tile_features):
-                print('valid')
                 done_valid = True
                 self.rotating_tile = None
                 if is_placing:
@@ -1142,7 +1143,6 @@ class GameView(arcade.View):
                         self.settings.placed_tiles[-1][0][1].rotate_tile()
                         self.tile_list[-1].angle = self.tile_list[-1].angle + 90
                         self.settings.increment_rotation(self.settings.placed_tiles[-1][0][0])
-                        self.curr_tile.set_moved(False)
                     self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
 
     def ai_place_meeple(self, index, player, tile_x, tile_y):
