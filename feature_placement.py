@@ -90,6 +90,7 @@ class feature_placements:
 
     def check_feature_completed(self, settings):
         last_placed = settings.placed_tiles[-1][0][1]
+        print(last_placed.image)
         # check all monastery tiles to see if there are 8 surrounding tiles for any of them
         for row in range(len(self.tiles_on_board)):
             for col in range(len(self.tiles_on_board[row])):
