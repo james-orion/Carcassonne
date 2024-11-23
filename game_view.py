@@ -465,9 +465,6 @@ class GameView(arcade.View):
                     arcade.draw_rectangle_outline(585, 50, 140, 80, arcade.color.YELLOW, 3)
             pass
 
-
-
-
     def on_update(self, delta_time):
         """ All the logic to move"""
         # change button from start to done
@@ -563,12 +560,10 @@ class GameView(arcade.View):
                     self.settings.previous_coor_x = -1
                     self.settings.previous_coor_y = -1
                     # get player count for indexing
-                    # count = self.settings.get_player_count() - 1
                     # if the last player to go, increment current round
                     if self.settings.get_current_player() == self.settings.current_players[3]:
                         round = self.settings.get_current_round() + 1
                         self.settings.set_current_round(round)
-
                     # get current player
                     current_player = self.settings.get_current_player()
                     # increment player to next player in the list
@@ -694,8 +689,6 @@ class GameView(arcade.View):
                         if current_player.is_ai():
                             self.on_ai_turn(current_player)
                             self.setup()
-
-
                     else:
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
@@ -748,7 +741,6 @@ class GameView(arcade.View):
             self.h_box.add(self.place_meeple_button.with_space_around(top=550, left=10))
             self.place_meeple_button_active = True
 
-
     def on_place_meeple(self, event):
         if len(self.settings.get_placed_tiles()) > 1 and self.settings.get_meeple_placed_current_round() == False:
             # create new list to update placed sprites
@@ -779,8 +771,6 @@ class GameView(arcade.View):
         except AttributeError:
             pass
 
-
-
     def on_mouse_press(self, x, y, button, key_modifiers):
         """ Called when the user presses a mouse button. """
          # Check if the tutorial is active
@@ -794,7 +784,8 @@ class GameView(arcade.View):
             button_height = 80
 
             # Check if the user clicked within the "Continue" button area
-            if (continue_button_x <= x <= continue_button_x + button_width and continue_button_y <= y <= continue_button_y + button_height):
+            if (continue_button_x <= x <= continue_button_x + button_width
+                    and continue_button_y <= y <= continue_button_y + button_height):
                 # Proceed to the next tutorial step
                 self.tutorial_step += 1
                 if self.tutorial_step >= self.tutorial.get_total_steps():
@@ -826,7 +817,9 @@ class GameView(arcade.View):
             # Allow dragging to be possible
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, dragging is possible
-                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0] and not self.settings.meeple_placed_current_round:
+                if (clicked_tile[0] == self.tile_list[-1] and
+                        clicked_tile[0] != self.tile_list[0] and
+                        not self.settings.meeple_placed_current_round):
                     self.dragging_sprite = clicked_tile[0]
 
             # Check if the popup is visible, if so dismiss it
@@ -840,10 +833,12 @@ class GameView(arcade.View):
                 self.show_tutorial_flag = False
 
         if button == arcade.MOUSE_BUTTON_RIGHT:
-            clicked_tile = arcade.get_sprites_at_point((x, y), self.tile_list)
+            clicked_tile = arcade.get_sprites_at_point((x, y),
+                                                       self.tile_list)
             if clicked_tile:
                 # if current tile is clicked and is the newest tile, rotating is possible
-                if clicked_tile[0] == self.tile_list[-1] and clicked_tile[0] != self.tile_list[0]:
+                if (clicked_tile[0] == self.tile_list[-1] and
+                        clicked_tile[0] != self.tile_list[0]):
                     self.rotating_tile = clicked_tile[0]
 
     def on_mouse_release(self, x, y, button, key_modifiers):
@@ -1032,8 +1027,9 @@ class GameView(arcade.View):
                 endview = end_view.EndView(self.settings)
                 self.window.show_view(endview)
 
-
     def validate_placement(self, neighbors, curr_tile, is_placing=True):
+        """This function validates that a placment can be placed, if valid
+        it sends the tiles that are neighboring to feature_placemnts, returns bool"""
         # boolean if you can place tile
         done_valid = False
         # get neighbor coordinates
@@ -1135,7 +1131,7 @@ class GameView(arcade.View):
         return done_valid
 
     def on_ai_turn(self, player):
-        # Randomly chooses an available space on the board to place their tile
+        """ Randomly chooses an available space on the board to place their tile"""
         can_place = False
         while can_place == False:
             rand_x = random.randint(0, 6)
@@ -1164,6 +1160,7 @@ class GameView(arcade.View):
                     self.settings.reset_rotation(self.settings.placed_tiles[-1][0][1])
 
     def ai_place_meeple(self, index, player, tile_x, tile_y):
+        """This randomly places a meeple for the ai if it can, it will"""
         results = player.use_meeple(self.settings.placed_tiles[-1][0][1], index, self.settings)
         valid_placement = results[0]
         current_meeple = results[1]
