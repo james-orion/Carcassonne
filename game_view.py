@@ -619,7 +619,7 @@ class GameView(arcade.View):
                     if current_player.is_ai():
                         self.on_ai_turn(current_player)
 
-                elif self.settings.tile_count < len(self.settings.tiles):
+                else:
                     if self.settings.current_player.ai:
                         print("PLayer - AI", self.settings.current_player)
                         self.feat.check_feature_completed(self.settings)
@@ -688,6 +688,7 @@ class GameView(arcade.View):
                                                       self.tile_sprite.center_x, self.tile_sprite.center_y)
                         self.settings.increment_tile_count()
                         self.on_new_tile()
+                        self.settings.prev_ai = False
 
                          # increment turns -- update the board
                         if current_player.is_ai():
@@ -696,13 +697,6 @@ class GameView(arcade.View):
                     else:
                         self.settings.done_pressed = True
                         self.add_place_meeple_button()
-                else:
-                    # end of game scoring for meeples
-                    meeple_list = self.settings.get_meeples()
-                    for meeple in self.settings.get_meeples():
-                        meeple.end_of_game_scoring(self.settings, meeple_list)
-                    endview = end_view.EndView(self.settings)
-                    self.window.show_view(endview)
             else:
                 if self.settings.sound_on:
                     self.sound = self.error_sound.play()
@@ -1019,11 +1013,14 @@ class GameView(arcade.View):
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
                 self.on_new_tile()
-                #if AI player, needs to generate new tile and replay turn
-                if self.settings.current_player.ai:
-                    self.tile_sprite.kill()
-                    #TODO: for some reason not generating new tile and the AI isn't playing it
-                    self.on_done(0)
+                #if AI player, and cannot play a tile, ends the game, triggers scoring and end screen
+                if self.settings.prev_ai:
+                    # end of game scoring for meeples
+                    meeple_list = self.settings.get_meeples()
+                    for meeple in self.settings.get_meeples():
+                        meeple.end_of_game_scoring(self.settings, meeple_list)
+                    endview = end_view.EndView(self.settings)
+                    self.window.show_view(endview)
             else:
                 # end of game scoring for meeples
                 meeple_list = self.settings.get_meeples()
@@ -1152,6 +1149,7 @@ class GameView(arcade.View):
                         self.settings.previous_coor_x = rand_x
                         self.settings.previous_coor_y = rand_y
                         self.settings.ai = True
+                        self.settings.prev_ai = True
                         self.ai_list.append(self.tile_list[-1])
                         print(self.ai_list)
                         self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])

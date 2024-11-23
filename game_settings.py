@@ -26,6 +26,7 @@ class game_settings:
         self.done_pressed = False
         self.meeple_screen = False
         self.ai = False
+        self.prev_ai = False
         self.ai_valid = False
 
 
