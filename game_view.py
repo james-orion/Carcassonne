@@ -339,10 +339,12 @@ class GameView(arcade.View):
                          22,
                          font_name="Carolingia")
         if self.settings.ai:
-            for i in range(5-self.settings.player_count):
-                i += 1
-                arcade.draw_rectangle_outline(self.tile_list[-i].center_x, self.tile_list[-i].center_y, 50, 50,
+            j = 1
+            for i in range(4-self.settings.player_count):
+                j += 1 
+                arcade.draw_rectangle_outline(self.tile_list[-j].center_x, self.tile_list[-j].center_y, 50, 50,
                                           arcade.color.DEEP_MAGENTA, 3)
+            j = 0
         if self.new_player_turn:
             arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 10, SCREEN_WIDTH,
                                      125, arcade.make_transparent_color([240, 255, 255], 150))
