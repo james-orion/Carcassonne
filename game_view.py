@@ -315,12 +315,16 @@ class GameView(arcade.View):
         # Drawing Text, Need From Player Class
         start_x = 700
         start_y = 50
+        # text size based on player name len
+        text_size = 20
+        if len(self.settings.current_player.name) > 9:
+            text_size = 16
         # Player text from player class
         arcade.draw_text(self.settings.get_current_player().name+"'s Turn",
                          start_x,
                          start_y,
                          arcade.color.BLACK,
-                         20,
+                         text_size,
                          font_name="Kenney Future")
 
         arcade.draw_text("Meeples: "+str(self.settings.current_player.get_meeple_count()),

@@ -28,6 +28,7 @@ class ColorView(arcade.View):
         self.color_list_string = ["red", "blue", "green", "yellow"]
         self.available_colors = ["red", "blue", "green", "yellow"]
         self.selected_colors = []
+        self.ready_to_play = False
         self.player_list = arcade.SpriteList()
         # create forward and back buttons
         self.manager = arcade.gui.UIManager()
@@ -89,13 +90,17 @@ class ColorView(arcade.View):
                                       self.background)
         arcade.draw_rectangle_filled(1000 // 2, 650 // 2, int((1000) * 0.75), int((650) * 0.75), color)
         arcade.draw_text("Select Color".upper(), self.window.width / 2, self.window.height -121 , arcade.color.BLACK , font_size=40, anchor_x="center", font_name="Carolingia")
-        arcade.draw_text("Use Keys 1-4 to Choose the Corresponding Color", self.window.width / 2, self.window.height - 210, arcade.color.BLACK, font_size=15, anchor_x="center",font_name="Kenney Future")
+        if not self.ready_to_play:
+            arcade.draw_text("Use Keys 1-4 to Choose the Corresponding Color", self.window.width / 2, self.window.height - 210, arcade.color.BLACK, font_size=15, anchor_x="center",font_name="Kenney Future")
         num_colors_selected = len(self.selected_colors)
-        if num_colors_selected < self.num_players:
+        if num_colors_selected < self.num_players and not self.ready_to_play:
+            self.ready_to_play = False
             arcade.draw_text(f"{self.settings.current_players[num_colors_selected].name}\'s Choice".upper(), self.window.width / 2, self.window.height - 175, arcade.color.BLACK, font_size=20, anchor_x="center", font_name="Kenney Future")
         else:
+            self.ready_to_play = True
             arcade.draw_text(f"All Players Have Chosen, Click Next to Start Game", self.window.width / 2, self.window.height - 175, arcade.color.BLACK, font_size=15, anchor_x="center", font_name="Kenney Future")
-        arcade.draw_text("All Players Must Select a Color Before Clicking Next", self.window.width / 2, SCREEN_HEIGHT // 2 - 210, arcade.color.BLACK, font_size=14, anchor_x="center", font_name="Kenney Future")
+        if not self.ready_to_play:
+            arcade.draw_text("All Players Must Select a Color Before Clicking Next", self.window.width / 2, SCREEN_HEIGHT // 2 - 210, arcade.color.BLACK, font_size=14, anchor_x="center", font_name="Kenney Future")
         for i, color in enumerate(self.color_list):
             # draw a square for each color
             arcade.draw_text(f"{self.color_list_string[i]}".upper(), 245 + i * 175, SCREEN_HEIGHT // 2 + 70, arcade.color.BLACK, 25, anchor_x="center", font_name="Carolingia")
@@ -127,26 +132,26 @@ class ColorView(arcade.View):
             choose = choose_view.ChooseView(self.my_player, self.game_manager)
             self.window.show_view(choose)
         else:
+            self.ready_to_play = False
             last_color_choice = self.selected_colors[-1]
             self.selected_colors.remove(last_color_choice)
             self.available_colors.append(last_color_choice)
 
     def on_click_next(self, event):
-        if len(self.selected_colors) == self.num_players:
-            for i in range(self.num_players):
-                self.players[i].set_color(self.selected_colors[i])
-            self.curr_tile = current_tile.current_tile()
-            self.curr_meeple = current_meeple.current_meeple()
-            self.manager.disable()
-            feature = feature_placement.feature_placements()
-            self.next_sound.play()
-            game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player, self.game_manager)
-            game.setup()
-            self.window.show_view(game)
-        print(self.players)
-        for j in range(4 - self.num_players):
-            for k in self.available_colors:
-                print(k)
-                self.players[self.settings.get_player_count() + j].set_color(k)
-                self.selected_colors.append(k)
-                self.available_colors.remove(k)
+        if self.ready_to_play:
+            if len(self.selected_colors) == self.num_players:
+                for i in range(self.num_players):
+                    self.players[i].set_color(self.selected_colors[i])
+                self.curr_tile = current_tile.current_tile()
+                self.curr_meeple = current_meeple.current_meeple()
+                self.manager.disable()
+                feature = feature_placement.feature_placements()
+                self.next_sound.play()
+                game = game_view.GameView(self.curr_tile, self.curr_meeple, self.settings, feature, self.my_player, self.game_manager)
+                game.setup()
+                self.window.show_view(game)
+            for j in range(4 - self.num_players):
+                for k in self.available_colors:
+                    self.players[self.settings.get_player_count() + j].set_color(k)
+                    self.selected_colors.append(k)
+                    self.available_colors.remove(k)
