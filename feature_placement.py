@@ -90,6 +90,7 @@ class feature_placements:
 
     def check_feature_completed(self, settings):
         last_placed = settings.placed_tiles[-1][0][1]
+        print(last_placed.image)
         # check all monastery tiles to see if there are 8 surrounding tiles for any of them
         for row in range(len(self.tiles_on_board)):
             for col in range(len(self.tiles_on_board[row])):
@@ -128,16 +129,16 @@ class feature_placements:
         if str(last_placed.get_building()) == "Building.VILLAGE":
             tile_coords = self.get_coords(last_placed)
             roads = [[last_placed], [last_placed], [last_placed], [last_placed]]
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and tile_coords[0] <= len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['top']) == "Side.ROAD" and tile_coords[0] < len(self.tiles_on_board) - 1 and self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]] != 0:
                 roads[0].append(self.tiles_on_board[tile_coords[0] + 1][tile_coords[1]]['tile'])
                 self.check_road(roads[0], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and tile_coords[1] >= 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['left']) == "Side.ROAD" and tile_coords[1] > 0 and self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1] != 0:
                 roads[1].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] - 1]['tile'])
                 self.check_road(roads[1], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and tile_coords[1] <= len(self.tiles_on_board[0]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['right']) == "Side.ROAD" and tile_coords[1] < len(self.tiles_on_board[0]) - 1 and self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1] != 0:
                 roads[2].append(self.tiles_on_board[tile_coords[0]][tile_coords[1] + 1]['tile'])
                 self.check_road(roads[2], settings)
-            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and tile_coords[0] >= 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
+            if str(self.tiles_on_board[tile_coords[0]][tile_coords[1]]['bottom']) == "Side.ROAD" and tile_coords[0] > 0 and self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]] != 0:
                 roads[3].append(self.tiles_on_board[tile_coords[0] - 1][tile_coords[1]]['tile'])
                 self.check_road(roads[3], settings)
             
