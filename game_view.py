@@ -1021,6 +1021,7 @@ class GameView(arcade.View):
                 #if AI player, needs to generate new tile and replay turn
                 if self.settings.current_player.ai:
                     self.tile_sprite.kill()
+                    #TODO: for some reason not generating new tile and the AI isn't playing it
                     self.on_done(0)
             else:
                 # end of game scoring for meeples
