@@ -44,8 +44,6 @@ class Player:
                     return True, meeple
                 else:
                     return False, None
-        # If no meeples are available, print warning message
-        # print(f"{self.name}: you have no meeples left to place.")
         return False, None
 
     """ Function to return a meeple to the player's hand and add points to the player's score. """
@@ -58,7 +56,6 @@ class Player:
                 # Add the earned points to player's total score 
                 self.set_score(earned_points + points)
                 return True
-        # print(f"{self.name}: No meeples to return.")
         return False
     
     def get_meeple_score(self, scored_meeple, tile, settings, connected_tiles, meeples_on_feature):

@@ -167,9 +167,6 @@ class Tile:
         self.set_right(self.get_bottom())  # Right becomes bottom
         self.set_bottom(self.get_left())  # Bottom becomes left
         self.set_left(temp_top)  # Left becomes the original top
-        #print(
-        #    f"Tile rotated: top={self.get_top()}, left={self.get_left()}, right={self.get_right()}, bottom={self.get_bottom()}")
-
 # Create tiles for base game
 
 # There are 72 tiles including one start tile

@@ -621,7 +621,6 @@ class GameView(arcade.View):
 
                 else:
                     if self.settings.current_player.ai:
-                        print("PLayer - AI", self.settings.current_player)
                         self.feat.check_feature_completed(self.settings)
                         # create correct sound
                         if self.settings.sound_on:
@@ -1012,7 +1011,6 @@ class GameView(arcade.View):
                 self.settings.add_placed_tile(self.settings.tiles[self.settings.tile_count],
                                               self.tile_sprite.center_x, self.tile_sprite.center_y)
                 self.settings.increment_tile_count()
-                self.on_new_tile()
                 #if AI player, and cannot play a tile, ends the game, triggers scoring and end screen
                 if self.settings.prev_ai:
                     # end of game scoring for meeples
@@ -1021,6 +1019,7 @@ class GameView(arcade.View):
                         meeple.end_of_game_scoring(self.settings, meeple_list)
                     endview = end_view.EndView(self.settings)
                     self.window.show_view(endview)
+                self.on_new_tile()
             else:
                 # end of game scoring for meeples
                 meeple_list = self.settings.get_meeples()
@@ -1151,7 +1150,6 @@ class GameView(arcade.View):
                         self.settings.ai = True
                         self.settings.prev_ai = True
                         self.ai_list.append(self.tile_list[-1])
-                        print(self.ai_list)
                         self.feat.add_tile(rand_x, rand_y, self.settings.placed_tiles[-1][0][1])
                         self.curr_tile.set_moved(False)
                         self.on_done(0)

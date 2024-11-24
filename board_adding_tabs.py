@@ -165,8 +165,6 @@ class GameView(arcade.View):
 
         super().on_resize(width, height)
 
-        print(f"Window resized to: {width}, {height}")
-
     def on_key_press(self, key, key_modifiers):
         """ Called whenever a key on the keyboard is pressed. """
         pass
@@ -189,8 +187,6 @@ class GameView(arcade.View):
 
         clicked_meeple = arcade.get_sprites_at_point((0, 0),
                                                      self.tile_list)
-        if clicked_meeple:
-            print("hi")
 
 
 
